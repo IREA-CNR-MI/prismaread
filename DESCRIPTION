@@ -8,9 +8,6 @@ Authors@R:
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-License: GPL-3
+License: What license it uses
 Encoding: UTF-8
 LazyData: true
-Suggests: 
-    spelling
-Language: en-US
