@@ -9,8 +9,9 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of prismaread is allowing to easily import PRISMA L1 images and
-convert them in a easier to use format (ENVI or GeoTiff)
+The goal of prismaread is allowing to easily import PRISMA L1
+hyperspectral images and convert them in a easier to use format (ENVI or
+GeoTiff).
 
 ## Installation
 
@@ -22,35 +23,31 @@ You can install the development version from
 remotes::install_github("lbusett/prismaread")
 ```
 
-## Example
+## Usage
 
-This is a basic example which shows you how to solve a common problem:
+The function to be used is `convert_prisma`. It takes as input the full
+path of a PRISMA hdf5 image, an output file name and format, and a
+series of switches allowing to decide which datasets should be saved.
+For example the code:
 
 ``` r
 library(prismaread)
-## basic example code
+
+ in_file  <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+ out_file <- "/home/lb/tmp/test/test_1"
+ out_format <- "ENVI"
+ 
+ # Save a full image, prioritizing the SWIR spectrometer and save in EVI format
+ convert_prisma(in_file    = in_file,
+                out_file   = out_file,
+                out_format = out_format,
+                FULL = TRUE,
+                PAN  = TRUE,
+                CLD  = TRUE
+                )
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!
+accesses the input file and saves both the VNIR and SWIR cubes, as well
+as a full hyperspectral cube and the PAN and CLOUD images. See
+[documentation](docs/reference/convert_prisma.html) of the
+convert\_prisma() function for info on available arguments.

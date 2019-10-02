@@ -1,15 +1,21 @@
 Package: prismaread
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Import PRISMA L1 images and convert to friendly format
+Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Lorenzo",
+           family = "Busetto",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "lbusett@gmail.com",
+           comment = c(ORCID = '0000-0001-9634-6038'))
+Description: Import PRISMA L1 images and convert to friendly format.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/lbusett/prismaread
 BugReports: https://github.com/lbusett/prismaread/issues
+Imports: h5,tools,raster
+Suggests: testthat, 
+    spelling,
+    knitr,
+    rmarkdown
+RoxygenNote: 6.1.1

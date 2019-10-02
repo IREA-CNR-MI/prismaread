@@ -3,49 +3,55 @@
 #'  format
 #' @param in_file `character` full path of input HDF5 file
 #' @param out_file `character` full path of output  file
-#' @param out_format `character`` ["tif" | "ENVI"], Output format, Default: 'tif'
+#' @param out_format `character`` ["TIF" | "ENVI"], Output format, Default: 'tif'
 #' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'
-#' @param join_spectra `logical` if TRUE, create a single multispectral image from
-#'  VNIR and SWIR, otherwise, save two separate images, Default: FALSE
+#' @param VNIR `logical` if TRUE, create the VNIR image, Default: TRUE
+#' @param SWIR `logical` if TRUE, create the SWIR image, Default: TRUE
+#' @param FULL `logical` if TRUE, create a single multispectral image from
+#'  VNIR and SWIR, Default: FALSE
 #' @param join_priority `character` ["VNIR" | "SWIR"], spectrometer to consider in
 #'  the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE
-#' @param pan   `logical` if TRUE, also save the PAN data, default: TRUE
-#' @param cloud `logical` if TRUE, also save the cloud mask data, default: TRUE
-#' @param landcov `logical` if TRUE, also save the land cover data, default: TRUE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @param PAN   `logical` if TRUE, also save the PAN data, default: TRUE
+#' @param CLOUD `logical` if TRUE, also save the cloud mask data, default: TRUE
+#' @param LC `logical` if TRUE, also save the land cover data, default: TRUE
+#' @param overwrite `logical` if TRUE, existing files are overwritten, default: FALSE
+#' @return The function is called for its side effects
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  in_file  <- "/home/lb/projects/ASI-PRISCAV/3_IMAGES/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-#'  out_file <- "/home/lb/projects/test/test_1_all.envi"
+#'  in_file  <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+#'  out_file <- "/home/lb/tmp/test/test_1"
+#'  out_format <- "ENVI"
+#'
 #'
 #'  # Save a full image, prioritizing the SWIR spectrometer and save in EVI format
 #'  convert_prisma(in_file       = in_file,
 #'                 out_file      = out_file,
-#'                 format        = "ENVI",
-#'                 join_spectra  = TRUE,
-#'                 join_priority = "SWIR"
+#'                 out_format    = out_format,
+#'                 FULL          = TRUE,
+#'                 join_priority = "SWIR",
+#'                 LC            = TRUE,
+#'                 CLOUD         = TRUE
 #'                 )
-#'  }
 #' }
-#' @seealso
-#'  \code{\link[h5]{c("H5File", "H5File")}},\code{\link[h5]{H5Location-Attribute}}
-#'  \code{\link[raster]{c("raster", "Raster")}},\code{\link[raster]{transpose}},\code{\link[raster]{c("flip", "flip")}},\code{\link[raster]{c("Extent-class", "extent", "extent")}},\code{\link[raster]{setExtent}},\code{\link[raster]{stack}},\code{\link[raster]{brick}},\code{\link[raster]{blockSize}},\code{\link[raster]{writeValues}},\code{\link[raster]{getValues}}
-#'  \code{\link[tools]{fileutils}}
-#'  \code{\link[mapview]{c("mapView", "mapView")}},\code{\link[mapview]{viewRGB}}
 #' @rdname convert_prisma
 #' @export
 #' @importFrom h5 h5file h5attr
-#' @importFrom raster raster t flip extent setExtent stack brick blockSize writeStart getValues writeValues writeStop
 #' @importFrom tools file_path_sans_ext
-#' @importFrom mapview mapview viewRGB
+#' @importFrom raster stack raster t flip extent setExtent
+#' @importFrom utils write.table
 #'
 convert_prisma <- function(in_file,
                            out_file,
-                           out_format = "tif",
-                           source     = "HRC",
-                           join_spectra = FALSE) {
+                           out_format    = "ENVI",
+                           VNIR          = TRUE,
+                           SWIR          = TRUE,
+                           FULL          = FALSE,
+                           source        = "HRC",
+                           join_priority = "SWIR",
+                           PAN           = TRUE,
+                           CLOUD         = FALSE,
+                           LC            = FALSE,
+                           overwrite     = FALSE) {
 
   # Open the file ----
   f <- try(h5::h5file(in_file))
@@ -89,170 +95,278 @@ convert_prisma <- function(in_file,
   sunaz   <- h5::h5attr(f, "Sun_azimuth_angle")
   acqtime <- h5::h5attr(f, "Product_StartTime")
 
+  out_file_angles <- paste0(tools::file_path_sans_ext(out_file), "_ANGLES.txt")
+  utils::write.table(data.frame(date = acqtime,
+                                sunzen   = sunzen,
+                                sunaz = sunaz, stringsAsFactors = FALSE),
+                     file = out_file_angles, row.names = FALSE)
+
 
   # get VNIR data cube and convert to raster ----
 
-  message("- Importing VNIR Cube -")
+  out_file_vnir <- paste0(tools::file_path_sans_ext(out_file), "_VNIR")
+  out_file_vnir <- ifelse(out_format == "TIF",
+                          paste0(out_file_vnir, ".tif"),
+                          paste0(out_file_vnir, ".envi"))
 
-  vnir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/VNIR_Cube")][]
-  # vnir_cube <- aperm(vnir_cube, perm = c(1,3,2))[, , order_vnir]
-  for (band_vnir in 1:66) {
-    band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]), crs = "+proj=longlat +datum=WGS84")
-    band <- raster::t(raster::flip(band, 2))
-    ex <- matrix(c(min(lon), max(lon),  min(lat), max(lat)), nrow = 2, ncol = 2, byrow = T)
-    ex <- raster::extent(ex)
-    band <- raster::setExtent(band, ex, keepres=F)
-    if (band_vnir == 1) {
-      rast_vnir <- band
+  if (VNIR) {
+    message("- Importing VNIR Cube -")
+    if (file.exists(out_file_vnir) & !overwrite) {
+      message("VNIR file already exists - use overwrite = TRUE or change output file name to reprocess")
+      rast_vnir <- raster::stack(out_file_vnir)
     } else {
-      rast_vnir <- raster::stack(rast_vnir, band)
+
+      vnir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/VNIR_Cube")][]
+
+      # vnir_cube <- aperm(vnir_cube, perm = c(1,3,2))[, , order_vnir]
+      for (band_vnir in 1:66) {
+        band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]), crs = "+proj=longlat +datum=WGS84")
+        band <- raster::t(raster::flip(band, 2))
+        ex <- matrix(c(min(lon), max(lon),  min(lat), max(lat)), nrow = 2, ncol = 2, byrow = T)
+        ex <- raster::extent(ex)
+        band <- raster::setExtent(band, ex, keepres=F)
+        if (band_vnir == 1) {
+          rast_vnir <- band
+        } else {
+          rast_vnir <- raster::stack(rast_vnir, band)
+        }
+      }
+      rm(vnir_cube)
+      rm(band)
+      gc()
+
+      if (VNIR) {
+        message("- Writing VNIR raster -")
+        rastwrite_lines(rast_vnir, out_file_vnir, out_format)
+        if (out_format == "ENVI") {
+
+          out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
+          write(c("wavelength = {",
+                  paste(round(wl_vnir, digits = 4), collapse = ","), "}"),
+                out_hdr, append = TRUE)
+          write(c("fwhm = {",
+                  paste(round(fwhm_vnir, digits = 4), collapse = ","), "}"),
+                out_hdr, append = TRUE)
+        }
+
+        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), "_meta.txt")
+        utils::write.table(data.frame(band = 1:length(wl_vnir),
+                                      wl   = wl_vnir,
+                                      fwhm = fwhm_vnir, stringsAsFactors = FALSE),
+                           file = out_file_txt, row.names = FALSE)
+
+      }
     }
   }
-  rm(vnir_cube)
-  rm(band)
-  gc()
-
-  if (join_spectra == FALSE) {
-
-    out_file <- paste(tools::file_path_sans_ext(out_file), "_SWIR")
-    out_file <- ifelse(out_format == "tif",
-                       paste0(out_file, ".tif"),
-                       paste0(out_file, ".envi"))
-    rastwrite_lines(rast_vnir, out_file, out_format)
-    if (out_format == "ENVI") {
-      out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
-
-      # writeLines(c("wavelength units = DOY"), fileConn_meta_hdr)
-      # Wavelengths == DOY from 01/01/2000
-      write(c("wavelength = {",
-              paste(round(wls_vnir, digits = 4), collapse = ","), "}"),
-            out_hdr, append = TRUE)
-    }
-
-  }
-
   # get SWIR data cube and convert to raster ----
   #
-
-  message("- Importing SWIR Cube - ")
-  swir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/SWIR_Cube")][]
-  # swir_cube <- aperm(swir_cube, perm = c(1,3,2))[, , order_swir]
-  for (band_swir in 1:173) {
-    band <- raster::raster((swir_cube[,order_swir[band_swir], ]), crs = "+proj=longlat +datum=WGS84")
-    band <- raster::t(raster::flip(band, 2))
-    ex   <- matrix(c(min(lon), max(lon),  min(lat), max(lat)), nrow = 2, ncol = 2, byrow = T)
-    ex   <- raster::extent(ex)
-    band <- raster::setExtent(band, ex, keepres=F)
-    if (band_swir == 1) {
-      rast_swir <- band
+  out_file_swir <- paste0(tools::file_path_sans_ext(out_file), "_SWIR")
+  out_file_swir <- ifelse(out_format == "TIF",
+                          paste0(out_file_swir, ".tif"),
+                          paste0(out_file_swir, ".envi"))
+  if (SWIR) {
+    if (file.exists(out_file_swir) & !overwrite) {
+      message("SWIR file already exists - use overwrite = TRUE or change output file name to reprocess")
+      rast_swir <- raster::stack(out_file_swir)
     } else {
-      rast_swir <- raster::stack(rast_swir, band)
-    }
-  }
-  rm(swir_cube)
-  rm(band)
-  gc()
 
-  if (join_spectra == FALSE) {
-
-    out_file <- paste(tools::file_path_sans_ext(out_file), "_SWIR")
-    out_file <- ifelse(out_format == "tif",
-                       paste0(out_file, ".tif"),
-                       paste0(out_file, ".envi"))
-    rastwrite_lines(rast_swir, out_file, out_format)
-    if (out_format == "ENVI") {
-      out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
-
-      # writeLines(c("wavelength units = DOY"), fileConn_meta_hdr)
-      # Wavelengths == DOY from 01/01/2000
-      write(c("wavelength = {",
-              paste(round(wls_vnir, digits = 4), collapse = ","), "}"),
-            out_hdr, append = TRUE)
-    }
-
-  }
-
-
-  if (join_spectra == TRUE) {
-
-    # Save hyperspectral cube
-    rast_tot <- raster::stack(rast_vnir, rast_swir)
-    rm(rast_vnir)
-    rm(rast_swir)
-    gc()
-    message("- Saving SWIR Cube - ")
-
-    if (format == "tif") {
-      out <- raster::brick(rast_tot, values = FALSE)
-      bs <-  raster::blockSize(out)
-      out <- raster::writeStart(out, filename = out_file, overwrite = TRUE)
-
-      for (i in 1:bs$n) {
-        print(i)
-        v <- raster::getValues(rast_tot, row=bs$row[i], nrows=bs$nrows[i] )
-        out <- raster::writeValues(out, v, bs$row[i])
+      message("- Importing SWIR Cube - ")
+      swir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/SWIR_Cube")][]
+      # swir_cube <- aperm(swir_cube, perm = c(1,3,2))[, , order_swir]
+      for (band_swir in 1:173) {
+        band <- raster::raster((swir_cube[,order_swir[band_swir], ]), crs = "+proj=longlat +datum=WGS84")
+        band <- raster::t(raster::flip(band, 2))
+        ex   <- matrix(c(min(lon), max(lon),  min(lat), max(lat)), nrow = 2, ncol = 2, byrow = T)
+        ex   <- raster::extent(ex)
+        band <- raster::setExtent(band, ex, keepres=F)
+        if (band_swir == 1) {
+          rast_swir <- band
+        } else {
+          rast_swir <- raster::stack(rast_swir, band)
+        }
       }
-      out <- raster::writeStop(out)
+      rm(swir_cube)
+      rm(band)
+      gc()
+
+      if (SWIR) {
+        message("- Writing SWIR raster -")
+        rastwrite_lines(rast_swir, out_file_swir, out_format)
+        if (out_format == "ENVI") {
+          out_hdr <- paste0(tools::file_path_sans_ext(out_file_swir), ".hdr")
+
+          # writeLines(c("wavelength units = DOY"), fileConn_meta_hdr)
+          # Wavelengths == DOY from 01/01/2000
+          write(c("wavelength = {",
+                  paste(round(wl_swir, digits = 4), collapse = ","), "}"),
+                out_hdr, append = TRUE)
+          write(c("fwhm = {",
+                  paste(round(fwhm_swir, digits = 4), collapse = ","), "}"),
+                out_hdr, append = TRUE)
+        }
+
+        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_swir), "_meta.txt")
+        utils::write.table(data.frame(band = 1:length(wl_swir),
+                                      wl   = wl_swir,
+                                      fwhm = fwhm_swir, stringsAsFactors = FALSE),
+                           file = out_file_txt, row.names = FALSE)
+
+      }
+    }
+  }
+
+  # create FULL data cube and convert to raster ----
+  out_file_full <- paste0(tools::file_path_sans_ext(out_file), "_FULL")
+  out_file_full <- ifelse(out_format == "TIF",
+                          paste0(out_file_full, ".tif"),
+                          paste0(out_file_full, ".envi"))
+  if (FULL) {
+
+    if (file.exists(out_file_full) & !overwrite) {
+      message("FULL file already exists - use overwrite = TRUE or change output file name to reprocess")
     } else {
-      out <- raster::brick(rast_tot, values = FALSE)
-      bs <-  raster::blockSize(out)
-      out <- raster::writeStart(out, filename = out_file, overwrite = TRUE,
-                                format = "ENVI")
-
-      for (i in 1:bs$n) {
-        print(i)
-        v <- raster::getValues(rast_tot, row=bs$row[i], nrows=bs$nrows[i] )
-        out <- raster::writeValues(out, v, bs$row[i])
+      message("- Creating FULL raster -")
+      # Save hyperspectral cube
+      if (join_priority == "SWIR") {
+        rast_tot <- raster::stack(rast_vnir[[1:58]], rast_swir)
+        wl_tot   <- c(wl_vnir[1:58], wl_swir)
+        fwhm_tot <- c(fwhm_vnir[1:58], fwhm_swir)
+      } else {
+        rast_tot <- raster::stack(rast_vnir, rast_swir[10:173])
+        wl_tot   <- c(wl_vnir, wl_swir[10:173])
+        fwhm_tot <- c(fwhm_vnir, fwhm_swir[10:173])
       }
 
-      out <- raster::writeStop(out)
-      out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
+      rm(rast_vnir)
+      rm(rast_swir)
+      gc()
 
-      # writeLines(c("wavelength units = DOY"), fileConn_meta_hdr)
-      # Wavelengths == DOY from 01/01/2000
-      write(c("wavelength = {",
-              paste(round(wls, digits = 4), collapse = ","), "}"),
-            out_hdr, append = TRUE)
+      message("- Writing FULL raster -")
+      rastwrite_lines(rast_tot, out_file_full, out_format)
+
+      if (out_format == "ENVI") {
+        out_hdr <- paste0(tools::file_path_sans_ext(out_file_full), ".hdr")
+
+        # writeLines(c("wavelength units = DOY"), fileConn_meta_hdr)
+        # Wavelengths == DOY from 01/01/2000
+        write(c("wavelength = {",
+                paste(round(wl_tot, digits = 4), collapse = ","), "}"),
+              out_hdr, append = TRUE)
+        write(c("fwhm = {",
+                paste(round(fwhm_tot, digits = 4), collapse = ","), "}"),
+              out_hdr, append = TRUE)
+      }
+      out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), "_meta.txt")
+      utils::write.table(data.frame(band = 1:length(wl_tot),
+                                    wl   = wl_tot,
+                                    fwhm = fwhm_tot, stringsAsFactors = FALSE),
+                         file = out_file_txt, row.names = FALSE)
+
+      rm(rast_tot)
+      gc()
     }
 
   }
 
-  # stitch vnir and swir and save
+  # Save PAN if requested ----
+  out_file_pan <- paste0(tools::file_path_sans_ext(out_file), "_PAN")
+  out_file_pan <- ifelse(out_format == "TIF",
+                         paste0(out_file_pan, ".tif"),
+                         paste0(out_file_pan, ".envi"))
+  if (file.exists(out_file_pan) & !overwrite) {
+    message("PAN file already exists - use overwrite = TRUE or change output file name to reprocess")
+  } else {
 
-  # return(out)
+    if (PAN) {
 
-  gc()
+      message(" - Accessing PAN raster - ")
 
-  pan_Cube <- f["/HDFEOS/SWATHS/PRS_L1_PRC/Data Fields/Cube"][]
-  aa <- setExtent(aa, ex, keepres=F)
+      pan_cube <- f[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")][]
+      pan_lat <- t(f[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+                            "/Geolocation Fields/Latitude")][])
+      pan_lon <- t(f[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+                            "/Geolocation Fields/Longitude")][])
+      rast_pan <- raster::raster(pan_cube, crs = "+proj=longlat +datum=WGS84")
+      rast_pan <- raster::t(raster::flip(rast_pan, 2))
+      rm(pan_cube)
+      gc()
 
+      ex   <- matrix(c(min(pan_lon), max(pan_lon),
+                       min(pan_lat), max(pan_lat)),
+                     nrow = 2, ncol = 2, byrow = T)
+      ex   <- raster::extent(ex)
+      rast_pan <- raster::setExtent(rast_pan, ex, keepres=F)
 
+      message("- Writing PAN raster -")
 
+      rastwrite_lines(rast_pan, out_file_pan, out_format)
+      rm(rast_pan)
+      rm(pan_lon)
+      rm(pan_lat)
+      gc()
+    }
+  }
 
+  # Save CLD if requested ----
+  out_file_cld <- paste0(tools::file_path_sans_ext(out_file), "_CLD")
+  out_file_cld <- ifelse(out_format == "TIF",
+                         paste0(out_file_cld, ".tif"),
+                         paste0(out_file_cld, ".envi"))
 
+  if (file.exists(out_file_cld) & !overwrite) {
+    message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
+  } else {
+    if (CLOUD) {
 
-  # mat_tot <- c(mat_vnir, mat_swir)
+      message(" - Accessing CLOUD raster - ")
+      cld_cube <- f["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"][]
+      rast_cld <- raster::raster(cld_cube, crs = "+proj=longlat +datum=WGS84")
+      rast_cld <- raster::t(raster::flip(rast_cld, 2))
+      rm(cld_cube)
+      gc()
 
+      ex   <- matrix(c(min(lon), max(lon),
+                       min(lat), max(lat)),
+                     nrow = 2, ncol = 2, byrow = T)
+      ex   <- raster::extent(ex)
+      rast_cld <- raster::setExtent(rast_cld, ex, keepres=F)
 
+      message("- Writing CLD raster -")
+      rastwrite_lines(rast_cld, out_file_cld, out_format)
 
+    }
+  }
 
+  # Save LC if requested ----
+  out_file_lc <- paste0(tools::file_path_sans_ext(out_file), "_LC")
+  out_file_lc <- ifelse(out_format == "TIF",
+                        paste0(out_file_lc, ".tif"),
+                        paste0(out_file_lc, ".envi"))
 
+  if (LC) {
+    if (file.exists(out_file_lc) & !overwrite) {
+      message("LC file already exists - use overwrite = TRUE or change output file name to reprocess")
+    } else {
 
-  rm(rast_vnir)
-  rm(rast_swir)
-  rm(mat_vnir)
-  rm(mat_swir)
+      message(" - Accessing LAND COVER raster - ")
+      lc_cube <- f["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/LandCover_Mask"][]
+      rast_lc <- raster::raster(lc_cube, crs = "+proj=longlat +datum=WGS84")
+      rast_lc <- raster::t(raster::flip(rast_lc, 2))
+      rm(lc_cube)
+      gc()
 
+      ex   <- matrix(c(min(lon), max(lon),
+                       min(lat), max(lat)),
+                     nrow = 2, ncol = 2, byrow = T)
+      ex   <- raster::extent(ex)
+      rast_lc <- raster::setExtent(rast_lc, ex, keepres=F)
 
-  crs(rast_tot) <- "+proj=longlat +datum=WGS84"
-  mapview::mapview(rast_tot[[1]])
+      message("- Writing LC raster -")
 
-  mapview::viewRGB(rast_tot, 40,30, 20)
+      rastwrite_lines(rast_lc, out_file_lc, out_format)
 
-  spect <- rast_tot[100,100][1,]
-  dfp <- data.frame(wl = wls, Rad =spect)
-  ggplot(dfp, aes(x = wl, y = Rad)) + geom_line() + theme_light()
+    }
 
+  }
 
-  # writeRaster("")
 }
