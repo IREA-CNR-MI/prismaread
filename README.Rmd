@@ -53,4 +53,4 @@ library(prismaread)
 
 ```
 
-accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN and CLOUD images. See [documentation](docs/reference/convert_prisma.html) of the convert_prisma() function for info on available arguments. 
+accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN and CLOUD images. See [documentation](reference/convert_prisma.html) of the convert_prisma() function for info on available arguments. 
