@@ -53,3 +53,7 @@ accesses the input file and saves both the VNIR and SWIR cubes, as well
 as a full hyperspectral cube and the PAN and CLOUD images. See
 [documentation](reference/convert_prisma.html) of the convert\_prisma()
 function for info on available arguments.
+
+The function also saves ancillary data related to wavelengths and fwhms
+of the different images, and to hour and sun geometry at acquisition in
+ancillary txt files.
