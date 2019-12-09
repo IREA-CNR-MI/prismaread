@@ -4,7 +4,7 @@
 \alias{rastwrite_lines}
 \title{rastwrite_lines}
 \usage{
-rastwrite_lines(rast_in, out_file, out_format = "tif")
+rastwrite_lines(rast_in, out_file, out_format = "tif", proc_lev = "1")
 }
 \arguments{
 \item{rast_in}{`Raster* object` to be written to disk}
@@ -12,6 +12,8 @@ rastwrite_lines(rast_in, out_file, out_format = "tif")
 \item{out_file}{`character` full path of output image}
 
 \item{out_format}{`character` [\"TIF\" | \"ENVI\"], Default: 'tif'}
+
+\item{proc_lev}{`character` [\"1\" | \"2D\"], Default: '1'}
 }
 \value{
 the function is called for its side effects

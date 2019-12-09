@@ -70,7 +70,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
       </span>
     </div>
 
@@ -119,10 +119,23 @@
  format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>convert_prisma</span>(<span class='no'>in_file</span>, <span class='no'>out_file</span>, <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"ENVI"</span>, <span class='kw'>VNIR</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>SWIR</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>FULL</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='st'>"HRC"</span>,
-  <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"SWIR"</span>, <span class='kw'>PAN</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>CLOUD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>LC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>convert_prisma</span>(
+  <span class='no'>in_file</span>,
+  <span class='no'>out_file</span>,
+  <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"ENVI"</span>,
+  <span class='kw'>VNIR</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>SWIR</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>FULL</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>source</span> <span class='kw'>=</span> <span class='st'>"HCO"</span>,
+  <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"SWIR"</span>,
+  <span class='kw'>ATCOR</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>ATCOR_wls</span> <span class='kw'>=</span> <span class='st'>"Nominal"</span>,
+  <span class='kw'>PAN</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>CLOUD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>LC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>GLINT</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,7 +172,20 @@ VNIR and SWIR, Default: FALSE</p></td>
     <tr>
       <th>join_priority</th>
       <td><p>`character` ["VNIR" | "SWIR"], spectrometer to consider in
-the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE</p></td>
+the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+Default: "VNIR"</p></td>
+    </tr>
+    <tr>
+      <th>ATCOR</th>
+      <td><p>logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;</p></td>
+    </tr>
+    <tr>
+      <th>ATCOR_wls</th>
+      <td><p>`character`, or `numeric` If equal to `Nominal`, the only ATCOR wvl file
+created is the one containing Nominal wavelengths. If a numeric vector is provided,
+then one different wvl file is created for each selected COLUMN selected (e.g., if
+providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
+columns 200 and 800 are saved.)</p></td>
     </tr>
     <tr>
       <th>PAN</th>
@@ -172,6 +198,10 @@ the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE</
     <tr>
       <th>LC</th>
       <td><p>`logical` if TRUE, also save the land cover data, default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>GLINT</th>
+      <td><p>`logical` if TRUE, also save the GLINT mask data, default: TRUE</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
@@ -190,15 +220,33 @@ the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE</
  <span class='no'>out_format</span> <span class='kw'>&lt;-</span> <span class='st'>"ENVI"</span>
 
 
- <span class='co'># Save a full image, prioritizing the SWIR spectrometer and save in EVI format</span>
+ <span class='co'># Save a full image, prioritizing the VNIR spectrometer and save in ENVI format</span>
  <span class='fu'>convert_prisma</span>(<span class='kw'>in_file</span>       <span class='kw'>=</span> <span class='no'>in_file</span>,
                 <span class='kw'>out_file</span>      <span class='kw'>=</span> <span class='no'>out_file</span>,
                 <span class='kw'>out_format</span>    <span class='kw'>=</span> <span class='no'>out_format</span>,
                 <span class='kw'>FULL</span>          <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"SWIR"</span>,
+                <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"VNIR"</span>,
                 <span class='kw'>LC</span>            <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>CLOUD</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>
+                <span class='kw'>CLOUD</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                <span class='kw'>overwrite</span>     <span class='kw'>=</span> <span class='fl'>TRUE</span>
                 )
+
+ <span class='co'># Save a full image, prioritizing the SWIR spectrometer and save in ENVI format,</span>
+ <span class='co'># Also create ATCOR files, with Nominal wavelengths, and those for columns</span>
+ <span class='co'># 200 and 800 of the cube</span>
+ <span class='fu'>convert_prisma</span>(<span class='kw'>in_file</span>       <span class='kw'>=</span> <span class='no'>in_file</span>,
+                <span class='kw'>out_file</span>      <span class='kw'>=</span> <span class='no'>out_file</span>,
+                <span class='kw'>out_format</span>    <span class='kw'>=</span> <span class='no'>out_format</span>,
+                <span class='kw'>FULL</span>          <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"VNIR"</span>,
+                <span class='kw'>ATCOR</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                <span class='kw'>ATCOR_wls</span>     <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>200</span>,<span class='fl'>800</span>),
+                <span class='kw'>LC</span>            <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                <span class='kw'>CLOUD</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                <span class='kw'>overwrite</span>     <span class='kw'>=</span> <span class='fl'>TRUE</span>
+                )
+
+
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

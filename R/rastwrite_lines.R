@@ -3,6 +3,7 @@
 #' @param rast_in `Raster* object` to be written to disk
 #' @param out_file `character` full path of output image
 #' @param out_format `character` [\"TIF\" | \"ENVI\"], Default: 'tif'
+#' @param proc_lev `character` [\"1\" | \"2D\"], Default: '1'
 #' @return the function is called for its side effects
 #' @details DETAILS
 #' @rdname rastwrite_lines
@@ -10,8 +11,9 @@
 #' @importFrom raster nlayers brick raster blockSize writeStart getValues writeValues writeStop
 
 rastwrite_lines <- function(rast_in,
-                           out_file,
-                           out_format = "tif") {
+                            out_file,
+                            out_format = "tif",
+                            proc_lev = "1") {
 
     if (raster::nlayers(rast_in) > 1) {
         out <- raster::brick(rast_in, values = FALSE)
@@ -20,11 +22,16 @@ rastwrite_lines <- function(rast_in,
     }
     bs <-  raster::blockSize(out)
 
+    if (proc_lev == 1) {
+        datatype = "INT2S"
+    } else {
+        datatype = "FLT4S"
+    }
     out <- raster::writeStart(out,
                               filename = out_file,
                               overwrite = TRUE,
                               options = c("COMPRESS=LZW"),
-                              datatype = "INT2S")
+                              datatype = datatype)
 
 
     for (i in 1:bs$n) {

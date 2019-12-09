@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
       </span>
     </div>
 
@@ -117,7 +117,7 @@
     <p>Write a raster object by blocks of lines</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rastwrite_lines</span>(<span class='no'>rast_in</span>, <span class='no'>out_file</span>, <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"tif"</span>)</pre>
+    <pre class="usage"><span class='fu'>rastwrite_lines</span>(<span class='no'>rast_in</span>, <span class='no'>out_file</span>, <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"tif"</span>, <span class='kw'>proc_lev</span> <span class='kw'>=</span> <span class='st'>"1"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -133,6 +133,10 @@
     <tr>
       <th>out_format</th>
       <td><p>`character` [\"TIF\" | \"ENVI\"], Default: 'tif'</p></td>
+    </tr>
+    <tr>
+      <th>proc_lev</th>
+      <td><p>`character` [\"1\" | \"2D\"], Default: '1'</p></td>
     </tr>
     </table>
 

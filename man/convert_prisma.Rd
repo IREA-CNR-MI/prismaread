@@ -4,10 +4,23 @@
 \alias{convert_prisma}
 \title{convert_prisma}
 \usage{
-convert_prisma(in_file, out_file, out_format = "ENVI", VNIR = TRUE,
-  SWIR = TRUE, FULL = FALSE, source = "HRC",
-  join_priority = "SWIR", PAN = TRUE, CLOUD = FALSE, LC = FALSE,
-  overwrite = FALSE)
+convert_prisma(
+  in_file,
+  out_file,
+  out_format = "ENVI",
+  VNIR = TRUE,
+  SWIR = TRUE,
+  FULL = FALSE,
+  source = "HCO",
+  join_priority = "SWIR",
+  ATCOR = TRUE,
+  ATCOR_wls = "Nominal",
+  PAN = TRUE,
+  CLOUD = FALSE,
+  LC = FALSE,
+  GLINT = FALSE,
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{in_file}{`character` full path of input HDF5 file}
@@ -26,13 +39,24 @@ VNIR and SWIR, Default: FALSE}
 \item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
 
 \item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
-the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE}
+the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+Default: "VNIR"}
+
+\item{ATCOR}{logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;}
+
+\item{ATCOR_wls}{`character`, or `numeric` If equal to `Nominal`, the only ATCOR wvl file
+created is the one containing Nominal wavelengths. If a numeric vector is provided,
+then one different wvl file is created for each selected COLUMN selected (e.g., if
+providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
+columns 200 and 800 are saved.)}
 
 \item{PAN}{`logical` if TRUE, also save the PAN data, default: TRUE}
 
 \item{CLOUD}{`logical` if TRUE, also save the cloud mask data, default: TRUE}
 
 \item{LC}{`logical` if TRUE, also save the land cover data, default: TRUE}
+
+\item{GLINT}{`logical` if TRUE, also save the GLINT mask data, default: TRUE}
 
 \item{overwrite}{`logical` if TRUE, existing files are overwritten, default: FALSE}
 }
@@ -50,14 +74,32 @@ Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
  out_format <- "ENVI"
 
 
- # Save a full image, prioritizing the SWIR spectrometer and save in EVI format
+ # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
  convert_prisma(in_file       = in_file,
                 out_file      = out_file,
                 out_format    = out_format,
                 FULL          = TRUE,
-                join_priority = "SWIR",
+                join_priority = "VNIR",
                 LC            = TRUE,
-                CLOUD         = TRUE
+                CLOUD         = TRUE,
+                overwrite     = TRUE
                 )
+
+ # Save a full image, prioritizing the SWIR spectrometer and save in ENVI format,
+ # Also create ATCOR files, with Nominal wavelengths, and those for columns
+ # 200 and 800 of the cube
+ convert_prisma(in_file       = in_file,
+                out_file      = out_file,
+                out_format    = out_format,
+                FULL          = TRUE,
+                join_priority = "VNIR",
+                ATCOR         = TRUE,
+                ATCOR_wls     = c(200,800),
+                LC            = TRUE,
+                CLOUD         = TRUE,
+                overwrite     = TRUE
+                )
+
+
 }
 }

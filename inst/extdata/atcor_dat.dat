@@ -1,0 +1,6 @@
+ 2.8  1000    across-track FOV [degree], pixels per line (dummy to agree with airborne ATCOR)
+   1   233    first, last reflective band (0.35-2.55 μm)
+   0     0    first, last mid IR band (2.6 -7.0 μm)
+   0     0    first, last thermal band (7.0 -14 μm)
+   1          flag for tilt capability (1=yes, 0=no)
+   0          required dummy

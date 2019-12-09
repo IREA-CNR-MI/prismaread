@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
       </span>
     </div>
 
@@ -82,26 +82,60 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages("remotes")</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>)</a></code></pre></div>
 </div>
-<div id="usage" class="section level2">
+<div id="work-on-level-1-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
-<p>The function to be used is <code>convert_prisma</code>. It takes as input the full path of a PRISMA hdf5 image, an output file name and format, and a series of switches allowing to decide which datasets should be saved. For example the code:</p>
+<a href="#work-on-level-1-data" class="anchor"></a>Work on Level 1 Data</h2>
+<p>The function to be used is <code>convert_prisma</code>. It takes as input the full path of a PRISMA hdf5 image, an output file name and format, and a series of switches allowing to decide which datasets should be saved. In particular, the <code>FULL</code> argument allow to decide if a complete VNIR+SWIR cube has to be created alongside the “single” VNIR and SWIR ones.</p>
+<p>A “ballpark” georeferencing is provided, but it is not to be trusted/used.</p>
+<p>For example the following code:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(prismaread)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"> in_file  &lt;-<span class="st"> "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"> out_file &lt;-<span class="st"> "/home/lb/tmp/test/test_1"</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"> out_format &lt;-<span class="st"> "ENVI"</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"> </a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"> <span class="co"># Save a full image, prioritizing the SWIR spectrometer and save in EVI format</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"> <span class="kw"><a href="reference/convert_prisma.html">convert_prisma</a></span>(<span class="dt">in_file    =</span> in_file,</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">                <span class="dt">out_file   =</span> out_file,</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">                <span class="dt">out_format =</span> out_format,</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">                <span class="dt">FULL =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">                <span class="dt">PAN  =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">                <span class="dt">CLD  =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">                )</a></code></pre></div>
-<p>accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN and CLOUD images. See <a href="reference/convert_prisma.html">documentation</a> of the convert_prisma() function for info on available arguments.</p>
+<a class="sourceLine" id="cb2-3" data-line-number="3">in_file  &lt;-<span class="st"> "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">out_file &lt;-<span class="st"> "/home/lb/tmp/test/test_1"</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">out_format &lt;-<span class="st"> "ENVI"</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw"><a href="reference/convert_prisma.html">convert_prisma</a></span>(<span class="dt">in_file    =</span> in_file,</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">               <span class="dt">out_file   =</span> out_file,</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">               <span class="dt">out_format =</span> out_format,</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">               <span class="dt">join_priority =</span> <span class="st">"VNIR"</span>, </a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">               <span class="dt">FULL =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">               <span class="dt">PAN  =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">               <span class="dt">CLOUD  =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p>accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN and CLOUD images. <strong>See <a href="reference/convert_prisma.html">documentation</a> of the convert_prisma() function for info on available arguments</strong>.</p>
 <p>The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files.</p>
+<div id="creation-of-atcor-files" class="section level3">
+<h3 class="hasAnchor">
+<a href="#creation-of-atcor-files" class="anchor"></a>Creation of ATCOR files</h3>
+<p>Starting <code>v0.02</code> the function also allows automatic creation of text files required to run an ATCOR atmospheric correction. Those files are saved in the <code>ATCOR</code> subfolder of the main output folder.</p>
+<p>In “standard” behaviour, only the three “standard” ATCOR files (<code>.wvl</code>, <code>.dat</code> and <code>.cal</code>) are created, with the <code>.wvl</code> file containing nominal wavelengths and FWHMs derived from the <code>cw</code> and <code>fwhm</code> attributes of the <em>.he5</em> file- The user can however also choose to generate additional ATCOR files, containing data about wavelengths and FWHMs related to different “columns” of the data cube, as derived from the <code>KDP_AUX/Cw_Vnir_Matrix</code>, <code>KDP_AUX/Cw_Swir_Matrix</code>, <code>KDP_AUX/Cw_Fwhm_Matrix</code>, <code>KDP_AUX/Cw_Fwhm_Matrix</code> HDF layers. This could allow running different atmospheric corrections for different columns of the data, potentially allowing compensating “smile” effects on the retrieved surface reflectances. For example:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(prismaread)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">in_file  &lt;-<span class="st"> "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">out_file &lt;-<span class="st"> "/home/lb/tmp/test/test_1"</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">out_format &lt;-<span class="st"> "ENVI"</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw"><a href="reference/convert_prisma.html">convert_prisma</a></span>(<span class="dt">in_file    =</span> in_file,</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">               <span class="dt">out_file   =</span> out_file,</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">               <span class="dt">out_format =</span> out_format,</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">               <span class="dt">join_priority =</span> <span class="st">"VNIR"</span>, </a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">               <span class="dt">ATCOR =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">               <span class="dt">ATCOR_wls =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">200</span>,<span class="dv">800</span>), </a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">               <span class="dt">FULL =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">               <span class="dt">PAN  =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">               <span class="dt">CLOUD  =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+</div>
+</div>
+<div id="work-on-level-2-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#work-on-level-2-data" class="anchor"></a>Work on Level 2 Data</h2>
+<p>The function to be used is still <code>convert_prisma</code>, with similar syntax. Only differences are:</p>
+<ol>
+<li>The “PAN”, “CLOUD”, “LC” and “GLINT” arguments are ignored, because they are not available in L2D files;</li>
+<li>The “ATCOR” and “ATCOR_wls” arguments are ignored, because they are useless in this case;</li>
+<li>The output imagery is properly georeferenced.</li>
+</ol>
 </div>
 </div>
   </div>

@@ -1,6 +1,6 @@
 Package: prismaread
 Title: Import PRISMA L1 images and convert to friendly format
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Lorenzo",
            family = "Busetto",
@@ -18,4 +18,4 @@ Suggests: testthat,
     spelling,
     knitr,
     rmarkdown
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
