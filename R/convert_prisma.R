@@ -61,7 +61,7 @@
 #' }
 #' @rdname convert_prisma
 #' @export
-#' @importFrom h5 h5file h5attr
+#' @importFrom hdf5r H5File h5attr
 #' @importFrom tools file_path_sans_ext
 #' @importFrom raster stack raster t flip extent setExtent
 #' @importFrom utils write.table
@@ -85,8 +85,8 @@ convert_prisma <- function(in_file,
   # browser()
 
   # Open the file ----
-  f <- try(h5::h5file(in_file))
-  proc_lev <- h5::h5attr(f, "Processing_Level")
+  f <- hdf5r::H5File$new(in_file, mode="r+")
+  proc_lev <- hdf5r::h5attr(f, "Processing_Level")
 
   if (proc_lev != "1") {
     if (source %in% c("HRC", "HC0")) {
@@ -109,19 +109,19 @@ convert_prisma <- function(in_file,
   }
 
   # Get wavelengths and fwhms ----
-  wl_vnir    <- h5::h5attr(f, "List_Cw_Vnir")
+  wl_vnir    <- hdf5r::h5attr(f, "List_Cw_Vnir")
   order_vnir <- order(wl_vnir)
   wl_vnir <- wl_vnir[order_vnir]
 
-  wl_swir    <- h5::h5attr(f, "List_Cw_Swir")
+  wl_swir    <- hdf5r::h5attr(f, "List_Cw_Swir")
   order_swir <- order(wl_swir)
   wl_swir <- wl_swir[order_swir]
   wls <- c(wl_vnir, wl_swir)
 
-  fwhm_vnir <- h5::h5attr(f, "List_Fwhm_Vnir")
+  fwhm_vnir <- hdf5r::h5attr(f, "List_Fwhm_Vnir")
   fwhm_vnir <- fwhm_vnir[order_vnir]
 
-  fwhm_swir <- h5::h5attr(f, "List_Fwhm_Swir")
+  fwhm_swir <- hdf5r::h5attr(f, "List_Fwhm_Swir")
   fwhm_swir <- fwhm_swir[order_swir]
 
   fwhms <- c(fwhm_vnir, fwhm_swir)
@@ -165,21 +165,21 @@ convert_prisma <- function(in_file,
              "column numbers at which wavelengths should be retrieved")
       }
 
-      vnir_start  <- h5::h5attr(f, "Start_index_EO_VNIR")
-      vnir_stop   <- h5::h5attr(f, "Stop_index_EO_VNIR")
-      vnir_wl_mat <- f["//KDP_AUX/Cw_Vnir_Matrix"][,vnir_start:vnir_stop]
+      vnir_start  <- hdf5r::h5attr(f, "Start_index_EO_VNIR")
+      vnir_stop   <- hdf5r::h5attr(f, "Stop_index_EO_VNIR")
+      vnir_wl_mat <- t(f[["//KDP_AUX/Cw_Vnir_Matrix"]][vnir_start:vnir_stop,])
       vnir_wl_mat <- vnir_wl_mat[,order_vnir]
       vnir_wl_mat <- vnir_wl_mat[, which(vnir_wl_mat[1,] != 0)]
-      vnir_fwhm_mat <- f["//KDP_AUX/Fwhm_Vnir_Matrix"][,vnir_start:vnir_stop]
+      vnir_fwhm_mat <- t(f[["KDP_AUX/Fwhm_Vnir_Matrix"]][vnir_start:vnir_stop,])
       vnir_fwhm_mat <- vnir_fwhm_mat[,order_vnir]
       vnir_fwhm_mat <- vnir_fwhm_mat[, which(vnir_fwhm_mat[1,] != 0)]
 
-      swir_start  <- h5::h5attr(f, "Start_index_EO_SWIR")
-      swir_stop   <- h5::h5attr(f, "Stop_index_EO_SWIR")
-      swir_wl_mat <- f["//KDP_AUX/Cw_Swir_Matrix"][,swir_start:swir_stop]
+      swir_start  <- hdf5r::h5attr(f, "Start_index_EO_SWIR")
+      swir_stop   <- hdf5r::h5attr(f, "Stop_index_EO_SWIR")
+      swir_wl_mat <- t(f[["//KDP_AUX/Cw_Swir_Matrix"]][swir_start:swir_stop,])
       swir_wl_mat <- swir_wl_mat[,order_swir]
       swir_wl_mat <- swir_wl_mat[, which(swir_wl_mat[1,] != 0)]
-      swir_fwhm_mat <- f["//KDP_AUX/Fwhm_Swir_Matrix"][,swir_start:swir_stop]
+      swir_fwhm_mat <- t(f[["//KDP_AUX/Fwhm_Swir_Matrix"]][swir_start:swir_stop,])
       swir_fwhm_mat <- swir_fwhm_mat[,order_swir]
       swir_fwhm_mat <- swir_fwhm_mat[, which(swir_fwhm_mat[1,] != 0)]
 
@@ -226,21 +226,21 @@ convert_prisma <- function(in_file,
 
   # get geolocation info ----
   if (proc_lev == "1") {
-    lat <- t(f[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Latitude_SWIR")][])
-    lon <- t(f[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Longitude_SWIR")][])
+    lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Latitude_SWIR")]][,])
+    lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Longitude_SWIR")]][,])
   } else {
-    proj_code <- h5::h5attr(f, "Projection_Id")
-    proj_name <- h5::h5attr(f, "Projection_Name")
-    xmin  <- h5::h5attr(f, "Product_ULcorner_easting")
-    xmax  <- h5::h5attr(f, "Product_LRcorner_easting")
-    ymin  <- h5::h5attr(f, "Product_LRcorner_northing")
-    ymax  <- h5::h5attr(f, "Product_ULcorner_northing")
+    proj_code <- hdf5r::h5attr(f, "Projection_Id")
+    proj_name <- hdf5r::h5attr(f, "Projection_Name")
+    xmin  <- hdf5r::h5attr(f, "Product_ULcorner_easting")
+    xmax  <- hdf5r::h5attr(f, "Product_LRcorner_easting")
+    ymin  <- hdf5r::h5attr(f, "Product_LRcorner_northing")
+    ymax  <- hdf5r::h5attr(f, "Product_ULcorner_northing")
   }
 
   # get additional metadata ----
-  sunzen  <- h5::h5attr(f, "Sun_zenith_angle")
-  sunaz   <- h5::h5attr(f, "Sun_azimuth_angle")
-  acqtime <- h5::h5attr(f, "Product_StartTime")
+  sunzen  <- hdf5r::h5attr(f, "Sun_zenith_angle")
+  sunaz   <- hdf5r::h5attr(f, "Sun_azimuth_angle")
+  acqtime <- hdf5r::h5attr(f, "Product_StartTime")
 
   out_file_angles <- paste0(tools::file_path_sans_ext(out_file), "_", source,
                             "_ANGLES.txt")
@@ -265,22 +265,23 @@ convert_prisma <- function(in_file,
     } else {
 
       if(proc_lev == 1) {
-        vnir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/VNIR_Cube")][]
+        vnir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/VNIR_Cube")]][,,]
       } else {
-        vnir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L2D_", source, "/Data Fields/VNIR_Cube")][]
+        vnir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L2D_", source, "/Data Fields/VNIR_Cube")]][,,]
       }
       ind_vnir <- 1
       for (band_vnir in 1:66) {
         if (wl_vnir[band_vnir] != 0) {
           if(proc_lev == "1") {
             band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]), crs = "+proj=longlat +datum=WGS84")
-            band <- raster::t(raster::flip(band, 2))
+            band <- raster::flip(band, 1)
             ex <- matrix(c(min(lon), max(lon),  min(lat), max(lat)), nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
           } else {
             band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
                                    crs = paste0("+proj=utm +zone=", proj_code,
                                                 " +datum=WGS84 +units=m +no_defs"))
+            band <- t(band)
             ex <- matrix(c(xmin, xmax,  ymin, ymax), nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
           }
@@ -341,9 +342,9 @@ convert_prisma <- function(in_file,
       message("- Importing SWIR Cube - ")
 
       if (proc_lev == "1") {
-        swir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/SWIR_Cube")][]
+        swir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/SWIR_Cube")]][,,]
       } else {
-        swir_cube <- f[paste0("HDFEOS/SWATHS/PRS_L2D_", source, "/Data Fields/SWIR_Cube")][]
+        swir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L2D_", source, "/Data Fields/SWIR_Cube")]][,,]
       }
 
       ind_band <- 1
@@ -351,13 +352,15 @@ convert_prisma <- function(in_file,
         if (wl_swir[band_swir] != 0) {
           if(proc_lev == "1") {
             band <- raster::raster((swir_cube[,order_swir[band_swir], ]), crs = "+proj=longlat +datum=WGS84")
-            band <- raster::t(raster::flip(band, 2))
+            # band <- raster::t(raster::flip(band, 2))
+            band <- raster::flip(band, 1)
             ex <- matrix(c(min(lon), max(lon),  min(lat), max(lat)), nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
           } else {
             band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
                                    crs = paste0("+proj=utm +zone=", proj_code,
                                                 " +datum=WGS84 +units=m +no_defs"))
+            band <- t(band)
             ex <- matrix(c(xmin, xmax,  ymin, ymax), nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
           }
@@ -475,13 +478,13 @@ convert_prisma <- function(in_file,
       message(" - Accessing PAN raster - ")
 
       if (proc_lev == "1") {
-        pan_cube <- f[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")][]
-        pan_lat <- t(f[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
-                              "/Geolocation Fields/Latitude")][])
-        pan_lon <- t(f[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
-                              "/Geolocation Fields/Longitude")][])
+        pan_cube <- f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")]][,]
+        pan_lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+                              "/Geolocation Fields/Latitude")]][,])
+        pan_lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+                              "/Geolocation Fields/Longitude")]][,])
       } else {
-        pan_cube <- f[paste0("//HDFEOS/SWATHS/PRS_L2D_PCO/Data Fields/Cube")][]
+        pan_cube <- f[[paste0("//HDFEOS/SWATHS/PRS_L2D_PCO/Data Fields/Cube")]][,]
       }
       if (proc_lev == "1") {
         rast_pan <- raster::raster(pan_cube, crs = "+proj=longlat +datum=WGS84")
@@ -528,7 +531,7 @@ convert_prisma <- function(in_file,
       if (CLOUD) {
 
         message(" - Accessing CLOUD raster - ")
-        cld_cube <- f["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"][]
+        cld_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"]][,]
         rast_cld <- raster::raster(cld_cube, crs = "+proj=longlat +datum=WGS84")
         rast_cld <- raster::t(raster::flip(rast_cld, 2))
         rm(cld_cube)
@@ -559,7 +562,7 @@ convert_prisma <- function(in_file,
       if (GLINT) {
 
         message(" - Accessing GLINT raster - ")
-        glnt_cube <- f["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"][]
+        glnt_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"]][,]
         rast_glnt <- raster::raster(glnt_cube, crs = "+proj=longlat +datum=WGS84")
         rast_glnt <- raster::t(raster::flip(rast_glnt, 2))
         rm(glnt_cube)
@@ -590,7 +593,7 @@ convert_prisma <- function(in_file,
       } else {
 
         message(" - Accessing LAND COVER raster - ")
-        lc_cube <- f["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/LandCover_Mask"][]
+        lc_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/LandCover_Mask"]][,]
         rast_lc <- raster::raster(lc_cube, crs = "+proj=longlat +datum=WGS84")
         rast_lc <- raster::t(raster::flip(rast_lc, 2))
         rm(lc_cube)
