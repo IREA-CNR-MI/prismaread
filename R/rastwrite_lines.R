@@ -23,7 +23,7 @@ rastwrite_lines <- function(rast_in,
     bs <-  raster::blockSize(out)
 
     if (proc_lev == 1) {
-        datatype = "INT2S"
+        datatype = "INT4S"
     } else {
         datatype = "FLT4S"
     }
