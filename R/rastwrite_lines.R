@@ -13,7 +13,10 @@
 rastwrite_lines <- function(rast_in,
                             out_file,
                             out_format = "tif",
-                            proc_lev = "1") {
+                            proc_lev = "1",
+                            scale_min = NULL,
+                            scale_max = NULL,
+                            join = FALSE) {
 
     if (raster::nlayers(rast_in) > 1) {
         out <- raster::brick(rast_in, values = FALSE)
@@ -22,8 +25,8 @@ rastwrite_lines <- function(rast_in,
     }
     bs <-  raster::blockSize(out)
 
-    if (proc_lev == 1) {
-        datatype = "INT4S"
+    if (substring(proc_lev, 1,1) == "1") {
+        datatype = "INT2U"
     } else {
         datatype = "FLT4S"
     }
@@ -33,9 +36,12 @@ rastwrite_lines <- function(rast_in,
                               options = c("COMPRESS=LZW"),
                               datatype = datatype)
 
-
     for (i in 1:bs$n) {
+        message("Writing Block: ", i, " of: ", bs$n)
         v <- raster::getValues(rast_in, row = bs$row[i], nrows = bs$nrows[i] )
+        if (substring(proc_lev, 1, 1) == "2" & !join) {
+            v <- scale_min + (v * (scale_max - scale_min)) / 65535
+        }
         out <- raster::writeValues(out, v, bs$row[i])
     }
     out <- raster::writeStop(out)

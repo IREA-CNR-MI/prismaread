@@ -34,9 +34,12 @@ remotes::install_github("lbusett/prismaread")
 
 The function to be used is `convert_prisma`. It takes as input the full path 
 of a PRISMA hdf5 image, an output file name and format, and a series of switches
-allowing to decide which datasets should be saved. In particular, the 
-`FULL` argument allow to decide if a complete VNIR+SWIR cube has to be created
-alongside the "single" VNIR and SWIR ones. 
+allowing to decide which datasets should be saved.
+
+In particular, the `FULL` argument allows deciding if a complete VNIR+SWIR cube has to be created
+alongside the "single" VNIR and SWIR ones. In that case, the 'join_priority' 
+keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
+cube in the wavelength were they overlap. 
 
 A "ballpark" georeferencing is provided, but it is not to be trusted/used.
 
@@ -105,4 +108,5 @@ The function to be used is still `convert_prisma`, with similar syntax. Only dif
 1. The "PAN", "CLOUD", "LC" and "GLINT" arguments are ignored, because they are 
 not available in L2D files; 
 2. The "ATCOR" and "ATCOR_wls" arguments are ignored, because they are useless in this case; 
-3. The output imagery is properly georeferenced. 
+3. The output imagery is properly georeferenced, in case level is 2D. Otherwise, 
+ the same "ballpark" georeferencing as for L1 data is applied.

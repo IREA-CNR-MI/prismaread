@@ -8,17 +8,20 @@ convert_prisma(
   in_file,
   out_file,
   out_format = "ENVI",
+  base_georef = FALSE,
   VNIR = TRUE,
   SWIR = TRUE,
   FULL = FALSE,
   source = "HCO",
   join_priority = "SWIR",
   ATCOR = TRUE,
-  ATCOR_wls = "Nominal",
+  ATCOR_wls = NULL,
   PAN = TRUE,
   CLOUD = FALSE,
   LC = FALSE,
   GLINT = FALSE,
+  ERR_MATRIX = FALSE,
+  apply_errmatrix = FALSE,
   overwrite = FALSE
 )
 }
@@ -44,7 +47,7 @@ Default: "VNIR"}
 
 \item{ATCOR}{logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;}
 
-\item{ATCOR_wls}{`character`, or `numeric` If equal to `Nominal`, the only ATCOR wvl file
+\item{ATCOR_wls}{NULL, or `numeric` If NULL the only ATCOR wvl file
 created is the one containing Nominal wavelengths. If a numeric vector is provided,
 then one different wvl file is created for each selected COLUMN selected (e.g., if
 providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to

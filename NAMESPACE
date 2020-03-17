@@ -2,6 +2,7 @@
 
 export(convert_prisma)
 importFrom(hdf5r,H5File)
+importFrom(hdf5r,existsGroup)
 importFrom(hdf5r,h5attr)
 importFrom(raster,blockSize)
 importFrom(raster,brick)

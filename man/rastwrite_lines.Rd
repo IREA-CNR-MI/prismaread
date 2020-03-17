@@ -4,7 +4,15 @@
 \alias{rastwrite_lines}
 \title{rastwrite_lines}
 \usage{
-rastwrite_lines(rast_in, out_file, out_format = "tif", proc_lev = "1")
+rastwrite_lines(
+  rast_in,
+  out_file,
+  out_format = "tif",
+  proc_lev = "1",
+  scale_min = NULL,
+  scale_max = NULL,
+  join = FALSE
+)
 }
 \arguments{
 \item{rast_in}{`Raster* object` to be written to disk}
