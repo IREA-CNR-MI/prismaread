@@ -11,6 +11,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
 <!-- badges: end -->
 
+# Under maintenance - Please do not install until further notice - should be back in a couple of days!!!
+
 The goal of prismaread is allowing to easily import PRISMA L1
 hyperspectral images and convert them in a easier to use format (ENVI or
 GeoTiff).
