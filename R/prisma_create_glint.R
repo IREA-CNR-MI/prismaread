@@ -18,7 +18,11 @@ prisma_create_glint <- function(f,
     geo <- prisma_get_geoloc(f, "1", "HCO")
 
     glint_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"]][,]
-    rast_glint <- raster::raster(glint_cube, crs = "+proj=longlat +datum=WGS84")
+    if (base_georef) {
+        rast_glint <- raster::raster(glint_cube, crs = "+proj=longlat +datum=WGS84")
+    } else {
+        rast_glint <- raster::raster(glint_cube)
+    }
     rast_glint <- raster::flip(rast_glint, 1)
     rast_glint[rast_glint == 255] <- NA
     rm(glint_cube)
@@ -28,7 +32,9 @@ prisma_create_glint <- function(f,
                      min(geo$lat), max(geo$lat)),
                    nrow = 2, ncol = 2, byrow = T)
     ex   <- raster::extent(ex)
-    rast_glint <- raster::setExtent(rast_glint, ex, keepres = FALSE)
+    if (base_georef) {
+        rast_glint <- raster::setExtent(rast_glint, ex, keepres = FALSE)
+    }
 
     message("- Writing GLINT raster -")
     rastwrite_lines(rast_glint, out_file_glint, out_format)

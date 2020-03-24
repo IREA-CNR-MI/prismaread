@@ -50,7 +50,6 @@ prisma_create_vnir <- function(f,
         if (wl_vnir[band_vnir] != 0) {
 
             if(proc_lev == "1") {
-
                 if (base_georef) {
                     band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
                                            crs = "+proj=longlat +datum=WGS84")
@@ -73,63 +72,64 @@ prisma_create_vnir <- function(f,
                     ex <- raster::extent(ex)
                 }
                 if (proc_lev %in% c("2B", "2C")) {
-
-                    band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
-                                           crs = "+proj=longlat +datum=WGS84")
+                    if (base_georef) {
+                        band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
+                                               crs = "+proj=longlat +datum=WGS84")
+                        ex <- matrix(c(min(geo$lon), max(geo$lon),
+                                       min(geo$lat), max(geo$lat)),
+                                     nrow = 2, ncol = 2, byrow = T)
+                        ex <- raster::extent(ex)
+                        ex <- ex + 30
+                    } else {
+                        band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]))
+                    }
                     band <- flip(band, 1)
-                    # ex <- matrix(c(xmin, xmax,  ymin, ymax), nrow = 2, ncol = 2, byrow = T)
-                    ex <- matrix(c(min(geo$lon), max(geo$lon),
-                                   min(geo$lat), max(geo$lat)),
-                                 nrow = 2, ncol = 2, byrow = T)
-                    ex <- raster::extent(ex)
-                    ex <- ex + 30
-
+                    }
                 }
-            }
 
-            if (base_georef) {
-                band <- raster::setExtent(band, ex, keepres <- F)
+                if (base_georef | proc_lev == "2D") {
+                    band <- raster::setExtent(band, ex, keepres <- F)
+                }
+                # res(band) <- c(30,30)
+                if (ind_vnir == 1) {
+                    rast_vnir <- band
+                } else {
+                    rast_vnir <- raster::stack(rast_vnir, band)
+                }
+                ind_vnir <- ind_vnir + 1
             }
-            # res(band) <- c(30,30)
-            if (ind_vnir == 1) {
-                rast_vnir <- band
-            } else {
-                rast_vnir <- raster::stack(rast_vnir, band)
-            }
-            ind_vnir <- ind_vnir + 1
         }
+        # res(rast_vnir) <- c(30,30)
+        wl_vnir   <- wl_vnir[wl_vnir != 0]
+        fwhm_vnir <- fwhm_vnir[fwhm_vnir != 0]
+        names(rast_vnir) <- paste0("wl_", round(wl_vnir, digits = 4))
+        rm(vnir_cube)
+        rm(band)
+        gc()
+
+
+        message("- Writing VNIR raster -")
+
+        rastwrite_lines(rast_vnir,
+                        out_file_vnir,
+                        out_format,
+                        proc_lev,
+                        scale_min = vnir_min,
+                        scale_max = vnir_max)
+        if (out_format == "ENVI") {
+
+            out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
+            write(c("wavelength = {",
+                    paste(round(wl_vnir, digits = 4), collapse = ","), "}"),
+                  out_hdr, append = TRUE)
+            write(c("fwhm = {",
+                    paste(round(fwhm_vnir, digits = 4), collapse = ","), "}"),
+                  out_hdr, append = TRUE)
+        }
+
+        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), "_meta.txt")
+        utils::write.table(data.frame(band = 1:length(wl_vnir),
+                                      wl   = wl_vnir,
+                                      fwhm = fwhm_vnir, stringsAsFactors = FALSE),
+                           file = out_file_txt, row.names = FALSE)
     }
-    # res(rast_vnir) <- c(30,30)
-    wl_vnir   <- wl_vnir[wl_vnir != 0]
-    fwhm_vnir <- fwhm_vnir[fwhm_vnir != 0]
-    names(rast_vnir) <- paste0("wl_", round(wl_vnir, digits = 4))
-    rm(vnir_cube)
-    rm(band)
-    gc()
-
-
-    message("- Writing VNIR raster -")
-
-    rastwrite_lines(rast_vnir,
-                    out_file_vnir,
-                    out_format,
-                    proc_lev,
-                    scale_min = vnir_min,
-                    scale_max = vnir_max)
-    if (out_format == "ENVI") {
-
-        out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
-        write(c("wavelength = {",
-                paste(round(wl_vnir, digits = 4), collapse = ","), "}"),
-              out_hdr, append = TRUE)
-        write(c("fwhm = {",
-                paste(round(fwhm_vnir, digits = 4), collapse = ","), "}"),
-              out_hdr, append = TRUE)
-    }
-
-    out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), "_meta.txt")
-    utils::write.table(data.frame(band = 1:length(wl_vnir),
-                                  wl   = wl_vnir,
-                                  fwhm = fwhm_vnir, stringsAsFactors = FALSE),
-                       file = out_file_txt, row.names = FALSE)
-}

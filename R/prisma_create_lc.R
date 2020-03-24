@@ -18,7 +18,11 @@ prisma_create_lc <- function(f,
     geo <- prisma_get_geoloc(f, "1", "HCO")
 
     lc_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"]][,]
-    rast_lc <- raster::raster(lc_cube, crs = "+proj=longlat +datum=WGS84")
+    if (base_georef) {
+        rast_lc <- raster::raster(lc_cube, crs = "+proj=longlat +datum=WGS84")
+    } else {
+        rast_lc <- raster::raster(lc_cube)
+    }
     rast_lc <- raster::flip(rast_lc, 1)
     rast_lc[rast_lc == 255] <- NA
     rm(lc_cube)
@@ -28,7 +32,9 @@ prisma_create_lc <- function(f,
                      min(geo$lat), max(geo$lat)),
                    nrow = 2, ncol = 2, byrow = T)
     ex   <- raster::extent(ex)
-    rast_lc <- raster::setExtent(rast_lc, ex, keepres = FALSE)
+    if (base_georef) {
+        rast_lc <- raster::setExtent(rast_lc, ex, keepres = FALSE)
+    }
 
     message("- Writing lc raster -")
     rastwrite_lines(rast_lc, out_file_lc, out_format)

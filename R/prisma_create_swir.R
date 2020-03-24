@@ -42,13 +42,17 @@ prisma_create_swir <- function(f,
     for (band_swir in 1:173) {
         if (wl_swir[band_swir] != 0) {
             if(proc_lev == "1") {
-                band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
-                                       crs = "+proj=longlat +datum=WGS84")
+                if (base_georef) {
+                    band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
+                                           crs = "+proj=longlat +datum=WGS84")
+                    ex <- matrix(c(min(geo$lon), max(geo$lon),
+                                   min(geo$lat), max(geo$lat)),
+                                 nrow = 2, ncol = 2, byrow = T)
+                    ex <- raster::extent(ex)
+                } else {
+                    band <- raster::raster((swir_cube[,order_swir[band_swir], ]))
+                }
                 band <- raster::flip(band, 1)
-                ex <- matrix(c(min(geo$lon), max(geo$lon),
-                               min(geo$lat), max(geo$lat)),
-                             nrow = 2, ncol = 2, byrow = T)
-                ex <- raster::extent(ex)
             } else {
 
                 if (proc_lev == "2D") {
@@ -63,16 +67,23 @@ prisma_create_swir <- function(f,
                 }
 
                 if (proc_lev %in% c("2B", "2C")) {
-                    band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
-                                           crs = "+proj=longlat +datum=WGS84")
+                    if (base_georef) {
+                        band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
+                                               crs = "+proj=longlat +datum=WGS84")
+                        ex <- matrix(c(min(geo$lon), max(geo$lon),
+                                       min(geo$lat), max(geo$lat)),
+                                     nrow = 2, ncol = 2, byrow = T)
+                        ex <- raster::extent(ex)
+                    } else {
+                        band <- raster::raster(swir_cube[,order_swir[band_swir], ])
+                    }
                     band <- raster::flip(band, 1)
-                    ex <- matrix(c(min(geo$lon), max(geo$lon),
-                                   min(geo$lat), max(geo$lat)),
-                                 nrow = 2, ncol = 2, byrow = T)
-                    ex <- raster::extent(ex)
+
                 }
             }
-            band <- raster::setExtent(band, ex, keepres = FALSE)
+            if (base_georef | proc_lev == "2D") {
+                band <- raster::setExtent(band, ex, keepres = FALSE)
+            }
 
             if (ind_band == 1) {
                 rast_swir <- band

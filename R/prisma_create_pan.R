@@ -52,15 +52,20 @@ prisma_create_pan <- function(f,
 
     if (proc_lev == "1") {
 
-        rast_pan <- raster::raster(pan_cube, crs = "+proj=longlat +datum=WGS84")
+        if (base_georef) {
+            rast_pan <- raster::raster(pan_cube, crs = "+proj=longlat +datum=WGS84")
+            ex   <- matrix(c(min(pan_lon), max(pan_lon),
+                             min(pan_lat), max(pan_lat)),
+                           nrow = 2, ncol = 2, byrow = T)
+            ex   <- raster::extent(ex)
+        } else {
+            rast_pan <- raster::raster(pan_cube)
+        }
         rast_pan <- raster::flip(rast_pan, 1)
 
-        ex   <- matrix(c(min(pan_lon), max(pan_lon),
-                         min(pan_lat), max(pan_lat)),
-                       nrow = 2, ncol = 2, byrow = T)
-        ex   <- raster::extent(ex)
     } else {
         if (proc_lev == "2D") {
+
             rast_pan <- raster::raster(pan_cube,
                                        crs = paste0("+proj=utm +zone=", proj_code,
                                                     " +datum=WGS84 +units=m +no_defs"))
@@ -72,23 +77,27 @@ prisma_create_pan <- function(f,
         }
         if (proc_lev %in% c("2B", "2C")) {
 
-            rast_pan <- raster::raster(pan_cube,
-                                       crs = "+proj=longlat +datum=WGS84")
+            if (base_georef) {
+                rast_pan <- raster::raster(pan_cube,
+                                           crs = "+proj=longlat +datum=WGS84")
+                ex   <- matrix(c(min(pan_lon), max(pan_lon),
+                                 min(pan_lat), max(pan_lat)),
+                               nrow = 2, ncol = 2, byrow = T)
+                ex <- raster::extent(ex)
+
+            } else {
+                rast_pan <- raster::raster(pan_cube)
+            }
             rast_pan <- raster::flip(rast_pan, 1)
-
-            ex   <- matrix(c(min(pan_lon), max(pan_lon),
-                             min(pan_lat), max(pan_lat)),
-                           nrow = 2, ncol = 2, byrow = T)
-            ex <- raster::extent(ex)
-
         }
     }
 
     rm(pan_cube)
     gc()
 
-
-    rast_pan <- raster::setExtent(rast_pan, ex, keepres = FALSE)
+    if (base_georef | proc_lev == "2D") {
+        rast_pan <- raster::setExtent(rast_pan, ex, keepres = FALSE)
+    }
 
     message("- Writing PAN raster -")
 

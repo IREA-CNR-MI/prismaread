@@ -200,6 +200,7 @@ convert_prisma <- function(in_file,
                          source,
                          out_file_swir,
                          out_format,
+                         base_georef,
                          wl_swir,
                          order_swir,
                          fwhm_swir,
@@ -292,7 +293,8 @@ convert_prisma <- function(in_file,
                         proc_lev,
                         source,
                         out_file_pan,
-                        out_format)
+                        out_format,
+                        base_georef)
 
     }
   }
@@ -313,7 +315,8 @@ convert_prisma <- function(in_file,
       if (CLOUD) {
         prisma_create_cld(f,
                           out_file_cld,
-                          out_format)
+                          out_format,
+                          base_georef)
 
       }
     }
@@ -330,7 +333,8 @@ convert_prisma <- function(in_file,
       if (GLINT) {
         prisma_create_glint(f,
                             out_file_glnt,
-                            out_format)
+                            out_format,
+                            base_georef)
       }
     }
     # Save LC if requested ----
@@ -346,7 +350,8 @@ convert_prisma <- function(in_file,
       } else {
         prisma_create_lc(f,
                          out_file_lc,
-                         out_format)
+                         out_format,
+                         base_georef)
       }
     }
   }
