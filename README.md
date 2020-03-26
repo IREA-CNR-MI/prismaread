@@ -9,11 +9,17 @@
 status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![DOI](https://zenodo.org/badge/211091818.svg)](https://zenodo.org/badge/latestdoi/211091818)
 <!-- badges: end -->
 
-The goal of prismaread is allowing to easily import PRISMA hyperspectral
-data (<http://www.prisma-i.it/index.php/it/>) and convert them to a
-easier to use format (ENVI or GeoTiff).
+The goal of `prismaread` is allowing to easily import PRISMA
+hyperspectral data (<http://www.prisma-i.it/index.php/it/>) and convert
+them to a easier to use format (ENVI or GeoTiff).
+
+*`prismaread` is developed and maintained by Lorenzo Busetto and Luigi
+Ranghetti, [Institute of Remote Sensing of
+Environment](http://www.irea.cnr.it/en/) - National Research Council -
+Italy (CNR-IREA)*
 
 # Installation
 
@@ -164,6 +170,20 @@ Only differences are:
   - Test possibility to more properly georeference L1/L2B/L2C data using
     the curvilinear grids functionality in package `stars`
 
-  - Implement possibility to apply masks base on the ERR\_MATRIX cubes
+  - Implement possibility to apply masks based on the ERR\_MATRIX cubes
 
   - Clean up code
+
+## Citation
+
+To cite `prismaread` please use:
+
+L. Busetto (2020) prismaread: An R package for imporing PRISMA L1/L2
+hyperspectral data and convert them to a more user friendly format, URL:
+<https://github.com/lbusett/prismaread>, doi:
+<https://doi.org/10.5281/zenodo.3727671>
+
+## Website
+
+For more information, documentation and examples of use, **see also the
+prismaread website at <https://github.com/lbusett/prismaread/>**

@@ -1,0 +1,16 @@
+citHeader("To cite prismaread in publications use:")
+
+citEntry(
+  entry    = "Misc",
+  title    = "prismaread: An R package for imporing PRISMA L1/L2 hyperspectral data and convert them to a more user friendly format",
+  author   = "Lorenzo Busetto",
+  year     = 2020,
+  url      = "https://github.com/lbusett/prismaread",
+  doi      = "https://doi.org/10.5281/zenodo.3727671",
+  textVersion = paste("L. Busetto (2020)",
+      "prismaread: An R package for imporing PRISMA L1/L2 hyperspectral data and convert them to a more user friendly format",
+      "URL: https://github.com/lbusett/prismaread",
+      "doi: https://doi.org/10.5281/zenodo.3727671"
+      )
+
+)
