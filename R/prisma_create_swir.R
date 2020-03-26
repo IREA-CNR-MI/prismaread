@@ -1,13 +1,15 @@
 #' @title prisma_create_swir
-#' @description FUNCTION_DESCRIPTION
+#' @description helper function used to process and save the SWIR data cube
+#' @param f input data he5 from caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param out_file_swir output file name for SWIR
 #' @param wl_swir passed by caller - array of PRISMA SWIR wavelengths
-#' @param order_swir passed by caller - ordering of array of PRISMA VNIR wavelengths
-#' @param fwhm_swir passed by caller - array of PRISMA VNIR fwhms
+#' @param order_swir passed by caller - ordering of array of PRISMA SWIR wavelengths
+#' @param fwhm_swir passed by caller - array of PRISMA SWIR fwhms
 #' @inheritParams convert_prisma
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @return the function is called for its side effects
 #' @importFrom hdf5r h5attr
-#' @importFrom raster raster flip extent setExtent stack
+#' @importFrom raster raster extent flip t setExtent stack
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table
 #'
@@ -29,8 +31,8 @@ prisma_create_swir <- function(f,
     if (proc_lev == "1") {
         swir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source,
                                "/Data Fields/SWIR_Cube")]][,,]
-        swir_scale  <- ""
-        swir_offset <- ""
+        swir_scale  <- hdf5r::h5attr(f, "ScaleFactor_Swir")
+        swir_offset <- hdf5r::h5attr(f, "Offset_Swir")
     } else {
         swir_max <- hdf5r::h5attr(f, "L2ScaleSwirMax")
         swir_min <- hdf5r::h5attr(f, "L2ScaleSwirMin")
@@ -52,6 +54,7 @@ prisma_create_swir <- function(f,
                 } else {
                     band <- raster::raster((swir_cube[,order_swir[band_swir], ]))
                 }
+                band <- (band / swir_scale) - swir_offset
                 band <- raster::flip(band, 1)
             } else {
 
@@ -59,7 +62,7 @@ prisma_create_swir <- function(f,
                     band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
                                            crs = paste0("+proj=utm +zone=", geo$proj_code,
                                                         " +datum=WGS84 +units=m +no_defs"))
-                    band <- t(band)
+                    band <- raster::t(band)
                     ex <- matrix(c(geo$xmin, geo$xmax,
                                    geo$ymin, geo$ymax),
                                  nrow = 2, ncol = 2, byrow = T)

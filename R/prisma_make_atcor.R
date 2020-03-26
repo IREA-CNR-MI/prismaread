@@ -5,8 +5,9 @@
 #' @param fwhms passed by caller - array of PRISMA fwhms
 #' @param order_vnir passed by caller - ordering of array of PRISMA VNIR wavelengths
 #' @param order_swir passed by caller - ordering of array of PRISMA SWIR wavelengths
-#' @return `list` containing required info according to `proc_lev`
+#' @param f input data he5 from caller
 #' @inheritParams convert_prisma
+#' @return `list` containing required info according to `proc_lev`
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table
 #' @importFrom hdf5r existsGroup h5attr

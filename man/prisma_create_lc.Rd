@@ -2,12 +2,19 @@
 % Please edit documentation in R/prisma_create_lc.R
 \name{prisma_create_lc}
 \alias{prisma_create_lc}
-\title{prisma_create_lc}
+\title{prisma_create_glint}
 \usage{
 prisma_create_lc(f, out_file_lc, out_format, base_georef)
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{out_file_lc}{output file name for glint}
+
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
+
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
 }
 \value{
 The function is called for its side effects

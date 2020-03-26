@@ -32,6 +32,9 @@ convert_prisma(
 
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
 
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
+
 \item{VNIR}{`logical` if TRUE, create the VNIR image, Default: TRUE}
 
 \item{SWIR}{`logical` if TRUE, create the SWIR image, Default: TRUE}
@@ -61,6 +64,10 @@ columns 200 and 800 are saved.)}
 
 \item{GLINT}{`logical` if TRUE, also save the GLINT mask data, default: TRUE}
 
+\item{ERR_MATRIX}{Not yet implemented!}
+
+\item{apply_errmatrix}{Not yet implemented!}
+
 \item{overwrite}{`logical` if TRUE, existing files are overwritten, default: FALSE}
 }
 \value{
@@ -76,8 +83,18 @@ Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
  out_file <- "/home/lb/tmp/test/test_1"
  out_format <- "ENVI"
 
+ # Save VNIR Cube image
+ convert_prisma(in_file       = in_file,
+                out_file      = out_file,
+                out_format    = out_format,
+                VNIR          = TRUE,
+                SWiR          = TRUE,
+                FULL          = FALSE,
+                overwrite     = TRUE
+                )
 
- # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
+ # Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format
+ # Also save Cloud and LC data
  convert_prisma(in_file       = in_file,
                 out_file      = out_file,
                 out_format    = out_format,

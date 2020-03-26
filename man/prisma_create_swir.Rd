@@ -19,22 +19,32 @@ prisma_create_swir(
 )
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
+
 \item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+
+\item{out_file_swir}{output file name for SWIR}
 
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
 
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
+
 \item{wl_swir}{passed by caller - array of PRISMA SWIR wavelengths}
 
-\item{order_swir}{passed by caller - ordering of array of PRISMA VNIR wavelengths}
+\item{order_swir}{passed by caller - ordering of array of PRISMA SWIR wavelengths}
 
-\item{fwhm_swir}{passed by caller - array of PRISMA VNIR fwhms}
+\item{fwhm_swir}{passed by caller - array of PRISMA SWIR fwhms}
+
+\item{apply_errmatrix}{Not yet implemented!}
+
+\item{ERR_MATRIX}{Not yet implemented!}
 }
 \value{
-OUTPUT_DESCRIPTION
+the function is called for its side effects
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
+helper function used to process and save the SWIR data cube
 }

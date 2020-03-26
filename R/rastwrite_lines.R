@@ -4,6 +4,9 @@
 #' @param out_file `character` full path of output image
 #' @param out_format `character` [\"TIF\" | \"ENVI\"], Default: 'tif'
 #' @param proc_lev `character` [\"1\" | \"2D\"], Default: '1'
+#' @param scale_min `numeric` coefficients use to compute values from DN on L2 products
+#' @param scale_max `numeric`  coefficients use to compute values from DN on L2 products
+#' @param join `logical` flag used to indicate if we are saving the "joined" VNIR+SWIR cube
 #' @return the function is called for its side effects
 #' @details DETAILS
 #' @rdname rastwrite_lines
@@ -26,7 +29,7 @@ rastwrite_lines <- function(rast_in,
     bs <-  raster::blockSize(out)
 
     if (substring(proc_lev, 1,1) == "1") {
-        datatype = "INT2U"
+        datatype = "FLT4S"
     } else {
         datatype = "FLT4S"
     }

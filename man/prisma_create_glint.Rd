@@ -7,7 +7,14 @@
 prisma_create_glint(f, out_file_glint, out_format, base_georef)
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{out_file_glint}{output file name for glint}
+
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
+
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
 }
 \value{
 The function is called for its side effects

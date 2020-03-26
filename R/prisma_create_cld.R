@@ -1,12 +1,10 @@
 #' @title prisma_create_cld
-#' @description helper function used to process and save the VNIR data cube
+#' @description helper function used to process and save the CLOUD data cube
+#' @param f input data he5 from caller
+#' @param out_file_cld output file name for glint
 #' @inheritParams convert_prisma
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @importFrom hdf5r h5attr
-#' @importFrom raster raster flip extent setExtent stack
-#' @importFrom tools file_path_sans_ext
-#' @importFrom utils write.table
+#' @return The function is called for its side effects
+#' @importFrom raster raster flip extent setExtent
 #'
 prisma_create_cld <- function(f,
                               out_file_cld,

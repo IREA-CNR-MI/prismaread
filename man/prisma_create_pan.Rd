@@ -7,16 +7,22 @@
 prisma_create_pan(f, proc_lev, source, out_file_pan, out_format, base_georef)
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
+
 \item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
 
+\item{out_file_pan}{output file name for PAN}
+
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
+
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
 }
 \value{
-OUTPUT_DESCRIPTION
+The function is called for its side effects
 }
 \description{
-helper function used to process and save the VNIR data cube
-}
-\details{
-DETAILS
+helper function used to process and save the PAN data cube
 }

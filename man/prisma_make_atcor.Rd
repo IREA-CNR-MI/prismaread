@@ -16,6 +16,8 @@ prisma_make_atcor(
 )
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
 \item{out_file}{`character` full path of output  file}
 
 \item{ATCOR_wls}{NULL, or `numeric` If NULL the only ATCOR wvl file

@@ -15,27 +15,36 @@ prisma_create_vnir(
   order_vnir,
   fwhm_vnir,
   apply_errmatrix,
-  ERR_MATRIX,
-  proj_code
+  ERR_MATRIX
 )
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
+
 \item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+
+\item{out_file_vnir}{output file name for VNIR}
 
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
 
-\item{wl_vnir}{PARAM_DESCRIPTION}
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
 
-\item{order_vnir}{PARAM_DESCRIPTION}
+\item{wl_vnir}{passed by caller - array of PRISMA VNIR wavelengths}
 
-\item{fwhm_vnir}{PARAM_DESCRIPTION}
+\item{order_vnir}{passed by caller - ordering of array of PRISMA VNIR wavelengths}
+
+\item{fwhm_vnir}{passed by caller - array of PRISMA VNIR fwhms}
+
+\item{apply_errmatrix}{Not yet implemented!}
+
+\item{ERR_MATRIX}{Not yet implemented!}
 }
 \value{
-OUTPUT_DESCRIPTION
+the function is called for its side effects
 }
 \description{
 helper function used to process and save the VNIR data cube
-}
-\details{
-DETAILS
 }

@@ -1,12 +1,12 @@
 #' @title prisma_create_pan
-#' @description helper function used to process and save the VNIR data cube
+#' @description helper function used to process and save the PAN data cube
+#' @param f input data he5 from caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param out_file_pan output file name for PAN
 #' @inheritParams convert_prisma
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @return The function is called for its side effects
 #' @importFrom hdf5r h5attr
-#' @importFrom raster raster flip extent setExtent stack
-#' @importFrom tools file_path_sans_ext
-#' @importFrom utils write.table
+#' @importFrom raster raster extent flip setExtent t
 #'
 prisma_create_pan <- function(f,
                               proc_lev,
@@ -65,11 +65,10 @@ prisma_create_pan <- function(f,
 
     } else {
         if (proc_lev == "2D") {
-
             rast_pan <- raster::raster(pan_cube,
                                        crs = paste0("+proj=utm +zone=", proj_code,
                                                     " +datum=WGS84 +units=m +no_defs"))
-            rast_pan <- t(rast_pan)
+            rast_pan <- raster::t(rast_pan)
             ex <- matrix(c(geo$xmin, geo$xmax,
                            geo$ymin, geo$ymax),
                          nrow = 2, ncol = 2, byrow = T)

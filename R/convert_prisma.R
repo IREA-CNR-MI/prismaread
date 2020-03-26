@@ -4,6 +4,8 @@
 #' @param in_file `character` full path of input HDF5 file
 #' @param out_file `character` full path of output  file
 #' @param out_format `character`` ["TIF" | "ENVI"], Output format, Default: 'tif'
+#' @param base_georef `logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+#'  Default: FALSE
 #' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'
 #' @param VNIR `logical` if TRUE, create the VNIR image, Default: TRUE
 #' @param SWIR `logical` if TRUE, create the SWIR image, Default: TRUE
@@ -23,6 +25,8 @@
 #' @param GLINT `logical` if TRUE, also save the GLINT mask data, default: TRUE
 #' @param LC `logical` if TRUE, also save the land cover data, default: TRUE
 #' @param overwrite `logical` if TRUE, existing files are overwritten, default: FALSE
+#' @param ERR_MATRIX Not yet implemented!
+#' @param apply_errmatrix Not yet implemented!
 #' @return The function is called for its side effects
 #' @examples
 #' \dontrun{
@@ -30,8 +34,18 @@
 #'  out_file <- "/home/lb/tmp/test/test_1"
 #'  out_format <- "ENVI"
 #'
+#'  # Save VNIR Cube image
+#'  convert_prisma(in_file       = in_file,
+#'                 out_file      = out_file,
+#'                 out_format    = out_format,
+#'                 VNIR          = TRUE,
+#'                 SWiR          = TRUE,
+#'                 FULL          = FALSE,
+#'                 overwrite     = TRUE
+#'                 )
 #'
-#'  # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
+#'  # Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format
+#'  # Also save Cloud and LC data
 #'  convert_prisma(in_file       = in_file,
 #'                 out_file      = out_file,
 #'                 out_format    = out_format,
@@ -63,8 +77,8 @@
 #' @export
 #' @importFrom hdf5r H5File h5attr
 #' @importFrom tools file_path_sans_ext
-#' @importFrom raster stack raster t flip extent setExtent
 #' @importFrom utils write.table
+#' @importFrom raster stack
 #'
 convert_prisma <- function(in_file,
                            out_file,

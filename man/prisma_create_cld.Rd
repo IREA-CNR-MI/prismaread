@@ -7,14 +7,18 @@
 prisma_create_cld(f, out_file_cld, out_format, base_georef)
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{out_file_cld}{output file name for glint}
+
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
+
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+Default: FALSE}
 }
 \value{
-OUTPUT_DESCRIPTION
+The function is called for its side effects
 }
 \description{
-helper function used to process and save the VNIR data cube
-}
-\details{
-DETAILS
+helper function used to process and save the CLOUD data cube
 }

@@ -1,13 +1,15 @@
 #' @title prisma_create_vnir
 #' @description helper function used to process and save the VNIR data cube
-#' @param wl_vnir PARAM_DESCRIPTION
-#' @param order_vnir PARAM_DESCRIPTION
-#' @param fwhm_vnir PARAM_DESCRIPTION
+#' @param f input data he5 from caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param out_file_vnir output file name for VNIR
+#' @param wl_vnir passed by caller - array of PRISMA VNIR wavelengths
+#' @param order_vnir passed by caller - ordering of array of PRISMA VNIR wavelengths
+#' @param fwhm_vnir passed by caller - array of PRISMA VNIR fwhms
 #' @inheritParams convert_prisma
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @return the function is called for its side effects
 #' @importFrom hdf5r h5attr
-#' @importFrom raster raster flip extent setExtent stack
+#' @importFrom raster raster extent flip t setExtent stack
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table
 #'
@@ -21,16 +23,15 @@ prisma_create_vnir <- function(f,
                                order_vnir,
                                fwhm_vnir,
                                apply_errmatrix,
-                               ERR_MATRIX,
-                               proj_code){
+                               ERR_MATRIX){
 
     # Get geo info ----
     geo <- prisma_get_geoloc(f, proc_lev, source)
 
     if(proc_lev == 1) {
         vnir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source, "/Data Fields/VNIR_Cube")]][,,]
-        vnir_max <- NULL
-        vnir_min <- NULL
+        vnir_scale  <- hdf5r::h5attr(f, "ScaleFactor_Vnir")
+        vnir_offset <- hdf5r::h5attr(f, "Offset_Vnir")
         if (any(apply_errmatrix | ERR_MATRIX)) {
             err_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source,
                                   "/Data Fields/VNIR_PIXEL_SAT_ERR_MATRIX/")]]
@@ -59,6 +60,7 @@ prisma_create_vnir <- function(f,
                 } else {
                     band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]))
                 }
+                band <- (band / vnir_scale) - vnir_offset
                 band <- raster::flip(band, 1)
 
             } else {
@@ -66,7 +68,7 @@ prisma_create_vnir <- function(f,
                     band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
                                            crs = paste0("+proj=utm +zone=", geo$proj_code,
                                                         " +datum=WGS84 +units=m +no_defs"))
-                    band <- t(band)
+                    band <- raster::t(band)
                     ex <- matrix(c(geo$xmin, geo$xmax,  geo$ymin, geo$ymax),
                                  nrow = 2, ncol = 2, byrow = T)
                     ex <- raster::extent(ex)
@@ -88,7 +90,7 @@ prisma_create_vnir <- function(f,
                 }
 
                 if (base_georef | proc_lev == "2D") {
-                    band <- raster::setExtent(band, ex, keepres <- F)
+                    band <- raster::setExtent(band, ex, keepres <- FALSE)
                 }
                 # res(band) <- c(30,30)
                 if (ind_vnir == 1) {

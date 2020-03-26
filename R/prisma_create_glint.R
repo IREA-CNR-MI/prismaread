@@ -1,11 +1,10 @@
 #' @title prisma_create_glint
 #' @description helper function used to process and save the GLINT data cube
+#' @param f input data he5 from caller
+#' @param out_file_glint output file name for glint
 #' @inheritParams convert_prisma
 #' @return The function is called for its side effects
-#' @importFrom hdf5r h5attr
-#' @importFrom raster raster flip extent setExtent stack
-#' @importFrom tools file_path_sans_ext
-#' @importFrom utils write.table
+#' @importFrom raster raster flip extent setExtent
 #'
 prisma_create_glint <- function(f,
                                 out_file_glint,

@@ -7,6 +7,10 @@
 prisma_get_geoloc(f, proc_lev, source)
 }
 \arguments{
+\item{f}{input data he5 from caller}
+
+\item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
+
 \item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
 }
 \value{
@@ -14,5 +18,5 @@ prisma_get_geoloc(f, proc_lev, source)
 }
 \description{
 helper function used to get geolocation info
- from PRISMA data
+ from PRISMA data on VNIR and SWIR cubes
 }
