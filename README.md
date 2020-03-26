@@ -122,7 +122,7 @@ Only differences are:
     Otherwise, the same “ballpark” georeferencing as for L1 data is
     applied.
 
-### Output Format
+# Output Formats
 
   - Outputs are provided as rasters in **ENVI** or **GEOTIFF** format
     according to user’s choice.
@@ -133,6 +133,16 @@ Only differences are:
     "HCO"`, the output file for the VNIR cube will be
     `D:/myoutfolder/myoutfil_HCO_VNIR.envi` (or
     `D:/myoutfolder/myoutfil_HCO_VNIR.tif`).
+
+  - Measure units of the output hyperspectral data are as follows:
+    
+    | LEVEL |  Variable   |    Measure Units    |
+    | :---: | :---------: | :-----------------: |
+    |  L1   |  Radiance   | W / m^2 \* sr \* um |
+    |  L2B  |  Radiance   | W / m^2 \* sr \* um |
+    |  L2C  | Reflectance |  unitless (ratio)   |
+    |  L2D  | Reflectance |  unitless (ratio)   |
+    
 
   - If output format is “ENVI”, the wavelengths of the different bands
     for the hyperspectral cubes are properly written in the appropriate
@@ -148,3 +158,12 @@ Only differences are:
     file. For example, if output file is
     `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved
     in `D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+
+# Future Work
+
+  - Test possibility to more properly georeference L1/L2B/L2C data using
+    the curvilinear grids functionality in package `stars`
+
+  - Implement possibility to apply masks base on the ERR\_MATRIX cubes
+
+  - Clean up code

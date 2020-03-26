@@ -110,9 +110,9 @@ The function to be used is still `convert_prisma`, with similar syntax. Only dif
 not available in L2 files; 
 2. The "ATCOR" and "ATCOR_wls" arguments are ignored, because they are useless in this case; 
 3. The output imagery is properly georeferenced, __if level is 2D__. Otherwise, 
- the same "ballpark" georeferencing as for L1 data is applied.
+the same "ballpark" georeferencing as for L1 data is applied.
 
-### Output Format
+# Output Formats
 
 - Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice. 
 
@@ -120,15 +120,38 @@ not available in L2 files;
 adding appropriate suffixes. For example, if the user specified `out_file = "D:/myoutfolder/myoutfil"`, and `source = "HCO"`, the output file for the VNIR cube will be `D:/myoutfolder/myoutfil_HCO_VNIR.envi` (or
 `D:/myoutfolder/myoutfil_HCO_VNIR.tif`).
 
+- Measure units of the output hyperspectral data are as follows: 
+
+  ```{r echo=FALSE, message=FALSE, warning=FALSE}
+  my_tbl <- tibble::tribble(
+    ~LEVEL, ~Variable, ~"Measure Units",
+    "L1",   "Radiance", "W / m^2 * sr * um",
+    "L2B",  "Radiance", "W / m^2 * sr * um",
+    "L2C",  "Reflectance", "unitless (ratio)",
+    "L2D",  "Reflectance", "unitless (ratio)"
+  )
+  knitr::kable(my_tbl, digits = 3, row.names = FALSE, align = "c",
+              caption = NULL)
+  ```
+
+
 - If output format is "ENVI", the wavelengths of the different bands for the hyperspectral 
- cubes are properly written in the appropriate header (.hdr) file. 
- 
+cubes are properly written in the appropriate header (.hdr) file. 
+
 - Irrespective from output format, info about wavelengths and fwhms of the hyperspectral 
- cubes are saved in appropriate txt files. For example, if the output file is 
- `D:/myoutfolder/myoutfil_HCO_VNIR.envi`, info about the wavelengths is saved in 
- `D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+cubes are saved in appropriate txt files. For example, if the output file is 
+`D:/myoutfolder/myoutfil_HCO_VNIR.envi`, info about the wavelengths is saved in 
+`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
 
 - Info about acquisition date and angles is saved in a dedicated txt file. For example, if
- output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved in 
- `D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved in 
+`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
 
+# Future Work
+
+- Test possibility to more properly georeference L1/L2B/L2C data using the curvilinear
+grids functionality in package `stars`
+
+- Implement possibility to apply masks base on the ERR_MATRIX cubes
+
+- Clean up code

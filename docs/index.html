@@ -138,17 +138,58 @@ convert_prisma(in_file    = in_file,
 <li>The “ATCOR” and “ATCOR_wls” arguments are ignored, because they are useless in this case;</li>
 <li>The output imagery is properly georeferenced, <strong>if level is 2D</strong>. Otherwise, the same “ballpark” georeferencing as for L1 data is applied.</li>
 </ol>
-<div id="output-format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#output-format" class="anchor"></a>Output Format</h3>
+</div>
+<div id="output-formats" class="section level1">
+<h1 class="hasAnchor">
+<a href="#output-formats" class="anchor"></a>Output Formats</h1>
 <ul>
 <li><p>Outputs are provided as rasters in <strong>ENVI</strong> or <strong>GEOTIFF</strong> format according to user’s choice.</p></li>
 <li><p>Filenames are built starting from the output file name provided by the user, by adding appropriate suffixes. For example, if the user specified <code>out_file = "D:/myoutfolder/myoutfil"</code>, and <code>source = "HCO"</code>, the output file for the VNIR cube will be <code>D:/myoutfolder/myoutfil_HCO_VNIR.envi</code> (or <code>D:/myoutfolder/myoutfil_HCO_VNIR.tif</code>).</p></li>
+<li>
+<p>Measure units of the output hyperspectral data are as follows:</p>
+<table class="table">
+<thead><tr class="header">
+<th align="center">LEVEL</th>
+<th align="center">Variable</th>
+<th align="center">Measure Units</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="center">L1</td>
+<td align="center">Radiance</td>
+<td align="center">W / m^2 * sr * um</td>
+</tr>
+<tr class="even">
+<td align="center">L2B</td>
+<td align="center">Radiance</td>
+<td align="center">W / m^2 * sr * um</td>
+</tr>
+<tr class="odd">
+<td align="center">L2C</td>
+<td align="center">Reflectance</td>
+<td align="center">unitless (ratio)</td>
+</tr>
+<tr class="even">
+<td align="center">L2D</td>
+<td align="center">Reflectance</td>
+<td align="center">unitless (ratio)</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li><p>If output format is “ENVI”, the wavelengths of the different bands for the hyperspectral cubes are properly written in the appropriate header (.hdr) file.</p></li>
 <li><p>Irrespective from output format, info about wavelengths and fwhms of the hyperspectral cubes are saved in appropriate txt files. For example, if the output file is <code>D:/myoutfolder/myoutfil_HCO_VNIR.envi</code>, info about the wavelengths is saved in <code>D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt</code></p></li>
 <li><p>Info about acquisition date and angles is saved in a dedicated txt file. For example, if output file is <code>D:/myoutfolder/myoutfil_VNIR.envi</code>, info about the angles is saved in <code>D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt</code></p></li>
 </ul>
 </div>
+<div id="future-work" class="section level1">
+<h1 class="hasAnchor">
+<a href="#future-work" class="anchor"></a>Future Work</h1>
+<ul>
+<li><p>Test possibility to more properly georeference L1/L2B/L2C data using the curvilinear grids functionality in package <code>stars</code></p></li>
+<li><p>Implement possibility to apply masks base on the ERR_MATRIX cubes</p></li>
+<li><p>Clean up code</p></li>
+</ul>
 </div>
 
   </div>
