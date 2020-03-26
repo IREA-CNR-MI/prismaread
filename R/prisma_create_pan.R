@@ -19,6 +19,8 @@ prisma_create_pan <- function(f,
 
     message(" - Accessing PAN raster - ")
     if (proc_lev == "1") {
+        pan_scale  <- hdf5r::h5attr(f, "ScaleFactor_Pan")
+        pan_offset <- hdf5r::h5attr(f, "Offset_Pan")
         pan_cube <- f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")]][,]
         pan_lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
                                "/Geolocation Fields/Latitude")]][,])
@@ -41,8 +43,6 @@ prisma_create_pan <- function(f,
                         proj_name = proj_name)
         }
         if (proc_lev  %in% c("2B", "2C")) {
-
-
             pan_lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
                                    "/Geolocation Fields/Latitude")]][,])
             pan_lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
@@ -62,6 +62,7 @@ prisma_create_pan <- function(f,
             rast_pan <- raster::raster(pan_cube)
         }
         rast_pan <- raster::flip(rast_pan, 1)
+        rast_pan <- (rast_pan / pan_scale) - pan_offset
 
     } else {
         if (proc_lev == "2D") {
