@@ -1,5 +1,5 @@
 Package: prismaread
-Title: Allows import PRISMA L1/L2 hyperspectral data and convert them to 
+Title: Import PRISMA L1/L2 hyperspectral data and convert them to 
  a more user friendly format
 Version: 0.1.0
 Authors@R: 
