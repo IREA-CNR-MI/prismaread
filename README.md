@@ -15,7 +15,7 @@ The goal of prismaread is allowing to easily import PRISMA hyperspectral
 data (<http://www.prisma-i.it/index.php/it/>) and convert them to a
 easier to use format (ENVI or GeoTiff).
 
-## Installation
+# Installation
 
 You can install the development version from
 [GitHub](https://github.com/) with:
@@ -26,7 +26,7 @@ remotes::install_github("lbusett/prismaread")
 library(prismaread)
 ```
 
-## Work on Level 1 Data
+# Work on Level 1 Data
 
 The function to be used is `convert_prisma`. It takes as input the full
 path of a PRISMA hdf5 image, an output file name and format, and a
@@ -109,23 +109,23 @@ convert_prisma(in_file    = in_file,
 The latter functionality may be only appliable to “HRC” L1 data cubes.
 We are currently investigating this - proceed with caution\!
 
-## Work on Level 2 Data
+# Work on Level 2 Data
 
 The function to be used is still `convert_prisma`, with similar syntax.
 Only differences are:
 
 1.  The “PAN”, “CLOUD”, “LC” and “GLINT” arguments are ignored, because
-    they are not available in L2D files;
+    they are not available in L2 files;
 2.  The “ATCOR” and “ATCOR\_wls” arguments are ignored, because they are
     useless in this case;
-3.  The output imagery is properly georeferenced, in case level is 2D.
+3.  The output imagery is properly georeferenced, **if level is 2D**.
     Otherwise, the same “ballpark” georeferencing as for L1 data is
     applied.
 
 ### Output Format
 
-  - Outputs are provided as rasters in ENVI or GEOTIFF format according
-    to user’s choice.
+  - Outputs are provided as rasters in **ENVI** or **GEOTIFF** format
+    according to user’s choice.
 
   - Filenames are built starting from the output file name provided by
     the user, by adding appropriate suffixes. For example, if the user

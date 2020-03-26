@@ -69,23 +69,25 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div id="prismaread" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#prismaread" class="anchor"></a>prismaread</h1></div>
 <!-- badges: start -->
 
 <p>The goal of prismaread is allowing to easily import PRISMA hyperspectral data (<a href="http://www.prisma-i.it/index.php/it/" class="uri">http://www.prisma-i.it/index.php/it/</a>) and convert them to a easier to use format (ENVI or GeoTiff).</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+</div>
+<div id="installation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="r"># install.packages("remotes")
 remotes::install_github("lbusett/prismaread")
 library(prismaread)</pre></div>
 </div>
-<div id="work-on-level-1-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#work-on-level-1-data" class="anchor"></a>Work on Level 1 Data</h2>
+<div id="work-on-level-1-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#work-on-level-1-data" class="anchor"></a>Work on Level 1 Data</h1>
 <p>The function to be used is <code>convert_prisma</code>. It takes as input the full path of a PRISMA hdf5 image, an output file name and format, and a series of switches allowing to decide which datasets should be saved.</p>
 <p>In particular, the <code>FULL</code> argument allows deciding if a complete VNIR+SWIR cube has to be created alongside the “single” VNIR and SWIR ones. In that case, the ‘join_priority’ keyword is used to decide if keeping bands from the “VNIR” or the “SWIR” data cube in the wavelength were they overlap.</p>
 <p>A “ballpark” georeferencing is provided, but it is <strong>not</strong> to be trusted/used. (this may change in the near future)</p>
@@ -127,20 +129,20 @@ convert_prisma(in_file    = in_file,
 <p>The latter functionality may be only appliable to “HRC” L1 data cubes. We are currently investigating this - proceed with caution!</p>
 </div>
 </div>
-<div id="work-on-level-2-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#work-on-level-2-data" class="anchor"></a>Work on Level 2 Data</h2>
+<div id="work-on-level-2-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#work-on-level-2-data" class="anchor"></a>Work on Level 2 Data</h1>
 <p>The function to be used is still <code>convert_prisma</code>, with similar syntax. Only differences are:</p>
 <ol>
-<li>The “PAN”, “CLOUD”, “LC” and “GLINT” arguments are ignored, because they are not available in L2D files;</li>
+<li>The “PAN”, “CLOUD”, “LC” and “GLINT” arguments are ignored, because they are not available in L2 files;</li>
 <li>The “ATCOR” and “ATCOR_wls” arguments are ignored, because they are useless in this case;</li>
-<li>The output imagery is properly georeferenced, in case level is 2D. Otherwise, the same “ballpark” georeferencing as for L1 data is applied.</li>
+<li>The output imagery is properly georeferenced, <strong>if level is 2D</strong>. Otherwise, the same “ballpark” georeferencing as for L1 data is applied.</li>
 </ol>
 <div id="output-format" class="section level3">
 <h3 class="hasAnchor">
 <a href="#output-format" class="anchor"></a>Output Format</h3>
 <ul>
-<li><p>Outputs are provided as rasters in ENVI or GEOTIFF format according to user’s choice.</p></li>
+<li><p>Outputs are provided as rasters in <strong>ENVI</strong> or <strong>GEOTIFF</strong> format according to user’s choice.</p></li>
 <li><p>Filenames are built starting from the output file name provided by the user, by adding appropriate suffixes. For example, if the user specified <code>out_file = "D:/myoutfolder/myoutfil"</code>, and <code>source = "HCO"</code>, the output file for the VNIR cube will be <code>D:/myoutfolder/myoutfil_HCO_VNIR.envi</code> (or <code>D:/myoutfolder/myoutfil_HCO_VNIR.tif</code>).</p></li>
 <li><p>If output format is “ENVI”, the wavelengths of the different bands for the hyperspectral cubes are properly written in the appropriate header (.hdr) file.</p></li>
 <li><p>Irrespective from output format, info about wavelengths and fwhms of the hyperspectral cubes are saved in appropriate txt files. For example, if the output file is <code>D:/myoutfolder/myoutfil_HCO_VNIR.envi</code>, info about the wavelengths is saved in <code>D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt</code></p></li>
@@ -148,7 +150,7 @@ convert_prisma(in_file    = in_file,
 </ul>
 </div>
 </div>
-</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
