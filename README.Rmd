@@ -166,7 +166,7 @@ grids functionality in package `stars`
   
 To cite `prismaread` please use:
 
-L. Busetto (2020) prismaread: An R package for imporing PRISMA L1/L2 hyperspectral data and convert them to a more user friendly format, URL: https://github.com/lbusett/prismaread, doi: https://doi.org/10.5281/zenodo.3727671
+L. Busetto (2020) prismaread: An R package for imporing PRISMA L1/L2 hyperspectral data and convert them to a more user friendly format - v0.1.0, URL: https://github.com/lbusett/prismaread, doi: https://doi.org/10.5281/zenodo.3727671
 
 ## Website
 
