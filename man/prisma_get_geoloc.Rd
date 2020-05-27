@@ -4,7 +4,7 @@
 \alias{prisma_get_geoloc}
 \title{prisma_get_geoloc}
 \usage{
-prisma_get_geoloc(f, proc_lev, source)
+prisma_get_geoloc(f, proc_lev, source, wvl = NULL)
 }
 \arguments{
 \item{f}{input data he5 from caller}

@@ -5,8 +5,15 @@
 #' @param out_file `character` full path of output  file
 #' @param out_format `character`` ["TIF" | "ENVI"], Output format, Default: 'tif'
 #' @param base_georef `logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-#'  Default: FALSE
-#' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'
+#'  using the "Georeference from input GLT" procedure explained here:
+#'  https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+#'  Default: TRUE
+#' @param fill_gaps `logical` if TRUE, when georeferencing on L1, L2B/C data,
+#'  substitute missing values with results of a 3x3 focal filter on the georeferenced
+#'  data, Default: TRUE
+#' @param fix_geo `logical` if TRUE, apply a 90 metres correction to georeferencing
+#' info of l2D data, Default: TRUE
+#' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'
 #' @param VNIR `logical` if TRUE, create the VNIR image, Default: TRUE
 #' @param SWIR `logical` if TRUE, create the SWIR image, Default: TRUE
 #' @param FULL `logical` if TRUE, create a single multispectral image from
@@ -20,10 +27,12 @@
 #'  then one different wvl file is created for each selected COLUMN selected (e.g., if
 #'  providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
 #'  columns 200 and 800 are saved.)
-#' @param PAN   `logical` if TRUE, also save the PAN data, default: TRUE
-#' @param CLOUD `logical` if TRUE, also save the cloud mask data, default: TRUE
-#' @param GLINT `logical` if TRUE, also save the GLINT mask data, default: TRUE
-#' @param LC `logical` if TRUE, also save the land cover data, default: TRUE
+#' @param PAN   `logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)
+#' @param CLOUD `logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data)
+#' @param GLINT `logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
+#' @param LC `logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
+#' @param ANGLES if TRUE, also save the ACQUISITION ANGLES data, default: TRUE (Ignored for L2 data)
+#' @param LATLON if TRUE, also save the LATITUDA and LONGITUDE data, default: TRUE (Ignored for L2 data)
 #' @param overwrite `logical` if TRUE, existing files are overwritten, default: FALSE
 #' @param ERR_MATRIX Not yet implemented!
 #' @param apply_errmatrix Not yet implemented!
@@ -81,26 +90,41 @@
 #' @importFrom raster stack
 #'
 convert_prisma <- function(in_file,
-                           out_file,
+                           out_folder,
+                           out_filebase  = "auto",
                            out_format    = "ENVI",
-                           base_georef   = FALSE,
+                           base_georef   = TRUE,
+                           fill_gaps     = TRUE,
+                           fix_geo       = TRUE,
                            VNIR          = TRUE,
                            SWIR          = TRUE,
                            FULL          = FALSE,
                            source        = "HCO",
                            join_priority = "SWIR",
-                           ATCOR         = TRUE,
+                           ATCOR         = FALSE,
                            ATCOR_wls     = NULL,
                            PAN           = TRUE,
                            CLOUD         = FALSE,
                            LC            = FALSE,
                            GLINT         = FALSE,
+                           ANGLES        = FALSE,
+                           LATLON        = FALSE,
                            ERR_MATRIX    = FALSE,
                            apply_errmatrix = FALSE,
                            overwrite     = FALSE) {
 
   # Open the file ----
-  f <- hdf5r::H5File$new(in_file, mode="r+")
+  #
+  if (!file.exists(in_file)) {
+    stop("Selected input file does not exist. Verify your inputs. Aborting!")
+  }
+
+  f <- try(hdf5r::H5File$new(in_file, mode="r+"))
+
+  if (inherits(f, "try-error")){
+    stop("Unable to open the input file as a hdf5 file. Verify your inputs. Aborting!")
+  }
+
   proc_lev <- hdf5r::h5attr(f, "Processing_Level")
 
   if (proc_lev != "1") {
@@ -110,10 +134,15 @@ convert_prisma <- function(in_file,
     }
   }
 
-
-  if (inherits(f, "try-error")) {
-    stop("in_file does not appear to be a valid hdf5 dataset")
+  if (!is.character(out_filebase)) {
+    stop("out_filebase must be a string. Verify your inputs. Aborting!")
   }
+
+  if (out_filebase == "auto") {
+    out_filebase <- tools::file_path_sans_ext(basename(in_file))
+  }
+
+  out_file <- file.path(out_folder, out_filebase)
 
   if (!dir.exists(dirname(out_file))) {
     if (dir.exists(dirname(dirname(out_file)))) {
@@ -143,7 +172,7 @@ convert_prisma <- function(in_file,
 
   # write ATCOR files if needed ----
   if (ATCOR == TRUE && proc_lev == "1") {
-    prisma_make_atcor(f, out_file, ATCOR_wls, wls, fwhms, order_vnir, order_swir, join_priority)
+    prisma_make_atcor(f, out_file, ATCOR_wls, wls, fwhms, order_vnir, order_swir, join_priority, source)
   }
 
   # get geolocation info ----
@@ -168,7 +197,7 @@ convert_prisma <- function(in_file,
                           paste0(out_file_vnir, ".tif"),
                           paste0(out_file_vnir, ".envi"))
 
-  if (VNIR) {
+  if (VNIR | FULL) {
     message("- Importing VNIR Cube -")
     if (file.exists(out_file_vnir) & !overwrite) {
       message("VNIR file already exists - use overwrite = TRUE or change output file name to reprocess")
@@ -180,6 +209,8 @@ convert_prisma <- function(in_file,
                          out_file_vnir,
                          out_format,
                          base_georef,
+                         fill_gaps,
+                         fix_geo,
                          wl_vnir,
                          order_vnir,
                          fwhm_vnir,
@@ -202,7 +233,7 @@ convert_prisma <- function(in_file,
                           paste0(out_file_swir, ".tif"),
                           paste0(out_file_swir, ".envi"))
 
-  if (SWIR) {
+  if (SWIR | FULL) {
     if (file.exists(out_file_swir) & !overwrite) {
       message("SWIR file already exists - use overwrite = TRUE or change output file name to reprocess")
       rast_swir <- raster::stack(out_file_swir)
@@ -215,13 +246,13 @@ convert_prisma <- function(in_file,
                          out_file_swir,
                          out_format,
                          base_georef,
+                         fill_gaps,
+                         fix_geo,
                          wl_swir,
                          order_swir,
                          fwhm_swir,
                          apply_errmatrix,
                          ERR_MATRIX)
-
-
     }
   }
 
@@ -242,6 +273,7 @@ convert_prisma <- function(in_file,
       message("FULL file already exists - use overwrite = TRUE or change output file name to reprocess")
     } else {
       message("- Creating FULL raster -")
+
       # Save hyperspectral cube
       if (file.exists(out_file_vnir) && file.exists(out_file_swir)) {
         rast_vnir <- raster::stack(out_file_vnir)
@@ -268,9 +300,6 @@ convert_prisma <- function(in_file,
 
         if (out_format == "ENVI") {
           out_hdr <- paste0(tools::file_path_sans_ext(out_file_full), ".hdr")
-
-          # writeLines(c("wavelength units = DOY"), fileConn_meta_hdr)
-          # Wavelengths == DOY from 01/01/2000
           write(c("wavelength = {",
                   paste(round(wl_tot, digits = 4), collapse = ","), "}"),
                 out_hdr, append = TRUE)
@@ -278,7 +307,7 @@ convert_prisma <- function(in_file,
                   paste(round(fwhm_tot, digits = 4), collapse = ","), "}"),
                 out_hdr, append = TRUE)
         }
-        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), "_meta.txt")
+        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), "_wavelengths.txt")
         utils::write.table(data.frame(band = 1:length(wl_tot),
                                       wl   = wl_tot,
                                       fwhm = fwhm_tot, stringsAsFactors = FALSE),
@@ -287,7 +316,7 @@ convert_prisma <- function(in_file,
         rm(rast_tot)
         gc()
       } else {
-        warning("Unable to create FULL data cube becaue VNIR or SWIR cubes were not created!")
+        warning("Unable to create FULL data cube because VNIR or SWIR cubes were not created!")
       }
     }
 
@@ -308,10 +337,59 @@ convert_prisma <- function(in_file,
                         source,
                         out_file_pan,
                         out_format,
-                        base_georef)
+                        base_georef,
+                        fill_gaps,
+                        fix_geo)
 
     }
   }
+
+  # Save LATLON if requested ----
+  out_file_latlon<- paste0(tools::file_path_sans_ext(out_file), "_", source,
+                           "_ANG")
+  out_file_latlon <- ifelse(out_format == "TIF",
+                            paste0(out_file_latlon, ".tif"),
+                            paste0(out_file_latlon, ".envi"))
+
+  if (file.exists(out_file_latlon) & !overwrite) {
+    message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
+  } else {
+    if (LATLON) {
+      prisma_create_latlon(f,
+                           proc_lev,
+                           out_file_latlon,
+                           out_format,
+                           base_georef,
+                           fill_gaps,
+                           fix_geo)
+
+    }
+  }
+
+  if (proc_lev %in% c("2B", "2C", "2D")) {
+    # Save ANGLES if requested ----
+    out_file_ang<- paste0(tools::file_path_sans_ext(out_file), "_", source,
+                          "_ANG")
+    out_file_ang <- ifelse(out_format == "TIF",
+                           paste0(out_file_ang, ".tif"),
+                           paste0(out_file_ang, ".envi"))
+
+    if (file.exists(out_file_ang) & !overwrite) {
+      message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
+    } else {
+      if (ANGLES) {
+        prisma_create_angles(f,
+                             proc_lev,
+                             out_file_ang,
+                             out_format,
+                             base_georef,
+                             fill_gaps,
+                             fix_geo)
+
+      }
+    }
+  }
+
 
   if (proc_lev == 1) {
 
@@ -327,10 +405,13 @@ convert_prisma <- function(in_file,
       message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
     } else {
       if (CLOUD) {
-        prisma_create_cld(f,
-                          out_file_cld,
-                          out_format,
-                          base_georef)
+        prisma_create_additional(f,
+                                 type = "CLD",
+                                 out_file_cld,
+                                 out_format,
+                                 base_georef,
+                                 fill_gaps,
+                                 fix_geo)
 
       }
     }
@@ -345,10 +426,13 @@ convert_prisma <- function(in_file,
       message("GLINT file already exists - use overwrite = TRUE or change output file name to reprocess")
     } else {
       if (GLINT) {
-        prisma_create_glint(f,
-                            out_file_glnt,
-                            out_format,
-                            base_georef)
+        prisma_create_additional(f,
+                                 type = "GLNT",
+                                 out_file_glnt,
+                                 out_format,
+                                 base_georef,
+                                 fill_gaps,
+                                 fix_geo)
       }
     }
     # Save LC if requested ----
@@ -362,10 +446,13 @@ convert_prisma <- function(in_file,
       if (file.exists(out_file_lc) & !overwrite) {
         message("LC file already exists - use overwrite = TRUE or change output file name to reprocess")
       } else {
-        prisma_create_lc(f,
-                         out_file_lc,
-                         out_format,
-                         base_georef)
+        prisma_create_additional(f,
+                                 type = "LC",
+                                 out_file_lc,
+                                 out_format,
+                                 base_georef,
+                                 fill_gaps,
+                                 fix_geo)
       }
     }
   }

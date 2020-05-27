@@ -11,7 +11,7 @@ prisma_create_glint <- function(f,
                                 out_format,
                                 base_georef){
 
-    message(" - Accessing GLINT raster - ")
+    message(" - Accessing GLINT dataset - ")
 
     # Get geo info ----
     geo <- prisma_get_geoloc(f, "1", "HCO")

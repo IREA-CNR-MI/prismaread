@@ -13,12 +13,14 @@ prisma_create_pan <- function(f,
                               source,
                               out_file_pan,
                               out_format,
-                              base_georef){
+                              base_georef,
+                              fill_gaps,
+                              fix_geo){
 
     # Get geo info ----
 
-    message(" - Accessing PAN raster - ")
-    if (proc_lev == "1") {
+    message(" - Accessing PAN dataset - ")
+    if (proc_lev %in% c("1")) {
         pan_scale  <- hdf5r::h5attr(f, "ScaleFactor_Pan")
         pan_offset <- hdf5r::h5attr(f, "Offset_Pan")
         pan_cube <- f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")]][,]
@@ -26,6 +28,7 @@ prisma_create_pan <- function(f,
                                "/Geolocation Fields/Latitude")]][,])
         pan_lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
                                "/Geolocation Fields/Longitude")]][,])
+
     } else {
         pan_cube  <- f[[paste0("//HDFEOS/SWATHS/PRS_L", proc_lev, "_PCO/Data Fields/Cube")]][,]
         panscale_min <- hdf5r::h5attr(f, "L2ScalePanMin")
@@ -50,20 +53,18 @@ prisma_create_pan <- function(f,
         }
     }
 
-    if (proc_lev == "1") {
+    if (proc_lev %in% c("1", "2B", "2C")) {
 
         if (base_georef) {
             rast_pan <- raster::raster(pan_cube, crs = "+proj=longlat +datum=WGS84")
-            ex   <- matrix(c(min(pan_lon), max(pan_lon),
-                             min(pan_lat), max(pan_lat)),
-                           nrow = 2, ncol = 2, byrow = T)
-            ex   <- raster::extent(ex)
+            if (proc_lev == "1") {
+                rast_pan <- (rast_pan / pan_scale) - pan_offset
+            }
+            band <- prisma_basegeo(rast_pan, pan_lon, pan_lat, fill_gaps)
         } else {
             rast_pan <- raster::raster(pan_cube)
+            rast_pan <- raster::flip(rast_pan, 1)
         }
-        rast_pan <- raster::flip(rast_pan, 1)
-        rast_pan <- (rast_pan / pan_scale) - pan_offset
-
     } else {
         if (proc_lev == "2D") {
             rast_pan <- raster::raster(pan_cube,
@@ -74,30 +75,16 @@ prisma_create_pan <- function(f,
                            geo$ymin, geo$ymax),
                          nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
-        }
-        if (proc_lev %in% c("2B", "2C")) {
-
-            if (base_georef) {
-                rast_pan <- raster::raster(pan_cube,
-                                           crs = "+proj=longlat +datum=WGS84")
-                ex   <- matrix(c(min(pan_lon), max(pan_lon),
-                                 min(pan_lat), max(pan_lat)),
-                               nrow = 2, ncol = 2, byrow = T)
-                ex <- raster::extent(ex)
-
-            } else {
-                rast_pan <- raster::raster(pan_cube)
+            if (fix_geo) {
+                ex <- ex - 90
             }
-            rast_pan <- raster::flip(rast_pan, 1)
+            rast_pan <- raster::setExtent(rast_pan, ex, keepres = FALSE)
         }
     }
 
     rm(pan_cube)
     gc()
 
-    if (base_georef | proc_lev == "2D") {
-        rast_pan <- raster::setExtent(rast_pan, ex, keepres = FALSE)
-    }
 
     message("- Writing PAN raster -")
 

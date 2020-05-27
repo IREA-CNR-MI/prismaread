@@ -19,6 +19,8 @@ prisma_create_swir <- function(f,
                                out_file_swir,
                                out_format,
                                base_georef,
+                               fill_gaps,
+                               fix_geo,
                                wl_swir,
                                order_swir,
                                fwhm_swir,
@@ -26,38 +28,44 @@ prisma_create_swir <- function(f,
                                ERR_MATRIX){
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, proc_lev, source)
+    geo <- prisma_get_geoloc(f, proc_lev, source, wvl = "SWIR")
 
+    # Get the datacube and required attributes frim hdr ----
     if (proc_lev == "1") {
         swir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source,
                                "/Data Fields/SWIR_Cube")]][,,]
         swir_scale  <- hdf5r::h5attr(f, "ScaleFactor_Swir")
         swir_offset <- hdf5r::h5attr(f, "Offset_Swir")
     } else {
-        swir_max <- hdf5r::h5attr(f, "L2ScaleSwirMax")
-        swir_min <- hdf5r::h5attr(f, "L2ScaleSwirMin")
+        swir_max  <- hdf5r::h5attr(f, "L2ScaleSwirMax")
+        swir_min  <- hdf5r::h5attr(f, "L2ScaleSwirMin")
         swir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L", proc_lev,"_",
                                source, "/Data Fields/SWIR_Cube")]][,,]
     }
 
+    # Get the different bands in order of wvl, and convert to `raster` bands ----
+    # Also georeference if needed
     ind_band <- 1
+
     for (band_swir in 1:173) {
+        message("Importing Band: ", band_swir, " of: 173")
         if (wl_swir[band_swir] != 0) {
-            if(proc_lev == "1") {
+            if (proc_lev %in% c("1", "2B", "2C")) {
                 if (base_georef) {
                     band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
                                            crs = "+proj=longlat +datum=WGS84")
-                    ex <- matrix(c(min(geo$lon), max(geo$lon),
-                                   min(geo$lat), max(geo$lat)),
-                                 nrow = 2, ncol = 2, byrow = T)
-                    ex <- raster::extent(ex)
+                    lat  <- geo$lat
+                    lon  <- geo$lon
+                    if (proc_lev == "1") {
+                        band <- (band / swir_scale) - swir_offset
+                    }
+                    band <- prisma_basegeo(band, lon, lat, fill_gaps)
                 } else {
                     band <- raster::raster((swir_cube[,order_swir[band_swir], ]))
+                    band <- raster::flip(band, 1)
                 }
-                band <- (band / swir_scale) - swir_offset
-                band <- raster::flip(band, 1)
-            } else {
 
+            } else {
                 if (proc_lev == "2D") {
                     band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
                                            crs = paste0("+proj=utm +zone=", geo$proj_code,
@@ -67,27 +75,13 @@ prisma_create_swir <- function(f,
                                    geo$ymin, geo$ymax),
                                  nrow = 2, ncol = 2, byrow = T)
                     ex <- raster::extent(ex)
-                }
-
-                if (proc_lev %in% c("2B", "2C")) {
-                    if (base_georef) {
-                        band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
-                                               crs = "+proj=longlat +datum=WGS84")
-                        ex <- matrix(c(min(geo$lon), max(geo$lon),
-                                       min(geo$lat), max(geo$lat)),
-                                     nrow = 2, ncol = 2, byrow = T)
-                        ex <- raster::extent(ex)
-                    } else {
-                        band <- raster::raster(swir_cube[,order_swir[band_swir], ])
+                    if (fix_geo) {
+                        ex <- ex - 90
                     }
-                    band <- raster::flip(band, 1)
-
+                    band <- raster::setExtent(band, ex, keepres = FALSE)
                 }
             }
-            if (base_georef | proc_lev == "2D") {
-                band <- raster::setExtent(band, ex, keepres = FALSE)
-            }
-
+            # Add band to stack ----
             if (ind_band == 1) {
                 rast_swir <- band
             } else {
@@ -97,6 +91,7 @@ prisma_create_swir <- function(f,
         }
     }
 
+    # Write the cube ----
     wl_swir   <- wl_swir[wl_swir != 0]
     fwhm_swir <- fwhm_swir[fwhm_swir != 0]
     names(rast_swir) <- paste0("wl_", round(wl_swir, digits = 4))

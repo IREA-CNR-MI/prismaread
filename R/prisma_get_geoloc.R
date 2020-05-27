@@ -6,11 +6,16 @@
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
 #' @inheritParams convert_prisma
 #' @importFrom hdf5r h5attr
-prisma_get_geoloc <- function(f, proc_lev, source) {
+prisma_get_geoloc <- function(f, proc_lev, source, wvl = NULL) {
 
     if (proc_lev == "1") {
-        lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Latitude_SWIR")]][,])
-        lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Longitude_SWIR")]][,])
+        if (is.null(wvl) | wvl == "VNIR") {
+            lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Latitude_VNIR")]][,])
+            lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Longitude_VNIR")]][,])
+        } else {
+            lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Latitude_SWIR")]][,])
+            lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", source, "/Geolocation Fields/Longitude_SWIR")]][,])
+        }
         out <- list(lat = lat, lon = lon)
         return(out)
     } else {
@@ -26,56 +31,24 @@ prisma_get_geoloc <- function(f, proc_lev, source) {
                          hdf5r::h5attr(f, "Product_LRcorner_northing"))
             ymax  <- max(hdf5r::h5attr(f, "Product_ULcorner_northing"),
                          hdf5r::h5attr(f, "Product_URcorner_northing"))
+            lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", source, "/Geolocation Fields/Latitude")]][,])
+            lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", source, "/Geolocation Fields/Longitude")]][,])
 
-            # convert to 32632
-            # ll_pt <- sf::st_sf(p = "LL",
-            #                    geometry =  sf::st_sfc(sf::st_point(c(xmin, ymin))),
-            #                    crs = 4326)
-            # ur_pt <- sf::st_sf(p = "UR",
-            #                    geometry =  sf::st_sfc(sf::st_point(c(xmax, ymax))),
-            #                    crs = 4326)
-
-            # ll_pt <- sf::st_transform(ll_pt, 32632)
-            # ur_pt <- sf::st_transform(ur_pt, 32632)
-            # ymax  <- hdf5r::h5attr(f, "Product_ULcorner_northing"),
-            #            hdf5r::h5attr(f, "Product_URcorner_northing"))
-            # out <- list(xmin = sf::st_coordinates(ll_pt)[1],
-            #             xmax = sf::st_coordinates(ur_pt)[1],
-            #             ymin = sf::st_coordinates(ll_pt)[2],
-            #             ymax = sf::st_coordinates(ur_pt)[2],
-            #             proj_code = proj_code,
-            #             proj_name = proj_name)
             out <- list(xmin = xmin,
                         xmax = xmax,
                         ymin = ymin,
                         ymax = ymax,
                         proj_code = proj_code,
-                        proj_name = proj_name)
+                        proj_name = proj_name,
+                        lat = lat,
+                        lon = lon)
             return(out)
         }
 
         if (proc_lev  %in% c("2B", "2C")) {
-            xmin  <- min(c(hdf5r::h5attr(f, "Product_LLcorner_long"),
-                           hdf5r::h5attr(f, "Product_ULcorner_long"),
-                           hdf5r::h5attr(f, "Product_URcorner_long"),
-                           hdf5r::h5attr(f, "Product_LRcorner_long")))
-            xmax  <- max(c(hdf5r::h5attr(f, "Product_LLcorner_long"),
-                           hdf5r::h5attr(f, "Product_ULcorner_long"),
-                           hdf5r::h5attr(f, "Product_URcorner_long"),
-                           hdf5r::h5attr(f, "Product_LRcorner_long")))
-            ymin  <- min(c(hdf5r::h5attr(f, "Product_LLcorner_lat"),
-                           hdf5r::h5attr(f, "Product_ULcorner_lat"),
-                           hdf5r::h5attr(f, "Product_URcorner_lat"),
-                           hdf5r::h5attr(f, "Product_LRcorner_lat")))
-            ymax  <- max(c(hdf5r::h5attr(f, "Product_LLcorner_lat"),
-                           hdf5r::h5attr(f, "Product_ULcorner_lat"),
-                           hdf5r::h5attr(f, "Product_URcorner_lat"),
-                           hdf5r::h5attr(f, "Product_LRcorner_lat")))
             lat <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", source, "/Geolocation Fields/Latitude")]][,])
             lon <- t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", source, "/Geolocation Fields/Longitude")]][,])
-            out <- list(lat = lat, lon = lon,
-                        xmin = xmin, xmax = xmax,
-                        ymin = ymin, ymax = ymax)
+            out <- list(lat = lat, lon = lon)
             return(out)
         }
     }

@@ -16,7 +16,7 @@ prisma_create_lc <- function(f,
     # Get geo info ----
     geo <- prisma_get_geoloc(f, "1", "HCO")
 
-    lc_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"]][,]
+    lc_cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/LandCover_Mask"]][,]
     if (base_georef) {
         rast_lc <- raster::raster(lc_cube, crs = "+proj=longlat +datum=WGS84")
     } else {

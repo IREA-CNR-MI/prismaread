@@ -14,7 +14,7 @@ convert_prisma(
   FULL = FALSE,
   source = "HCO",
   join_priority = "SWIR",
-  ATCOR = TRUE,
+  ATCOR = FALSE,
   ATCOR_wls = NULL,
   PAN = TRUE,
   CLOUD = FALSE,

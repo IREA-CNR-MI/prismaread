@@ -12,7 +12,8 @@ prisma_make_atcor(
   fwhms,
   order_vnir,
   order_swir,
-  join_priority
+  join_priority,
+  source
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ columns 200 and 800 are saved.)}
 \item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
 the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
 Default: "VNIR"}
+
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
 }
 \value{
 `list` containing required info according to `proc_lev`
