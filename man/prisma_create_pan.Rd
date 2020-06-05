@@ -4,21 +4,44 @@
 \alias{prisma_create_pan}
 \title{prisma_create_pan}
 \usage{
-prisma_create_pan(f, proc_lev, source, out_file_pan, out_format, base_georef)
+prisma_create_pan(
+  f,
+  proc_lev,
+  source,
+  out_file_pan,
+  out_format,
+  base_georef,
+  fill_gaps,
+  fix_geo,
+  in_L2_file = NULL
+)
 }
 \arguments{
 \item{f}{input data he5 from caller}
 
 \item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
 
 \item{out_file_pan}{output file name for PAN}
 
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
 
 \item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-Default: FALSE}
+using the "Georeference from input GLT" procedure explained here:
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+Default: TRUE}
+
+\item{fill_gaps}{`logical` if TRUE, when georeferencing on L1, L2B/C data,
+substitute missing values with results of a 3x3 focal filter on the georeferenced
+data, Default: TRUE}
+
+\item{fix_geo}{`logical` if TRUE, apply a 90 metres correction to georeferencing
+info of l2D data, Default: TRUE}
+
+\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
 }
 \value{
 The function is called for its side effects

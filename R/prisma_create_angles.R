@@ -2,6 +2,7 @@
 #' @description helper function used to process and save the ANGLES datasets
 #' @param f input data he5 from caller
 #' @param out_file output file name for glint
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
 #' @inheritParams convert_prisma
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
@@ -12,13 +13,20 @@ prisma_create_angles <- function(f,
                                  out_format,
                                  base_georef,
                                  fill_gaps,
-                                 fix_geo){
+                                 fix_geo,
+                                 in_L2_file = NULL){
 
-    message(" - Accessing ", type, " dataset - ")
-    browser()
+    message(" - Accessing ANGLES dataset - ")
+
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, proc_lev, "HCO", "VNIR")
-
+    geo <- prisma_get_geoloc(f, proc_lev, "HCO", "VNIR", in_L2_file)
+    if (!is.null(in_L2_file)) {
+        f <- try(hdf5r::H5File$new(in_L2_file, mode="r+"))
+        proc_lev <- hdf5r::h5attr(f, "Processing_Level")
+        if (inherits(f, "try-error")){
+            stop("Unable to open the input accessory L2 file as a hdf5 file. Verify your inputs. Aborting!")
+        }
+    }
 
     if (proc_lev != "2D") {
         rast_obsang    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,

@@ -2,7 +2,11 @@
 #' @description Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
 #'  format
 #' @param in_file `character` full path of input HDF5 file
-#' @param out_file `character` full path of output  file
+#' @param out_folder `character` full path to output folder
+#' @param out_filebase `character` if "auto", output file names are based on
+#'  filename of the input prisma file, with appropriate suffixes. If a different
+#'  string is provided, it is used as prefix instead of the input file name,
+#'  Default: "auto"
 #' @param out_format `character`` ["TIF" | "ENVI"], Output format, Default: 'tif'
 #' @param base_georef `logical` if TRUE, apply base georeferencing on L1, L2B/C data,
 #'  using the "Georeference from input GLT" procedure explained here:
@@ -12,7 +16,7 @@
 #'  substitute missing values with results of a 3x3 focal filter on the georeferenced
 #'  data, Default: TRUE
 #' @param fix_geo `logical` if TRUE, apply a 90 metres correction to georeferencing
-#' info of l2D data, Default: TRUE
+#' info of l2D data, Default: FALSE
 #' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'
 #' @param VNIR `logical` if TRUE, create the VNIR image, Default: TRUE
 #' @param SWIR `logical` if TRUE, create the SWIR image, Default: TRUE
@@ -31,21 +35,31 @@
 #' @param CLOUD `logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data)
 #' @param GLINT `logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
 #' @param LC `logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
-#' @param ANGLES if TRUE, also save the ACQUISITION ANGLES data, default: TRUE (Ignored for L2 data)
-#' @param LATLON if TRUE, also save the LATITUDA and LONGITUDE data, default: TRUE (Ignored for L2 data)
+#' @param ANGLES if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
+#'  a 3-band raster. Band 1 contains "obs_ang", Band 2 contains "relaz_ang" and
+#'  Band 3 contains "solzen_ang"), default: FALSE
+#' @param LATLON if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
+#'  a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE
 #' @param overwrite `logical` if TRUE, existing files are overwritten, default: FALSE
 #' @param ERR_MATRIX Not yet implemented!
 #' @param apply_errmatrix Not yet implemented!
+#' @param in_L2_file `character` full path of an L2 file to be used to extract better georeeferencing
+#'  info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+#'  fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file
+#' @param selbands_vnir `numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+#'  the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL
+#' @param selbands_swir `numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+#'  the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL
 #' @return The function is called for its side effects
 #' @examples
 #' \dontrun{
-#'  in_file  <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-#'  out_file <- "/home/lb/tmp/test/test_1"
+#'  in_file    <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+#'  out_folder <- "/home/lb/tmp/test/"
 #'  out_format <- "ENVI"
 #'
 #'  # Save VNIR Cube image
 #'  convert_prisma(in_file       = in_file,
-#'                 out_file      = out_file,
+#'                 out_folder    = out_folder,
 #'                 out_format    = out_format,
 #'                 VNIR          = TRUE,
 #'                 SWiR          = TRUE,
@@ -54,9 +68,10 @@
 #'                 )
 #'
 #'  # Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format
-#'  # Also save Cloud and LC data
+#'  # Also save Cloud and LC data. Also, use a custom prefix for output files
 #'  convert_prisma(in_file       = in_file,
-#'                 out_file      = out_file,
+#'                 out_folder    = out_folder,
+#'                 out_filebase  = "prismaout_2020_05-14",
 #'                 out_format    = out_format,
 #'                 FULL          = TRUE,
 #'                 join_priority = "VNIR",
@@ -65,16 +80,15 @@
 #'                 overwrite     = TRUE
 #'                 )
 #'
-#'  # Save a full image, prioritizing the SWIR spectrometer and save in ENVI format,
-#'  # Also create ATCOR files, with Nominal wavelengths, and those for columns
-#'  # 200 and 800 of the cube
+#'  # Save a full image, prioritizing the SWIR spectrometer and save in TIF format,
+#'  # Also create ATCOR files, with Nominal wavelengths
+#'
 #'  convert_prisma(in_file       = in_file,
-#'                 out_file      = out_file,
-#'                 out_format    = out_format,
+#'                 out_folder    = out_folder,
+#'                 out_format    = "TIF",
 #'                 FULL          = TRUE,
 #'                 join_priority = "VNIR",
 #'                 ATCOR         = TRUE,
-#'                 ATCOR_wls     = c(200,800),
 #'                 LC            = TRUE,
 #'                 CLOUD         = TRUE,
 #'                 overwrite     = TRUE
@@ -111,7 +125,10 @@ convert_prisma <- function(in_file,
                            LATLON        = FALSE,
                            ERR_MATRIX    = FALSE,
                            apply_errmatrix = FALSE,
-                           overwrite     = FALSE) {
+                           overwrite     = FALSE,
+                           in_L2_file    = NULL,
+                           selbands_vnir = NULL,
+                           selbands_swir = NULL) {
 
   # Open the file ----
   #
@@ -172,7 +189,15 @@ convert_prisma <- function(in_file,
 
   # write ATCOR files if needed ----
   if (ATCOR == TRUE && proc_lev == "1") {
-    prisma_make_atcor(f, out_file, ATCOR_wls, wls, fwhms, order_vnir, order_swir, join_priority, source)
+    prisma_make_atcor(f,
+                      out_file,
+                      ATCOR_wls,
+                      wls,
+                      fwhms,
+                      order_vnir,
+                      order_swir,
+                      join_priority,
+                      source)
   }
 
   # get geolocation info ----
@@ -203,6 +228,7 @@ convert_prisma <- function(in_file,
       message("VNIR file already exists - use overwrite = TRUE or change output file name to reprocess")
       rast_vnir <- raster::stack(out_file_vnir)
     } else {
+
       prisma_create_vnir(f,
                          proc_lev,
                          source,
@@ -215,7 +241,9 @@ convert_prisma <- function(in_file,
                          order_vnir,
                          fwhm_vnir,
                          apply_errmatrix,
-                         ERR_MATRIX)
+                         ERR_MATRIX,
+                         selbands_vnir = selbands_vnir,
+                         in_L2_file = in_L2_file)
     }
   }
 
@@ -252,7 +280,9 @@ convert_prisma <- function(in_file,
                          order_swir,
                          fwhm_swir,
                          apply_errmatrix,
-                         ERR_MATRIX)
+                         ERR_MATRIX,
+                         selbands_swir = selbands_swir,
+                         in_L2_file = in_L2_file)
     }
   }
 
@@ -260,6 +290,18 @@ convert_prisma <- function(in_file,
   # errors on creation of FULL if recycling an existing cube from file
   fwhm_swir <- fwhm_swir[wl_swir != 0]
   wl_swir   <- wl_swir[wl_swir != 0]
+
+  if (!is.null(selbands_vnir)){
+    seqbands_vnir <- unlist(lapply(selbands_vnir, FUN = function(x) which.min(abs(wl_vnir - x))))
+    wl_vnir   <- wl_vnir[seqbands_vnir]
+    fwhm_vnir <- fwhm_vnir[seqbands_vnir]
+  }
+
+  if (!is.null(selbands_swir)){
+    seqbands_swir <- unlist(lapply(selbands_swir, FUN = function(x) which.min(abs(wl_swir - x))))
+    wl_swir   <- wl_swir[seqbands_swir]
+    fwhm_swir <- fwhm_swir[seqbands_swir]
+  }
 
   # create FULL data cube and convert to raster ----
   out_file_full <- paste0(tools::file_path_sans_ext(out_file), "_", source,
@@ -339,14 +381,15 @@ convert_prisma <- function(in_file,
                         out_format,
                         base_georef,
                         fill_gaps,
-                        fix_geo)
+                        fix_geo,
+                        in_L2_file = in_L2_file)
 
     }
   }
 
   # Save LATLON if requested ----
   out_file_latlon<- paste0(tools::file_path_sans_ext(out_file), "_", source,
-                           "_ANG")
+                           "_LATLON")
   out_file_latlon <- ifelse(out_format == "TIF",
                             paste0(out_file_latlon, ".tif"),
                             paste0(out_file_latlon, ".envi"))
@@ -361,12 +404,13 @@ convert_prisma <- function(in_file,
                            out_format,
                            base_georef,
                            fill_gaps,
-                           fix_geo)
+                           fix_geo,
+                           in_L2_file = in_L2_file)
 
     }
   }
 
-  if (proc_lev %in% c("2B", "2C", "2D")) {
+  if (proc_lev %in% c("2B", "2C", "2D") | (proc_lev == "1" & !is.null(in_L2_file))) {
     # Save ANGLES if requested ----
     out_file_ang<- paste0(tools::file_path_sans_ext(out_file), "_", source,
                           "_ANG")
@@ -375,7 +419,7 @@ convert_prisma <- function(in_file,
                            paste0(out_file_ang, ".envi"))
 
     if (file.exists(out_file_ang) & !overwrite) {
-      message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
+      message("ANG file already exists - use overwrite = TRUE or change output file name to reprocess")
     } else {
       if (ANGLES) {
         prisma_create_angles(f,
@@ -384,7 +428,8 @@ convert_prisma <- function(in_file,
                              out_format,
                              base_georef,
                              fill_gaps,
-                             fix_geo)
+                             fix_geo,
+                             in_L2_file = in_L2_file)
 
       }
     }
@@ -392,7 +437,6 @@ convert_prisma <- function(in_file,
 
 
   if (proc_lev == 1) {
-
 
     # Save CLD if requested ----
     out_file_cld <- paste0(tools::file_path_sans_ext(out_file), "_", source,

@@ -13,12 +13,12 @@ prisma_create_additional <- function(f,
                                      out_format,
                                      base_georef,
                                      fill_gaps,
-                                     fix_geo){
+                                     in_L2_file = NULL){
 
     message(" - Accessing ", type, " dataset - ")
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, "1", "HCO", "VNIR")
+    geo <- prisma_get_geoloc(f, "1", "HCO", "VNIR", in_L2_file)
 
     if (type == "CLD") {
         cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"]][,]
@@ -32,6 +32,7 @@ prisma_create_additional <- function(f,
 
     rast <- raster::raster(cube)
     if (base_georef) {
+        message("Applying bowtie georeferencing")
         rast <- prisma_basegeo(rast, geo$lon, geo$lat, fill_gaps)
     } else {
         rast <- raster::flip(rast, 1)

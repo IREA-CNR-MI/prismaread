@@ -8,6 +8,13 @@
 
 <title>prisma_create_swir — prisma_create_swir • prismaread</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -41,6 +48,7 @@
 
 <meta property="og:title" content="prisma_create_swir — prisma_create_swir" />
 <meta property="og:description" content="helper function used to process and save the SWIR data cube" />
+<meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
 
@@ -72,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -86,6 +94,27 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
+    </li>
+    <li>
+      <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
+    </li>
+    <li>
+      <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
+    </li>
+    <li>
+      <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -127,11 +156,15 @@
   <span class='no'>out_file_swir</span>,
   <span class='no'>out_format</span>,
   <span class='no'>base_georef</span>,
+  <span class='no'>fill_gaps</span>,
+  <span class='no'>fix_geo</span>,
   <span class='no'>wl_swir</span>,
   <span class='no'>order_swir</span>,
   <span class='no'>fwhm_swir</span>,
   <span class='no'>apply_errmatrix</span>,
-  <span class='no'>ERR_MATRIX</span>
+  <span class='no'>ERR_MATRIX</span>,
+  <span class='kw'>selbands_swir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>in_L2_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -147,7 +180,7 @@
     </tr>
     <tr>
       <th>source</th>
-      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'</p></td>
+      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
     </tr>
     <tr>
       <th>out_file_swir</th>
@@ -160,7 +193,20 @@
     <tr>
       <th>base_georef</th>
       <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-Default: FALSE</p></td>
+using the "Georeference from input GLT" procedure explained here:
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>fill_gaps</th>
+      <td><p>`logical` if TRUE, when georeferencing on L1, L2B/C data,
+substitute missing values with results of a 3x3 focal filter on the georeferenced
+data, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>fix_geo</th>
+      <td><p>`logical` if TRUE, apply a 90 metres correction to georeferencing
+info of l2D data, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>wl_swir</th>
@@ -181,6 +227,17 @@ Default: FALSE</p></td>
     <tr>
       <th>ERR_MATRIX</th>
       <td><p>Not yet implemented!</p></td>
+    </tr>
+    <tr>
+      <th>selbands_swir</th>
+      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>in_L2_file</th>
+      <td><p>`character` full path of an L2 file to be used to extract better georeeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file</p></td>
     </tr>
     </table>
 
@@ -203,7 +260,7 @@ Default: FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

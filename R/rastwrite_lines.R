@@ -33,6 +33,7 @@ rastwrite_lines <- function(rast_in,
     } else {
         datatype = "FLT4S"
     }
+
     out <- raster::writeStart(out,
                               filename = out_file,
                               overwrite = TRUE,

@@ -6,9 +6,12 @@
 \usage{
 convert_prisma(
   in_file,
-  out_file,
+  out_folder,
+  out_filebase = "auto",
   out_format = "ENVI",
-  base_georef = FALSE,
+  base_georef = TRUE,
+  fill_gaps = TRUE,
+  fix_geo = TRUE,
   VNIR = TRUE,
   SWIR = TRUE,
   FULL = FALSE,
@@ -20,20 +23,39 @@ convert_prisma(
   CLOUD = FALSE,
   LC = FALSE,
   GLINT = FALSE,
+  ANGLES = FALSE,
+  LATLON = FALSE,
   ERR_MATRIX = FALSE,
   apply_errmatrix = FALSE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  in_L2_file = NULL,
+  selbands_vnir = NULL,
+  selbands_swir = NULL
 )
 }
 \arguments{
 \item{in_file}{`character` full path of input HDF5 file}
 
-\item{out_file}{`character` full path of output  file}
+\item{out_folder}{`character` full path to output folder}
+
+\item{out_filebase}{`character` if "auto", output file names are based on
+filename of the input prisma file, with appropriate suffixes. If a different
+string is provided, it is used as prefix instead of the input file name,
+Default: "auto"}
 
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
 
 \item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-Default: FALSE}
+using the "Georeference from input GLT" procedure explained here:
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+Default: TRUE}
+
+\item{fill_gaps}{`logical` if TRUE, when georeferencing on L1, L2B/C data,
+substitute missing values with results of a 3x3 focal filter on the georeferenced
+data, Default: TRUE}
+
+\item{fix_geo}{`logical` if TRUE, apply a 90 metres correction to georeferencing
+info of l2D data, Default: TRUE}
 
 \item{VNIR}{`logical` if TRUE, create the VNIR image, Default: TRUE}
 
@@ -42,7 +64,7 @@ Default: FALSE}
 \item{FULL}{`logical` if TRUE, create a single multispectral image from
 VNIR and SWIR, Default: FALSE}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
 
 \item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
 the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
@@ -56,19 +78,36 @@ then one different wvl file is created for each selected COLUMN selected (e.g., 
 providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
 columns 200 and 800 are saved.)}
 
-\item{PAN}{`logical` if TRUE, also save the PAN data, default: TRUE}
+\item{PAN}{`logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)}
 
-\item{CLOUD}{`logical` if TRUE, also save the cloud mask data, default: TRUE}
+\item{CLOUD}{`logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data)}
 
-\item{LC}{`logical` if TRUE, also save the land cover data, default: TRUE}
+\item{LC}{`logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)}
 
-\item{GLINT}{`logical` if TRUE, also save the GLINT mask data, default: TRUE}
+\item{GLINT}{`logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)}
+
+\item{ANGLES}{if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
+a 3-band raster. Band 1 contains "obs_ang", Band 2 contains "relaz_ang" and
+Band 3 contains "solzen_ang"), default: FALSE}
+
+\item{LATLON}{if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
+a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE}
 
 \item{ERR_MATRIX}{Not yet implemented!}
 
 \item{apply_errmatrix}{Not yet implemented!}
 
 \item{overwrite}{`logical` if TRUE, existing files are overwritten, default: FALSE}
+
+\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
+
+\item{selbands_vnir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
+
+\item{selbands_swir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
 }
 \value{
 The function is called for its side effects
@@ -79,13 +118,13 @@ Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
 }
 \examples{
 \dontrun{
- in_file  <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
- out_file <- "/home/lb/tmp/test/test_1"
+ in_file    <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+ out_folder <- "/home/lb/tmp/test/"
  out_format <- "ENVI"
 
  # Save VNIR Cube image
  convert_prisma(in_file       = in_file,
-                out_file      = out_file,
+                out_folder    = out_folder,
                 out_format    = out_format,
                 VNIR          = TRUE,
                 SWiR          = TRUE,
@@ -94,9 +133,10 @@ Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
                 )
 
  # Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format
- # Also save Cloud and LC data
+ # Also save Cloud and LC data. Also, use a custom prefix for output files
  convert_prisma(in_file       = in_file,
-                out_file      = out_file,
+                out_folder    = out_folder,
+                out_filebase  = "prismaout_2020_05-14",
                 out_format    = out_format,
                 FULL          = TRUE,
                 join_priority = "VNIR",
@@ -105,16 +145,15 @@ Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
                 overwrite     = TRUE
                 )
 
- # Save a full image, prioritizing the SWIR spectrometer and save in ENVI format,
- # Also create ATCOR files, with Nominal wavelengths, and those for columns
- # 200 and 800 of the cube
+ # Save a full image, prioritizing the SWIR spectrometer and save in TIF format,
+ # Also create ATCOR files, with Nominal wavelengths
+
  convert_prisma(in_file       = in_file,
-                out_file      = out_file,
-                out_format    = out_format,
+                out_folder    = out_folder,
+                out_format    = "TIF",
                 FULL          = TRUE,
                 join_priority = "VNIR",
                 ATCOR         = TRUE,
-                ATCOR_wls     = c(200,800),
                 LC            = TRUE,
                 CLOUD         = TRUE,
                 overwrite     = TRUE

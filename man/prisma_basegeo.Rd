@@ -2,34 +2,35 @@
 % Please edit documentation in R/prisma_basegeo.R
 \name{prisma_basegeo}
 \alias{prisma_basegeo}
-\title{FUNCTION_TITLE}
+\title{prisma_basegeo}
 \usage{
 prisma_basegeo(band, lon, lat, fill_gaps = TRUE)
 }
 \arguments{
-\item{band}{PARAM_DESCRIPTION}
+\item{band}{`Raster` layer to be georefewrenced}
 
-\item{lon}{PARAM_DESCRIPTION}
+\item{lon}{`Matrix` containing the longitudes of each pixel (as derived from the
+geolocation fields datasets of the hdf5)}
 
-\item{lat}{PARAM_DESCRIPTION}
+\item{lat}{`Matrix` containing the latitudes of each pixel (as derived from the
+geolocation fields datasets of the hdf5)}
 
-\item{fill_gaps}{PARAM_DESCRIPTION, Default: TRUE}
+\item{fill_gaps}{`logical` If TRUE, pixels with no values in the georeferenced image are
+filled based on a 3x3 average focal filter of the neighbouring valid pixels, Default: TRUE}
 }
 \value{
-OUTPUT_DESCRIPTION
+`Raster` georeferenced dataset
 }
 \description{
-FUNCTION_DESCRIPTION
+Function used to create a georeferenced raster from L1/L2B/L2C datasets,
+ based on the Latitude and Longitude data, and exploiting the procedure described in
+ https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html
 }
 \details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+The function is based on the "GLT and Bowtie Correction" technique used in ENVI, and
+described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
+Note that the 7x7 interpolation step for pixels still missing aftere the 3x3 interpolation is not (yet)
+implemnted, as well as the nearest neighbour interpolation.
 }
 \seealso{
 \code{\link[raster]{getValues}}

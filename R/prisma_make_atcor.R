@@ -1,4 +1,4 @@
-#' @title prisma_get_geoloc
+#' @title prisma_make_atcor
 #' @description helper function used to create accessory files needed for ATCOR
 #'  atmospheric correction
 #' @param wls passed by caller - array of PRISMA wavelengths
@@ -6,7 +6,7 @@
 #' @param order_vnir passed by caller - ordering of array of PRISMA VNIR wavelengths
 #' @param order_swir passed by caller - ordering of array of PRISMA SWIR wavelengths
 #' @param f input data he5 from caller
-#'
+#' @param out_file main prismaread output file name - passed by caller
 #' @inheritParams convert_prisma
 #' @return `list` containing required info according to `proc_lev`
 #' @importFrom tools file_path_sans_ext

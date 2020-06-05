@@ -17,7 +17,8 @@
 #' @seealso
 #'  \code{\link[raster]{getValues}}
 #' @rdname prisma_basegeo
-#' @importFrom raster values
+#' @importFrom raster values raster focal
+#' @importFrom stats median
 prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
 
     # https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html
@@ -26,8 +27,9 @@ prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
     # from the GLT.
     numlines <- dim(lon)[1]
     numcols  <- dim(lat)[1]
-    psize_x  <- abs(median(diff(lon[, round(numcols / 2) ], lag = 1)))
-    psize_y  <- abs(median(diff(lat[round(numlines / 2), ], lag = 1)))
+
+    psize_x  <- abs(stats::median(diff(lon[, round(numcols / 2) ], lag = 1)))
+    psize_y  <- abs(stats::median(diff(lat[round(numlines / 2), ], lag = 1)))
 
     # Compute the size of the grid, using the following IDL notation.
     # The CEIL function returns the closest integer greater than or equal to
@@ -49,15 +51,21 @@ prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
     columns <- round((lon - minlon) / psize_x)
     rows    <- nrows - round((lat - minlat) / psize_y)
 
+    # columns <- round((lon - minlon) / psize_x) + 1
+    # rows    <- nrows - round((lat - minlat) / psize_y) - 1
+    # columns[columns > ncols] <- 0
+    # rows[rows > nrows] <- 0
+
     for (indpix in 1:(numlines*numcols)) {
         out_grd[rows[indpix], columns[indpix]] <- vals[indpix]
     }
 
-    outrast <- raster(out_grd, xmn = min(lon, na.rm = TRUE), xmx = max(lon, na.rm = TRUE),
-                      ymn = min(lat, na.rm = TRUE), ymx = max(lat, na.rm = TRUE),
+    outrast <- raster::raster(out_grd, xmn = min(lon, na.rm = TRUE), xmx = min(lon, na.rm = TRUE) + ncols*psize_x,
+                      ymn = max(lat, na.rm = TRUE) - nrows*psize_y, ymx = max(lat, na.rm = TRUE),
                       crs = "+init=epsg:4326")
 
     if (fill_gaps) {
+        message("Filling Gaps")
         outrast <- raster::focal(outrast, w=matrix(1,3,3), fun=mean, na.rm = TRUE, NAonly = TRUE)
     }
 

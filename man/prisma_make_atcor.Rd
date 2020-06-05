@@ -2,7 +2,7 @@
 % Please edit documentation in R/prisma_make_atcor.R
 \name{prisma_make_atcor}
 \alias{prisma_make_atcor}
-\title{prisma_get_geoloc}
+\title{prisma_make_atcor}
 \usage{
 prisma_make_atcor(
   f,
@@ -19,7 +19,7 @@ prisma_make_atcor(
 \arguments{
 \item{f}{input data he5 from caller}
 
-\item{out_file}{`character` full path of output  file}
+\item{out_file}{main prismaread output file name - passed by caller}
 
 \item{ATCOR_wls}{NULL, or `numeric` If NULL the only ATCOR wvl file
 created is the one containing Nominal wavelengths. If a numeric vector is provided,
@@ -39,7 +39,7 @@ columns 200 and 800 are saved.)}
 the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
 Default: "VNIR"}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
 }
 \value{
 `list` containing required info according to `proc_lev`
