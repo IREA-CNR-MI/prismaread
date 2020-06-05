@@ -150,7 +150,7 @@ prisma_create_vnir <- function(f,
 
 
     if (out_format == "ENVI") {
-        browser()
+        # browser()
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
         write(c("wavelength = {",
                 paste(round(wl_sub, digits = 4), collapse = ","), "}"),
