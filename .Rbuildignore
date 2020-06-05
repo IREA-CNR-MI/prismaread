@@ -8,3 +8,4 @@
 ^\.travis\.yml$
 ^README\.Rmd$
 ^WIP$
+^vignettes/articles$

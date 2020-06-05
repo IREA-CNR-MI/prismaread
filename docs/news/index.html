@@ -8,6 +8,13 @@
 
 <title>Changelog • prismaread</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -40,6 +47,7 @@
 
 
 <meta property="og:title" content="Changelog" />
+<meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
 
@@ -71,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -85,6 +93,27 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
+    </li>
+    <li>
+      <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
+    </li>
+    <li>
+      <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
+    </li>
+    <li>
+      <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -114,6 +143,29 @@
       <small>Source: <a href='https://github.com/lbusett/prismaread/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="prismaread-020---2019-06-04" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#prismaread-020---2019-06-04" class="anchor"></a>prismaread 0.2.0 - 2019-06-04</h1>
+<ul>
+<li>
+<p>Major changes</p>
+<ul>
+<li><p>prismaread now applies a GLT-based georeferencing to L1, L2B and L2C data, based on the technique described in <a href="https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html" class="uri">https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html</a></p></li>
+<li><p>Added functionality to create also outputs about acquisition angles and Lat/Lon;</p></li>
+<li><p>Added the <code>prisma_extract_spectra</code> function to facilitate extraction of PRISMA data over features of vector files;</p></li>
+<li><p>Added possibility to extract only some bands, using the <code>selbands_vnir</code> and <code>selbands_swir</code> arguments to <code>convert_prisma</code>;</p></li>
+<li><p>Removed the <code>out_file</code> argument, in favor of the <code>out_folder</code> and <code>out_basefile</code> arguments (see documentation);</p></li>
+</ul>
+</li>
+<li>
+<p>Other changes</p>
+<ul>
+<li>Miscellaneous bug fixes and optimization</li>
+<li>Added pkgdown website</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="prismaread-010---2019-03-25" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
 <a href="#prismaread-010---2019-03-25" class="anchor"></a>prismaread 0.1.0 - 2019-03-25</h1>
@@ -156,7 +208,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

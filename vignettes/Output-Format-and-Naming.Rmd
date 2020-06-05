@@ -1,0 +1,57 @@
+---
+title: "Output Format and Naming"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+### Format of output rasters
+
+- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format`
+  argument of `convert_prisma`. 
+
+### Naming conventions
+
+- Filenames are built starting from the output folder name provided by the user, by
+adding appropriate suffixes. If `out_basefile` is not specified (or set to `auto`, the Default), 
+output file names are created based on the filename of the hdf5 input. For example, if 
+in_file is "PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5", the output file for the VNIR cube will be `PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_VNIR.envi` (or .tif), that for SWIR will be
+`PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_SWIR.envi` ), etcetera. 
+
+If `out_basefile` is specified, the filenames are created substituting the specified string. For example, if 
+out_basefile is "myprisma", the output file for the VNIR cube will be `myprisma_HCO_VNIR.envi` (or .tif), that for SWIR will be
+`myprisma_HCO_SWIR.envi` ), etcetera.
+
+### Measure Units
+
+- Measure units of the output hyperspectral data are as follows: 
+
+  ```{r echo=FALSE, message=FALSE, warning=FALSE}
+  my_tbl <- tibble::tribble(
+    ~LEVEL, ~Variable, ~"Measure Units",
+    "L1",   "Radiance", "W / m^2 * sr * um",
+    "L2B",  "Radiance", "W / m^2 * sr * um",
+    "L2C",  "Reflectance", "unitless (ratio)",
+    "L2D",  "Reflectance", "unitless (ratio)"
+  )
+  knitr::kable(my_tbl, digits = 3, row.names = FALSE, align = "c",
+              caption = NULL)
+  ```
+
+### Ancillary info
+
+- If output format is "ENVI", the wavelengths of the different bands for the hyperspectral 
+cubes are properly written in the appropriate header (.hdr) file. 
+
+- Irrespective from output format, info about wavelengths and fwhms of the hyperspectral 
+cubes are saved in appropriate txt files. For example, if the output file is 
+`D:/myoutfolder/myoutfil_HCO_VNIR.envi`, info about the wavelengths is saved in 
+`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+
+- Info about acquisition date and angles is saved in a dedicated txt file. For example, if
+output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved in 
+`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`

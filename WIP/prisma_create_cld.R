@@ -11,7 +11,7 @@ prisma_create_cld <- function(f,
                               out_format,
                               base_georef){
 
-    message(" - Accessing CLOUD raster - ")
+    message(" - Accessing CLOUD dataset - ")
 
     # Get geo info ----
     geo <- prisma_get_geoloc(f, "1", "HCO")

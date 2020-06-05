@@ -12,12 +12,11 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-
-# prismaread
+# prismaread <a href='https://github.com/lbusett/prismaread'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Lifecycle: beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
 [![DOI](https://zenodo.org/badge/211091818.svg)](https://zenodo.org/badge/latestdoi/211091818)
 <!-- badges: end -->
 
@@ -36,10 +35,10 @@ You can install the development version from [GitHub](https://github.com/) with:
 remotes::install_github("lbusett/prismaread")
 library(prismaread)
 ```
-# Work on Level 1 Data
+# Importing Level 1 Data
 
 The function to be used is `convert_prisma`. It takes as input the full path 
-of a PRISMA hdf5 image, an output file name and format, and a series of switches
+of a PRISMA L1 hdf5 image, an output file name and format, and a series of switches
 allowing to decide which datasets should be saved.
 
 In particular, the `FULL` argument allows deciding if a complete VNIR+SWIR cube has to be created
@@ -47,8 +46,9 @@ alongside the "single" VNIR and SWIR ones. In that case, the 'join_priority'
 keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
 cube in the wavelength were they overlap. 
 
-A "ballpark" georeferencing is provided, but it is __not__ to be trusted/used.
-(this may change in the near future)
+A "base" georeferincing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
+described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html, unless the `base_georef`
+argument is set to FALSE.
 
 For example the following code:
 
@@ -57,11 +57,11 @@ in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001
 out_file = "/home/lb/tmp/test/test_1"
 out_format = "ENVI"
 
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
 convert_prisma(in_file    = in_file,
                out_file   = out_file,
                out_format = out_format,
-               join_priority = "VNIR", 
+               join_priority = "SWIR", 
                FULL = TRUE,
                PAN  = TRUE,
                CLOUD  = TRUE)
@@ -105,7 +105,8 @@ convert_prisma(in_file    = in_file,
 
 __IMPORTANT NOTE__
 
-The latter functionality may be only appliable to "HRC" L1 data cubes. We are currently investigating this - proceed with caution!
+This latter functionality may be only appliable/make sense to "HRC" L1 data cubes. 
+We are currently investigating this - proceed with caution!
 
 # Work on Level 2 Data
 

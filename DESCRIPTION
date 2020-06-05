@@ -1,7 +1,7 @@
 Package: prismaread
 Title: Import PRISMA L1/L2 hyperspectral data and convert them to 
  a more user friendly format
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Lorenzo",
            family = "Busetto",
@@ -14,9 +14,23 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/lbusett/prismaread
 BugReports: https://github.com/lbusett/prismaread/issues
-Imports: hdf5r,tools,raster
+Imports: 
+    hdf5r,
+    tools,
+    raster,
+    exactextractr,
+    data.table,
+    dplyr,
+    sf,
+    tidyr,
+    tidyselect,
+    stringr,
+    openxlsx,
+    magrittr
 Suggests: testthat, 
     spelling,
     knitr,
     rmarkdown
-RoxygenNote: 7.0.2
+Remotes: 
+    isciences/exactextractr
+RoxygenNote: 7.1.0

@@ -7,8 +7,8 @@ test_that("convert_prisma works as expected - L1C", {
     skip_on_cran()
     # VNIR ----
     convert_prisma("D:/prismaread/L1/PRS_L1_STD_OFFL_20200215103028_20200215103033_0001.he5",
-                   "D:/prismaread/L1/testL1", SWIR = FALSE, overwrite = T, ERR_MATRIX = FALSE,
-                   CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = FALSE, GLINT = FALSE)
+                   "D:/prismaread/L1/", SWIR = T, overwrite = T, ERR_MATRIX = FALSE, base_georef = F,
+                   CLOUD = T, ATCOR = FALSE, FULL = FALSE, PAN = T, GLINT = T, LC = T, ANGLES = T, LATLON = T)
 
     # SWIR ----
     convert_prisma("D:/prismaread/L1/PRS_L1_STD_OFFL_20200215103028_20200215103033_0001.he5",
@@ -46,6 +46,13 @@ test_that("convert_prisma works as expected - L2B", {
     convert_prisma("D:/prismaread/L2B/PRS_L2B_STD_20200215103028_20200215103033_0001.he5",
                    "D:/prismaread/L2B/testL2B", SWIR = FALSE, VNIR = FALSE,
                    CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = TRUE
+                   , GLINT = FALSE, overwrite = T)
+
+
+    # ANGLES and OTHER ----
+    convert_prisma("D:/prismaread/L2B/PRS_L2B_STD_20200215103028_20200215103033_0001.he5",
+                   "D:/prismaread/L2B/testL2B", SWIR = FALSE, VNIR = FALSE,
+                   CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = FALSE, ANGLES = TRUE,
                    , GLINT = FALSE, overwrite = T)
 
 

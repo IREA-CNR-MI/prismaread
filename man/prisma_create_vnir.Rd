@@ -11,11 +11,15 @@ prisma_create_vnir(
   out_file_vnir,
   out_format,
   base_georef,
+  fill_gaps,
+  fix_geo,
   wl_vnir,
   order_vnir,
   fwhm_vnir,
   apply_errmatrix,
-  ERR_MATRIX
+  ERR_MATRIX,
+  selbands_vnir = NULL,
+  in_L2_file = NULL
 )
 }
 \arguments{
@@ -23,14 +27,23 @@ prisma_create_vnir(
 
 \item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
 
 \item{out_file_vnir}{output file name for VNIR}
 
 \item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
 
 \item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-Default: FALSE}
+using the "Georeference from input GLT" procedure explained here:
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+Default: TRUE}
+
+\item{fill_gaps}{`logical` if TRUE, when georeferencing on L1, L2B/C data,
+substitute missing values with results of a 3x3 focal filter on the georeferenced
+data, Default: TRUE}
+
+\item{fix_geo}{`logical` if TRUE, apply a 90 metres correction to georeferencing
+info of l2D data, Default: TRUE}
 
 \item{wl_vnir}{passed by caller - array of PRISMA VNIR wavelengths}
 
@@ -41,6 +54,13 @@ Default: FALSE}
 \item{apply_errmatrix}{Not yet implemented!}
 
 \item{ERR_MATRIX}{Not yet implemented!}
+
+\item{selbands_vnir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
+
+\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
 }
 \value{
 the function is called for its side effects

@@ -4,14 +4,20 @@
 \alias{prisma_get_geoloc}
 \title{prisma_get_geoloc}
 \usage{
-prisma_get_geoloc(f, proc_lev, source)
+prisma_get_geoloc(f, proc_lev, source, wvl = NULL, in_L2_file = NULL)
 }
 \arguments{
 \item{f}{input data he5 from caller}
 
 \item{proc_lev}{`character` Processing level (e.g., "1", "2B") - passed by caller}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HRC'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
+
+\item{wvl}{`character` "VNIR" or "SWIR" - passed by caller}
+
+\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
 }
 \value{
 `list` containing required info according to `proc_lev`

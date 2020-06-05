@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# prismaread
+# prismaread <a href='https://github.com/lbusett/prismaread'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
 [![Travis build
 status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
 [![Lifecycle:
-maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
 [![DOI](https://zenodo.org/badge/211091818.svg)](https://zenodo.org/badge/latestdoi/211091818)
 <!-- badges: end -->
 
@@ -32,10 +32,10 @@ remotes::install_github("lbusett/prismaread")
 library(prismaread)
 ```
 
-# Work on Level 1 Data
+# Importing Level 1 Data
 
 The function to be used is `convert_prisma`. It takes as input the full
-path of a PRISMA hdf5 image, an output file name and format, and a
+path of a PRISMA L1 hdf5 image, an output file name and format, and a
 series of switches allowing to decide which datasets should be saved.
 
 In particular, the `FULL` argument allows deciding if a complete
@@ -44,11 +44,12 @@ ones. In that case, the ‘join\_priority’ keyword is used to decide if
 keeping bands from the “VNIR” or the “SWIR” data cube in the wavelength
 were they overlap.
 
-A “ballpark” georeferencing is provided, but it is **not** to be
-trusted/used. (this may change in the near future)
+A “base” georeferincing in Lat/Lon WGS-84 based on the “GLT and Bowtie
+Correction” technique used in ENVI, and described in
+<https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html>,
+unless the `base_georef` argument is set to FALSE.
 
-For example the following
-code:
+For example the following code:
 
 ``` r
 in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
@@ -90,8 +91,7 @@ different “columns” of the data cube, as derived from the
 `KDP_AUX/Cw_Fwhm_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix` HDF layers. This
 could allow running different atmospheric corrections for different
 columns of the data, potentially allowing compensating “smile” effects
-on the retrieved surface reflectances. For
-example:
+on the retrieved surface reflectances. For example:
 
 ``` r
 in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
@@ -179,8 +179,8 @@ Only differences are:
 To cite `prismaread` please use:
 
 L. Busetto (2020) prismaread: An R package for imporing PRISMA L1/L2
-hyperspectral data and convert them to a more user friendly format, URL:
-<https://github.com/lbusett/prismaread>, doi:
+hyperspectral data and convert them to a more user friendly format -
+v0.1.0, URL: <https://github.com/lbusett/prismaread>, doi:
 <https://doi.org/10.5281/zenodo.3727671>
 
 ## Website
