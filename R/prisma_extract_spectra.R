@@ -6,9 +6,11 @@
 #' @param in_vect either the full path to a vector file, or a `sf` object containing
 #'  the points/polygons on which data should be extracted
 #' @param id_field `character` (Optional), name of the column of the vector
-#'  dataset to be used to "aggregate" the outputs (in case `dissolve` is TRUE).
+#'  dataset to be used to "name" the outputs, and also "aggregate" themin case `dissolve` is TRUE.
 #'  If NULL, a arbitrary `ID` field is created, and each point/polygin
 #'  is considered separately (see Details),  Default: NULL
+#' @param dissolve `logical` If TRUE and `id_field` was specified, in case multiple features of the input
+#'  vector share a common id, they are dissolved before extracting the data, Default: FALSE
 #' @param stats `logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
 #'  on the vector features, Default: TRUE
 #' @param selstats `character` containing the statistics to be computed. Possible values are:
@@ -99,6 +101,7 @@
 prisma_extract_spectra <- function(in_file,
                                    in_vect,
                                    id_field  = NULL,
+                                   dissolve  = FALSE,
                                    stats     = TRUE,
                                    selstats  = c("mean", "stdev"),
                                    stats_format = "long",
@@ -207,6 +210,15 @@ prisma_extract_spectra <- function(in_file,
         }
     }
 
+    # dissolve features if needed ----
+    if (dissolve && !is.null(id_field)){
+      if(length(in_sf[[id_field]]) != length(unique(in_sf[[id_field]]))){
+         in_sf <- in_sf %>%
+             dplyr::group_by(!!sym(id_field))%>%
+             dplyr::summarise()
+      }
+    }
+
     # extract the stats if needed ----
     in_sf <- sf::st_transform(in_sf, sf::st_crs(in_rast))
 
@@ -229,6 +241,9 @@ prisma_extract_spectra <- function(in_file,
         } else {
             colnames(out_vect) <- paste0("id_", seq_len(dim(in_sf)[1]))
         }
+
+
+
         varnames <- rep(selstats, each = dim(in_rast)[3])
 
         out_df <- data.frame(wvl = wvls, var = varnames, out_vect, row.names = NULL)

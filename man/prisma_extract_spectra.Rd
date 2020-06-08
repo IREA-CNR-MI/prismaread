@@ -8,6 +8,7 @@ prisma_extract_spectra(
   in_file,
   in_vect,
   id_field = NULL,
+  dissolve = FALSE,
   stats = TRUE,
   selstats = c("mean", "stdev"),
   stats_format = "long",
@@ -24,7 +25,7 @@ prisma_extract_spectra(
 the points/polygons on which data should be extracted}
 
 \item{id_field}{`character` (Optional), name of the column of the vector
-dataset to be used to "aggregate" the outputs (in case `dissolve` is TRUE).
+dataset to be used to "name" the outputs, and also "aggregate" themin case `dissolve` is TRUE.
 If NULL, a arbitrary `ID` field is created, and each point/polygin
 is considered separately (see Details),  Default: NULL}
 
