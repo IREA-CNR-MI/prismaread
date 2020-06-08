@@ -38,17 +38,14 @@ See the **Articles** section of the website for detailed info on usage.
 
   - Instructions for importing PRISMA
     [**L1**](articles/Importing-Level-1-Data.html) and
-    [**L2**](docs/articles/Importing-Level-2-Data.html)
+    [**L2**](articles/Importing-Level-2-Data.html)
 
   - Info about [Output format and Naming
     Conventions](articles/Output-Format-and-Naming.html)
 
-  - Info about [Creation of ATCOR input
-    files](articles/Creation-of-ATCOR-files.html)
-
   - Instructions for extracting PRISMA data over features of a vector
     dataset [Extracting Data from PRISMA
-    images](articles/Extract-Data.html)
+    images](articles/Extracting-data-over-vector.html)
 
 # Future Work
 
