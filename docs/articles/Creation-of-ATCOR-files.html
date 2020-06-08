@@ -64,6 +64,9 @@
       <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
     </li>
     <li>
+      <a href="../articles/Extracting-data-over-vector.html">Importing Level 1 Data</a>
+    </li>
+    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
@@ -108,45 +111,7 @@
 
     
     
-<div id="creation-of-atcor-files" class="section level3">
-<h3 class="hasAnchor">
-<a href="#creation-of-atcor-files" class="anchor"></a>Creation of ATCOR files</h3>
-<p>When working on L1 data, the <code>convert_prisma</code> function also allows automatic creation of text files required to run an atmospheric correction using ATCOR. Those files are saved in the “ATCOR” subfolder of the main output folder.</p>
-<p>In “standard” behaviour, only the three “standard” ATCOR files (<code>.wvl</code>, <code>.dat</code> and <code>.cal</code>) are created, within the “ATCOR” subfolder of the main output folder, with the <code>.wvl</code> file containing nominal wavelengths and FWHMs derived from the <code>cw</code> and <code>fwhm</code> attributes of the <em>.he5</em> file.</p>
-<p>For example, this code:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="no">in_file</span>  <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
-<span class="no">out_folder</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/"</span>
-<span class="no">out_format</span> <span class="kw">=</span> <span class="st">"ENVI"</span>
 
-<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span>
-<span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
-               <span class="kw">out_file</span>   <span class="kw">=</span> <span class="no">out_folder</span>,
-               <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
-               <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"VNIR"</span>,
-               <span class="kw">ATCOR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-               <span class="kw">FULL</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-               <span class="kw">PAN</span>  <span class="kw">=</span> <span class="fl">TRUE</span>,
-               <span class="kw">CLOUD</span>  <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p>will create input files for ATCOR useful for correction of the full hyperspectral cube.</p>
-<p>The user can however also choose to generate additional ATCOR files, containing data about wavelengths and FWHMs related to different “columns” of the data cube, as derived from the <code>KDP_AUX/Cw_Vnir_Matrix</code>, <code>KDP_AUX/Cw_Swir_Matrix</code>, <code>KDP_AUX/Cw_Fwhm_Matrix</code>, <code>KDP_AUX/Cw_Fwhm_Matrix</code> HDF layers. This could allow running different atmospheric corrections for different columns of the data, potentially allowing compensating “smile” effects on the retrieved surface reflectances. For example, this code:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">in_file</span>  <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
-<span class="no">out_file</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/test_1"</span>
-<span class="no">out_format</span> <span class="kw">=</span> <span class="st">"ENVI"</span>
-
-<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span>
-<span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
-               <span class="kw">out_file</span>   <span class="kw">=</span> <span class="no">out_file</span>,
-               <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
-               <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"VNIR"</span>,
-               <span class="kw">ATCOR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-               <span class="kw">ATCOR_wls</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">200</span>,<span class="fl">800</span>),
-               <span class="kw">FULL</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-               <span class="kw">PAN</span>  <span class="kw">=</span> <span class="fl">TRUE</span>,
-               <span class="kw">CLOUD</span>  <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p>will create additional ATCOR imput files with wavelengths corresponding to those of the columns 200 and 800.</p>
-<p><strong>IMPORTANT NOTE</strong></p>
-<p>The latter functionality may be only appliable to “HRC” L1 data cubes. We are currently investigating this - proceed with caution!</p>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

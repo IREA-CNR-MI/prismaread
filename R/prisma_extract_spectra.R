@@ -41,6 +41,7 @@
 #'  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
 #'  # extract base statistics
 #'  test <- prisma_extract_spectra(in_file, in_vect)
+#'  test
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl, y = mean)) +
 #'    geom_line(aes(color = ID, group = ID)) +
@@ -50,6 +51,7 @@
 #'  # extract base statistics ands save results as excel file, in "wide" format
 #'  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
 #'                                 stats_format = "wide")
+#'  test
 #'
 #'  # extract custom statistics
 #'  test <- prisma_extract_spectra(in_file, in_vect,
@@ -57,17 +59,25 @@
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl)) +
 #'    geom_line(aes(y = mean, color = ID, group = ID)) +
-#'    geom_line(aes(y = mean + stdev, group = ID), color = "grey75"))
-#'    geom_line(aes(y = mean - stdev, group = ID), color = "grey75"))
+#'    geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
+#'    geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
 #'    facet_wrap(~ID) +
 #'    theme_light()
+#'
 #'  # extract custom statistics and quantiles
 #'  test <- prisma_extract_spectra(in_file, in_vect, quantiles = TRUE,
 #'                                 selstats = c("mean", "stdev"))
+#'  test
 #'
 #'  # extract also all pixels
 #'  test <- prisma_extract_spectra(in_file, in_vect, allpix = TRUE, quantiles = TRUE,
 #'                                 selstats = c("mean", "stdev"))
+#'  test$allpix
+#'
+#'  ggplot(test$allpix, aes(x = wvl)) +
+#'    geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
+#'    facet_wrap(~ID) +
+#'    theme_light()
 #'
 #'  }
 #' }
@@ -118,7 +128,7 @@ prisma_extract_spectra <- function(in_file,
         }
     }
 
-        if (!is.null(out_file)) {
+    if (!is.null(out_file)) {
         if(!dir.exists(dirname(out_file))) {
             stop("Folder specified for the output does not exist.
                  Please create it beforehand! Aborting!")
@@ -135,15 +145,43 @@ prisma_extract_spectra <- function(in_file,
     if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLNT", "ANGLES", "LATLON")) {
         stop("Input file does not seem to be a PRISMA file obtained from PRISMAREAD. Aborting!")
     }
-    if (in_type %in% c("VNIR", "SWIR", "FULL")) {
 
-        in_file_wvl <- paste0(tools::file_path_sans_ext(in_file), c("_wavelengths.txt", "_meta.txt"))
-        if (any(file.exists(in_file_wvl))) {
-            wvls <- utils::read.table(in_file_wvl[which(file.exists(in_file_wvl))], header = TRUE)
-            wvls <- wvls[,2]
-        } else {
-            stop("Input Wavelengths file ", basename(in_file_wvl), " not found. Aborting!")
+    if (in_type %in% c("VNIR", "SWIR", "FULL")) {
+        in_file_wvl <- paste0(tools::file_path_sans_ext(in_file), ".wvl")
+        wvl_ok <- FALSE
+        if (tools::file_ext(in_file) == "envi"){
+            # attempt to retrieve wavelengths from band names (works for ENVI files)
+            tmpnames <- names(in_rast)
+            tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
+            wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..", fixed = TRUE)[[2]])
+            if (is.numeric(wvls) && all(!is.na(wvls))) {
+                wvl_ok <- TRUE
+            } else {
+                message("Unable to retrieve wavelengths from ENVI band names - trying to use .wvl file")
+            }
         }
+
+        if (!wvl_ok) {
+            if (file.exists(in_file_wvl)) {
+                wvls <- utils::read.table(in_file_wvl, header = TRUE)
+                wvls <- wvls$wl
+                if (is.numeric(wvls) && all(!is.na(wvls))) {
+                    wvl_ok <- TRUE
+                } else {
+                    message("Unable to retrieve wavelengths from .wvl file. Wavelengths set to
+                            band index.")
+                    wvl <- 1:dim(in_rast)[3]
+                }
+            } else {
+                message("Input Wavelengths file ", basename(in_file_wvl), " not found.",
+                        "Wavelengths set to band index. If you created the input file with an older version",
+                        "of prismaread and want to use this function, re-extract it to be able to retrieve",
+                        "wavelengths!")
+            }
+        }
+
+
+
     }
 
     if (!all(selstats %in% c("mean", "stdev", "variance", "min", "max", "coeffvar"))) {
@@ -154,7 +192,7 @@ prisma_extract_spectra <- function(in_file,
     # Get the vector dataset ----
     if(is.character(in_vect)){
         if(file.exists(in_vect)) {
-            in_sf <- try(sf::st_read(in_vect))
+            in_sf <- try(sf::st_read(in_vect, quiet = TRUE))
             if(inherits(in_sf, "try-error")) {
                 stop("in_vect does not appear to be a valid vector file. Aborting!")
             }
@@ -164,11 +202,18 @@ prisma_extract_spectra <- function(in_file,
     } else {
         if (!inherits(in_vect, "sf")) {
             stop("in_vect must be a `sf` object or a vector file in a GDAL-readable format. Aborting!")
+        } else {
+            in_sf <- in_vect
         }
     }
 
     # extract the stats if needed ----
     in_sf <- sf::st_transform(in_sf, sf::st_crs(in_rast))
+
+    # workaround to allow extraction over points
+    if (all(sf::st_dimension(in_sf) == 0)) {
+        in_sf <- sf::st_buffer(in_sf, res(in_rast)[1] / 10000)
+    }
 
     if (stats) {
         message("Extracting statistics")
@@ -177,7 +222,7 @@ prisma_extract_spectra <- function(in_file,
         if ("coeffvar" %in% selstats) {
             selstats_tmp[which(selstats_tmp == "coeffvar")] <- "coefficient_of_variation"
         }
-        out_vect <- t(exactextractr::exact_extract(in_rast, in_sf, selstats_tmp))
+        out_vect <- t(exactextractr::exact_extract(in_rast, in_sf, selstats_tmp, progress = FALSE))
 
         if (!is.null(id_field)) {
             colnames(out_vect) <- in_sf[[id_field]]
@@ -199,7 +244,7 @@ prisma_extract_spectra <- function(in_file,
     # extract the pixels if needed----
     if (allpix | (stats & quantiles)) {
         message("Extracting pixel data")
-        out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf)
+        out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf, progress = FALSE)
         names(out_all_tmp) <-   if (!is.null(id_field)) {
             in_sf[[id_field]]
         } else {

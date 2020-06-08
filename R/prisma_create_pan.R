@@ -102,7 +102,6 @@ prisma_create_pan <- function(f,
     rm(pan_cube)
     gc()
 
-
     message("- Writing PAN raster -")
 
     rastwrite_lines(rast_pan, out_file_pan, out_format, proc_lev,

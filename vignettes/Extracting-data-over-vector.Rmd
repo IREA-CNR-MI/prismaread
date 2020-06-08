@@ -1,0 +1,83 @@
+---
+title: "Importing Level 1 Data"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`prismaread` provides a very efficient function based on package `exactextractr`(https://github.com/isciences/exactextractr) for extracting and summarizing data from the converted 
+hyperspectral cubes over features of vector spatial files. The function allows to compute several 
+statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (__See [documentation](reference/prisma_extract_spectra.html) of the prisma_extract_spectra() function for info on available arguments__).
+
+For example, starting from a VNIR Cube obtained with `convert_prisma` and a vector polygon file: 
+
+```{r message=FALSE, warning=FALSE}
+  library(prismaread)
+  library(ggplot2)
+  library(tmap)
+  in_file <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
+  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
+
+  # extract base statistics, in "long" format
+  test <- prisma_extract_spectra(in_file, in_vect, id_field = "ID")
+  test
+  # plot results using ggplot
+  ggplot(test, aes(x = wvl, y = mean)) +
+    geom_line(aes(color = ID, group = ID)) +
+    facet_wrap(~ID) +
+    theme_light()
+
+  # extract base statistics ands save results as excel file, in "wide" format
+  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
+                                 stats_format = "wide", id_field = "id")
+  test
+
+  # extract custom statistics
+  test <- prisma_extract_spectra(in_file, in_vect,
+                                 selstats = c("mean", "coeffvar", "stdev", "min", "max"),
+                                 id_field = "id")
+  
+  test
+  
+  # plot results using ggplot
+  ggplot(test, aes(x = wvl)) +
+    geom_line(aes(y = mean, color = ID, group = ID)) +
+    geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
+    geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
+    facet_wrap(~ID) +
+    theme_light()
+
+  
+  # extract custom statistics and quantiles
+  test <- prisma_extract_spectra(in_file, in_vect, quantiles = TRUE,
+                                 selstats = c("mean", "stdev"),
+                                 id_field = "id")
+  test
+
+  
+  # extract also all pixels
+  test <- prisma_extract_spectra(in_file, in_vect, allpix = TRUE,
+                                 selstats = c("mean", "stdev"),
+                                 id_field = "id")
+  
+  
+  # stats are saved in the "stats" slot of the output
+  test$stats
+  
+  # pixel values are saved in the "allpix" slot of the output
+  test$allpix
+
+  ggplot(test$allpix, aes(x = wvl)) +
+    geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
+    facet_wrap(~ID) +
+    theme_light()
+
+```
+
+
+
+

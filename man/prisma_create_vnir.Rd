@@ -43,7 +43,7 @@ substitute missing values with results of a 3x3 focal filter on the georeference
 data, Default: TRUE}
 
 \item{fix_geo}{`logical` if TRUE, apply a 90 metres correction to georeferencing
-info of l2D data, Default: TRUE}
+info of l2D data, Default: FALSE}
 
 \item{wl_vnir}{passed by caller - array of PRISMA VNIR wavelengths}
 

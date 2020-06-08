@@ -70,7 +70,8 @@ prisma_create_swir <- function(f,
                     band <- prisma_basegeo(band, lon, lat, fill_gaps)
                 } else {
                     message("Importing Band: ", band_swir, " of: 173")
-                    band <- raster::raster((swir_cube[,order_swir[band_swir], ]))
+                    band <- raster::raster(swir_cube[,order_swir[band_swir], ],
+                                           crs = "+proj=longlat +datum=WGS84")
                     if (proc_lev == "1") {
                         band <- (band / swir_scale) - swir_offset
                     }
@@ -107,17 +108,24 @@ prisma_create_swir <- function(f,
     }
 
     # Write the cube ----
-    wl_swir   <- wl_swir[wl_swir != 0]
-    fwhm_swir <- fwhm_swir[fwhm_swir != 0]
     if (is.null(selbands_swir)) {
-        names(rast_swir) <- paste0("wl_", round(wl_swir, digits = 4))
+        # names(rast_vnir) <- paste0("b", seqbands, "_", round(wl_vnir, digits = 3))
+        orbands <- seqbands[wl_swir != 0]
+        names(rast_swir) <- paste0("b", orbands)
+        wl_sub   <- wl_swir[wl_swir != 0]
+        fwhm_sub <- fwhm_swir[wl_swir != 0]
     } else {
-        names(rast_swir) <- paste0("wl_", round(wl_swir[seqbands], digits = 4))
+        # names(rast_vnir) <- paste0("b", seqbands, "_", round(wl_vnir[seqbands], digits = 3))
+        orbands <- seqbands
+        names(rast_swir) <- paste0("b", orbands)
+        wl_sub   <- wl_swir[seqbands]
+        fwhm_sub <- fwhm_swir[seqbands]
     }
     rm(swir_cube)
     rm(band)
     gc()
     message("- Writing SWIR raster -")
+
     rastwrite_lines(rast_swir,
                     out_file_swir,
                     out_format,
@@ -125,29 +133,26 @@ prisma_create_swir <- function(f,
                     scale_min = swir_min,
                     scale_max = swir_max)
 
-    if (!is.null(selbands_swir)) {
-        wl_sub   <- wl_swir[seqbands]
-        fwhm_sub <- fwhm_swir[seqbands]
-    } else {
-        wl_sub   <- wl_swir
-        fwhm_sub <- fwhm_swir
-    }
-
     if (out_format == "ENVI") {
+        cat("band names = {", paste(names(rast_swir),collapse=","), "}", "\n",
+            file=raster::extension(out_file_swir, "hdr"), append=TRUE)
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_swir), ".hdr")
-
         write(c("wavelength = {",
                 paste(round(wl_sub, digits = 4), collapse = ","), "}"),
               out_hdr, append = TRUE)
         write(c("fwhm = {",
                 paste(round(fwhm_sub, digits = 4), collapse = ","), "}"),
               out_hdr, append = TRUE)
+        write("wavelength units = Nanometers")
+        write("sensor type = PRISMA")
     }
 
-    out_file_txt <- paste0(tools::file_path_sans_ext(out_file_swir), "_meta.txt")
+    out_file_txt <- paste0(tools::file_path_sans_ext(out_file_swir), ".wvl")
     utils::write.table(data.frame(band = 1:length(wl_sub),
+                                  orband = orbands,
                                   wl   = wl_sub,
-                                  fwhm = fwhm_sub, stringsAsFactors = FALSE),
+                                  fwhm = fwhm_sub,
+                                  stringsAsFactors = FALSE),
                        file = out_file_txt, row.names = FALSE)
 
 }

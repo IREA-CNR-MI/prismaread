@@ -13,11 +13,12 @@ prisma_create_additional <- function(f,
                                      out_format,
                                      base_georef,
                                      fill_gaps,
+                                     fix_geo,
                                      in_L2_file = NULL){
 
     message(" - Accessing ", type, " dataset - ")
 
-    # Get geo info ----
+    in_L2_file# Get geo info ----
     geo <- prisma_get_geoloc(f, "1", "HCO", "VNIR", in_L2_file)
 
     if (type == "CLD") {

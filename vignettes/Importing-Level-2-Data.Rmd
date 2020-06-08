@@ -69,8 +69,25 @@ convert_prisma(in_file    = in_file,
 
 ```
 
-The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files. 
+The function also saves ancillary data related to wavelengths and fwhms of the different images, 
+and to hour and sun geometry at acquisition in ancillary txt files (See [Output format and Naming Conventions](articles/Output-Format-and-Naming.html). 
 
-### Associating acquisition angles with L1 data
+## Importing only selected bands
 
-TODO TODO TODO TODO
+The `selbands_vnir` e `selbands_swir` arguments allow to select only a specified subset of 
+PRISMA bands, by specifying an array of required wavelengths. For example: 
+
+``` {r l1example2, eval=FALSE}
+convert_prisma(in_file    = in_file,
+               out_folder = out_folder,
+               out_format = out_format,
+               VNIR = TRUE, 
+               SwiR = TRUE, 
+               selbands_vnir = c(450,550,650), 
+               selbands_swir = c(1000,1330), 
+               join_priority = "SWIR",
+               FULL   = TRUE)
+```
+
+will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the original 
+PRISMA bands whit wavelengths closer to the requested ones. 

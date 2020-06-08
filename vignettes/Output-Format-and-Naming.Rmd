@@ -50,8 +50,8 @@ cubes are properly written in the appropriate header (.hdr) file.
 - Irrespective from output format, info about wavelengths and fwhms of the hyperspectral 
 cubes are saved in appropriate txt files. For example, if the output file is 
 `D:/myoutfolder/myoutfil_HCO_VNIR.envi`, info about the wavelengths is saved in 
-`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+`D:/myoutfolder/myoutfil_HCO_VNIR.wvl`
 
 - Info about acquisition date and angles is saved in a dedicated txt file. For example, if
 output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved in 
-`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+`D:/myoutfolder/myoutfil_HCO_VNIR.ang`

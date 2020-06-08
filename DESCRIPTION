@@ -12,7 +12,7 @@ Description: The goal of prismaread is allowing to easily import PRISMA (http://
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/lbusett/prismaread
+URL: https://lbusett.github.io/prismaread/
 BugReports: https://github.com/lbusett/prismaread/issues
 Imports: 
     hdf5r,
@@ -30,7 +30,8 @@ Imports:
 Suggests: testthat, 
     spelling,
     knitr,
-    rmarkdown
+    rmarkdown, 
+    ggplot2
 Remotes: 
     isciences/exactextractr
 RoxygenNote: 7.1.0

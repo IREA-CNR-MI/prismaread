@@ -28,130 +28,26 @@ _`prismaread` is developed and maintained by Lorenzo Busetto and Luigi Ranghetti
 
 # Installation
 
-You can install the development version from [GitHub](https://github.com/) with:
+You can install the last stable version of `prismaread` from [GitHub](https://github.com/) using: 
 
 ``` {r install, eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("lbusett/prismaread", ref = "v0.2.0")
+library(prismaread)
+```
+
+, or the last development version using:
+
+``` {r install2, eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("lbusett/prismaread")
 library(prismaread)
 ```
-# Importing Level 1 Data
 
-The function to be used is `convert_prisma`. It takes as input the full path 
-of a PRISMA L1 hdf5 image, an output file name and format, and a series of switches
-allowing to decide which datasets should be saved.
+# Usage
 
-In particular, the `FULL` argument allows deciding if a complete VNIR+SWIR cube has to be created
-alongside the "single" VNIR and SWIR ones. In that case, the 'join_priority' 
-keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
-cube in the wavelength were they overlap. 
-
-A "base" georeferincing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
-described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html, unless the `base_georef`
-argument is set to FALSE.
-
-For example the following code:
-
-```{r example, eval=FALSE}
-in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-out_file = "/home/lb/tmp/test/test_1"
-out_format = "ENVI"
-
-# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
-convert_prisma(in_file    = in_file,
-               out_file   = out_file,
-               out_format = out_format,
-               join_priority = "SWIR", 
-               FULL = TRUE,
-               PAN  = TRUE,
-               CLOUD  = TRUE)
-
-```
-
-accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN and CLOUD images. __See [documentation](reference/convert_prisma.html) of the convert_prisma() function for info on available arguments__. 
-
-The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files. 
-
-### Creation of ATCOR files
-
-Starting `v0.02` the function also allows automatic creation of text files required to run 
-an ATCOR atmospheric correction. Those files are saved in the `ATCOR` subfolder of the
-main output folder. 
-
-In "standard" behaviour, only the three "standard" ATCOR files (`.wvl`, `.dat` and `.cal`) are created, 
-with the `.wvl` file containing nominal wavelengths and FWHMs derived from the `cw` and `fwhm` attributes of the _.he5_ file-
-The user can however also choose to generate additional ATCOR files, containing data about
-wavelengths and FWHMs related to different "columns" of the data cube, as derived 
-from the `KDP_AUX/Cw_Vnir_Matrix`, `KDP_AUX/Cw_Swir_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix` HDF layers. This could allow running different atmospheric corrections for different columns of the data, potentially allowing compensating
-"smile" effects on the retrieved surface reflectances. For example: 
-
-```{r example2, eval=FALSE}
-in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-out_file = "/home/lb/tmp/test/test_1"
-out_format = "ENVI"
-
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
-convert_prisma(in_file    = in_file,
-               out_file   = out_file,
-               out_format = out_format,
-               join_priority = "VNIR", 
-               ATCOR = TRUE, 
-               ATCOR_wls = c(200,800), 
-               FULL = TRUE,
-               PAN  = TRUE,
-               CLOUD  = TRUE)
-
-```
-
-__IMPORTANT NOTE__
-
-This latter functionality may be only appliable/make sense to "HRC" L1 data cubes. 
-We are currently investigating this - proceed with caution!
-
-# Work on Level 2 Data
-
-The function to be used is still `convert_prisma`, with similar syntax. Only differences are: 
-
-1. The "PAN", "CLOUD", "LC" and "GLINT" arguments are ignored, because they are 
-not available in L2 files; 
-2. The "ATCOR" and "ATCOR_wls" arguments are ignored, because they are useless in this case; 
-3. The output imagery is properly georeferenced, __if level is 2D__. Otherwise, 
-the same "ballpark" georeferencing as for L1 data is applied.
-
-# Output Formats
-
-- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice. 
-
-- Filenames are built starting from the output file name provided by the user, by
-adding appropriate suffixes. For example, if the user specified `out_file = "D:/myoutfolder/myoutfil"`, and `source = "HCO"`, the output file for the VNIR cube will be `D:/myoutfolder/myoutfil_HCO_VNIR.envi` (or
-`D:/myoutfolder/myoutfil_HCO_VNIR.tif`).
-
-- Measure units of the output hyperspectral data are as follows: 
-
-  ```{r echo=FALSE, message=FALSE, warning=FALSE}
-  my_tbl <- tibble::tribble(
-    ~LEVEL, ~Variable, ~"Measure Units",
-    "L1",   "Radiance", "W / m^2 * sr * um",
-    "L2B",  "Radiance", "W / m^2 * sr * um",
-    "L2C",  "Reflectance", "unitless (ratio)",
-    "L2D",  "Reflectance", "unitless (ratio)"
-  )
-  knitr::kable(my_tbl, digits = 3, row.names = FALSE, align = "c",
-              caption = NULL)
-  ```
-
-
-- If output format is "ENVI", the wavelengths of the different bands for the hyperspectral 
-cubes are properly written in the appropriate header (.hdr) file. 
-
-- Irrespective from output format, info about wavelengths and fwhms of the hyperspectral 
-cubes are saved in appropriate txt files. For example, if the output file is 
-`D:/myoutfolder/myoutfil_HCO_VNIR.envi`, info about the wavelengths is saved in 
-`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
-
-- Info about acquisition date and angles is saved in a dedicated txt file. For example, if
-output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved in 
-`D:/myoutfolder/myoutfil_HCO_VNIR_meta.txt`
+See `prismaread` [website](https://lbusett.github.io/prismaread/) for further instructions and info 
+on output formats.
 
 # Future Work
 

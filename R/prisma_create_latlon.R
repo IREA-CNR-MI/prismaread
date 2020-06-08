@@ -55,4 +55,8 @@ prisma_create_latlon <- function(f,
     gc()
     message(" - Writing LATLON raster - ")
     rastwrite_lines(rastang, out_file, out_format)
+    if (out_format == "ENVI") {
+        cat("band names = {", paste(names(rastang),collapse=","), "}", "\n",
+            file=raster::extension(out_file, "hdr"), append=TRUE)
+    }
 }

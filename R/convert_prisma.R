@@ -208,7 +208,7 @@ convert_prisma <- function(in_file,
   acqtime <- hdf5r::h5attr(f, "Product_StartTime")
 
   out_file_angles <- paste0(tools::file_path_sans_ext(out_file), "_", source,
-                            "_ANGLES.txt")
+                            ".ang")
   utils::write.table(data.frame(date = acqtime,
                                 sunzen   = sunzen,
                                 sunaz = sunaz, stringsAsFactors = FALSE),
@@ -247,11 +247,18 @@ convert_prisma <- function(in_file,
     }
   }
 
+  if (!is.null(selbands_vnir)){
+    seqbands_vnir <- unlist(lapply(selbands_vnir, FUN = function(x) which.min(abs(wl_vnir - x))))
 
+  } else {
+    seqbands_vnir <- (1:66)[wl_vnir != 0]
+  }
+  wl_vnir   <- wl_vnir[seqbands_vnir]
+  fwhm_vnir <- fwhm_vnir[seqbands_vnir]
   # be sure to remove zeroes also if VNIR already present to avoid  ----
   # errors on creation of FULL
-  fwhm_vnir <- fwhm_vnir[wl_vnir != 0]
-  wl_vnir <- wl_vnir[wl_vnir != 0]
+  # fwhm_vnir <- fwhm_vnir[wl_vnir != 0]
+  # wl_vnir <- wl_vnir[wl_vnir != 0]
 
   # get SWIR data cube and convert to raster ----
 
@@ -285,23 +292,17 @@ convert_prisma <- function(in_file,
                          in_L2_file = in_L2_file)
     }
   }
-
-  # be sure to remove zeroes also if swir already present to avoid  ----
-  # errors on creation of FULL if recycling an existing cube from file
-  fwhm_swir <- fwhm_swir[wl_swir != 0]
-  wl_swir   <- wl_swir[wl_swir != 0]
-
-  if (!is.null(selbands_vnir)){
-    seqbands_vnir <- unlist(lapply(selbands_vnir, FUN = function(x) which.min(abs(wl_vnir - x))))
-    wl_vnir   <- wl_vnir[seqbands_vnir]
-    fwhm_vnir <- fwhm_vnir[seqbands_vnir]
-  }
-
   if (!is.null(selbands_swir)){
     seqbands_swir <- unlist(lapply(selbands_swir, FUN = function(x) which.min(abs(wl_swir - x))))
-    wl_swir   <- wl_swir[seqbands_swir]
-    fwhm_swir <- fwhm_swir[seqbands_swir]
+  } else {
+    seqbands_swir <- (1:173)[wl_swir != 0]
   }
+  wl_swir   <- wl_swir[seqbands_swir]
+  fwhm_swir <- fwhm_swir[seqbands_swir]
+  # be sure to remove zeroes also if swir already present to avoid  ----
+  # errors on creation of FULL if recycling an existing cube from file
+  # fwhm_swir <- fwhm_swir[wl_swir != 0]
+  # wl_swir   <- wl_swir[wl_swir != 0]
 
   # create FULL data cube and convert to raster ----
   out_file_full <- paste0(tools::file_path_sans_ext(out_file), "_", source,
@@ -320,16 +321,19 @@ convert_prisma <- function(in_file,
       if (file.exists(out_file_vnir) && file.exists(out_file_swir)) {
         rast_vnir <- raster::stack(out_file_vnir)
         rast_swir <- raster::stack(out_file_swir)
+
         if (join_priority == "SWIR") {
           rast_tot <- raster::stack(rast_vnir[[which(wl_vnir < min(wl_swir))]], rast_swir)
           wl_tot   <- c(wl_vnir[which(wl_vnir < min(wl_swir))], wl_swir)
           fwhm_tot <- c(fwhm_vnir[which(wl_vnir < min(wl_swir))], fwhm_swir)
-          names(rast_tot) <- paste0("wl_", round(wl_tot, digits = 4))
+          names(rast_tot) <- c(paste0("b", seqbands_vnir[which(wl_vnir < min(wl_swir))], "_v"),
+                               paste0("b", seqbands_swir, "_s"))
         } else {
           rast_tot <- raster::stack(rast_vnir, rast_swir[[which(wl_swir > max(wl_vnir))]])
           wl_tot   <- c(wl_vnir, wl_swir[which(wl_swir > max(wl_vnir))])
           fwhm_tot <- c(fwhm_vnir, fwhm_swir[which(wl_swir > max(wl_vnir))])
-          names(rast_tot) <- paste0("wl_", round(wl_tot, digits = 4))
+          names(rast_tot) <- c(paste0("b", seqbands_vnir, "_v"),
+                               paste0("b", seqbands_swir[which(wl_swir > max(wl_vnir))], "_s"))
         }
 
         rm(rast_vnir)
@@ -341,6 +345,8 @@ convert_prisma <- function(in_file,
         rastwrite_lines(rast_tot, out_file_full, out_format, proc_lev, join = TRUE)
 
         if (out_format == "ENVI") {
+          cat("band names = {", paste(names(rast_tot),collapse=","), "}", "\n",
+              file=raster::extension(out_file_full, "hdr"), append=TRUE)
           out_hdr <- paste0(tools::file_path_sans_ext(out_file_full), ".hdr")
           write(c("wavelength = {",
                   paste(round(wl_tot, digits = 4), collapse = ","), "}"),
@@ -348,12 +354,18 @@ convert_prisma <- function(in_file,
           write(c("fwhm = {",
                   paste(round(fwhm_tot, digits = 4), collapse = ","), "}"),
                 out_hdr, append = TRUE)
+          write("wavelength units = Nanometers")
+          write("sensor type = PRISMA")
         }
-        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), "_wavelengths.txt")
-        utils::write.table(data.frame(band = 1:length(wl_tot),
+
+        out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), ".wvl")
+        utils::write.table(data.frame(band   = 1:length(wl_tot),
+                                      orband = substring(names(rast_tot) , 2),
                                       wl   = wl_tot,
-                                      fwhm = fwhm_tot, stringsAsFactors = FALSE),
+                                      fwhm = fwhm_tot,
+                                      stringsAsFactors = FALSE),
                            file = out_file_txt, row.names = FALSE)
+
 
         rm(rast_tot)
         gc()
@@ -395,7 +407,7 @@ convert_prisma <- function(in_file,
                             paste0(out_file_latlon, ".envi"))
 
   if (file.exists(out_file_latlon) & !overwrite) {
-    message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
+    message("LATLON file already exists - use overwrite = TRUE or change output file name to reprocess")
   } else {
     if (LATLON) {
       prisma_create_latlon(f,

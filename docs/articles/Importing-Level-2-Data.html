@@ -64,6 +64,9 @@
       <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
     </li>
     <li>
+      <a href="../articles/Extracting-data-over-vector.html">Importing Level 1 Data</a>
+    </li>
+    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
@@ -146,17 +149,29 @@
                <span class="kw">FULL</span>   <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">LATLON</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">ANGLES</span>  <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p>The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files.</p>
-<div id="associating-acquisition-angles-with-l1-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#associating-acquisition-angles-with-l1-data" class="anchor"></a>Associating acquisition angles with L1 data</h3>
-<p>TODO TODO TODO TODO</p>
+<p>The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files (See <a href="articles/Output-Format-and-Naming.html">Output format and Naming Conventions</a>.</p>
+<div id="importing-only-selected-bands" class="section level2">
+<h2 class="hasAnchor">
+<a href="#importing-only-selected-bands" class="anchor"></a>Importing only selected bands</h2>
+<p>The <code>selbands_vnir</code> e <code>selbands_swir</code> arguments allow to select only a specified subset of PRISMA bands, by specifying an array of required wavelengths. For example:</p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
+               <span class="kw">out_folder</span> <span class="kw">=</span> <span class="no">out_folder</span>,
+               <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
+               <span class="kw">VNIR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+               <span class="kw">SwiR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+               <span class="kw">selbands_vnir</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">450</span>,<span class="fl">550</span>,<span class="fl">650</span>),
+               <span class="kw">selbands_swir</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1000</span>,<span class="fl">1330</span>),
+               <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"SWIR"</span>,
+               <span class="kw">FULL</span>   <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
+<p>will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the original PRISMA bands whit wavelengths closer to the requested ones.</p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

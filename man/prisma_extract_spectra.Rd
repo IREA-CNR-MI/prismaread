@@ -76,6 +76,7 @@ if(interactive()){
  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
  # extract base statistics
  test <- prisma_extract_spectra(in_file, in_vect)
+ test
  # plot results using ggplot
  ggplot(test, aes(x = wvl, y = mean)) +
    geom_line(aes(color = ID, group = ID)) +
@@ -85,6 +86,7 @@ if(interactive()){
  # extract base statistics ands save results as excel file, in "wide" format
  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
                                 stats_format = "wide")
+ test
 
  # extract custom statistics
  test <- prisma_extract_spectra(in_file, in_vect,
@@ -92,17 +94,25 @@ if(interactive()){
  # plot results using ggplot
  ggplot(test, aes(x = wvl)) +
    geom_line(aes(y = mean, color = ID, group = ID)) +
-   geom_line(aes(y = mean + stdev, group = ID), color = "grey75"))
-   geom_line(aes(y = mean - stdev, group = ID), color = "grey75"))
+   geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
+   geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
    facet_wrap(~ID) +
    theme_light()
+
  # extract custom statistics and quantiles
  test <- prisma_extract_spectra(in_file, in_vect, quantiles = TRUE,
                                 selstats = c("mean", "stdev"))
+ test
 
  # extract also all pixels
  test <- prisma_extract_spectra(in_file, in_vect, allpix = TRUE, quantiles = TRUE,
                                 selstats = c("mean", "stdev"))
+ test$allpix
+
+ ggplot(test$allpix, aes(x = wvl)) +
+   geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
+   facet_wrap(~ID) +
+   theme_light()
 
  }
 }

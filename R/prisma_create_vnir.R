@@ -61,6 +61,7 @@ prisma_create_vnir <- function(f,
     } else {
         seqbands <- unlist(lapply(selbands_vnir, FUN = function(x) which.min(abs(wl_vnir - x))))
     }
+
     for (band_vnir in seqbands) {
 
         if (wl_vnir[band_vnir] != 0) {
@@ -115,23 +116,27 @@ prisma_create_vnir <- function(f,
 
     # Write the cube ----
 
-    wl_vnir   <- wl_vnir[wl_vnir != 0]
-    fwhm_vnir <- fwhm_vnir[fwhm_vnir != 0]
-    # browser()
     if (is.null(selbands_vnir)) {
-        names(rast_vnir) <- paste0("wl_", round(wl_vnir, digits = 4))
+        # names(rast_vnir) <- paste0("b", seqbands, "_", round(wl_vnir, digits = 3))
+        orbands <- seqbands[wl_vnir != 0]
+        names(rast_vnir) <- paste0("b", orbands)
+        wl_sub   <- wl_vnir[wl_vnir != 0]
+        fwhm_sub <- fwhm_vnir[wl_vnir != 0]
     } else {
-        names(rast_vnir) <- paste0("wl_", round(wl_vnir[seqbands], digits = 4))
+        # names(rast_vnir) <- paste0("b", seqbands, "_", round(wl_vnir[seqbands], digits = 3))
+        orbands <- seqbands
+        names(rast_vnir) <- paste0("b", orbands)
+        wl_sub   <- wl_vnir[seqbands]
+        fwhm_sub <- fwhm_vnir[seqbands]
     }
+
+    # wl_vnir   <- wl_vnir[wl_vnir != 0]
+    # fwhm_vnir <- fwhm_vnir[fwhm_vnir != 0]
     rm(vnir_cube)
     rm(band)
     gc()
 
     message("- Writing VNIR raster -")
-
-    # if(proc_lev %in% c("1", "2B", "2C") && !base_georef) {
-    #     browser()
-    # }
 
     rastwrite_lines(rast_vnir,
                     out_file_vnir,
@@ -140,21 +145,10 @@ prisma_create_vnir <- function(f,
                     scale_min = vnir_min,
                     scale_max = vnir_max)
 
-    if (!is.null(selbands_vnir)) {
-        wl_sub   <- wl_vnir[seqbands]
-        fwhm_sub <- fwhm_vnir[seqbands]
-    } else {
-        wl_sub   <- wl_vnir
-        fwhm_sub <- fwhm_vnir
-    }
-
-
     if (out_format == "ENVI") {
-        # browser()
+        cat("band names = {", paste(names(rast_vnir),collapse=","), "}", "\n",
+            file=raster::extension(out_file_vnir, "hdr"), append=TRUE)
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
-        write(c("wavelength = {",
-                paste(round(wl_sub, digits = 4), collapse = ","), "}"),
-              out_hdr, append = TRUE)
         write(c("wavelength = {",
                 paste(round(wl_sub, digits = 4), collapse = ","), "}"),
               out_hdr, append = TRUE)
@@ -163,10 +157,23 @@ prisma_create_vnir <- function(f,
               out_hdr, append = TRUE)
         write("wavelength units = Nanometers")
         write("sensor type = PRISMA")
+        # hdr_in  <- readLines(out_hdr)
+        # start_line_bnames <- grep("band names", hdr_in) + 1
+        # end_line_bnames <- start_line_bnames + length(wl_sub) - 1
+        # for (bb in start_line_bnames:(end_line_bnames - 1)) {
+        #     hdr_in[bb] <- paste0(names(rast_vnir)[bb-start_line_bnames+1], ",")
+        # }
+        # hdr_in[end_line_bnames] <- paste0(tail(names(rast_vnir), 1), "}")
+        # fileConn <-file(out_hdr)
+        # writeLines(hdr_in, fileConn)
+        # close(fileConn)
+        # writeLines(hdr_in, )
+
     }
 
-    out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), "_meta.txt")
+    out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), ".wvl")
     utils::write.table(data.frame(band = 1:length(wl_sub),
+                                  orband = orbands,
                                   wl   = wl_sub,
                                   fwhm = fwhm_sub,
                                   stringsAsFactors = FALSE),

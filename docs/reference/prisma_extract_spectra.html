@@ -108,6 +108,9 @@
       <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
     </li>
     <li>
+      <a href="../articles/Extracting-data-over-vector.html">Importing Level 1 Data</a>
+    </li>
+    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
@@ -239,7 +242,52 @@ is not saved, Default: NULL</p></td>
     <p>DETAILS</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+ <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='st'>"D:/prismaread/L2D/testL2D_HCO_VNIR.envi"</span>
+ <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='st'>"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
+ <span class='co'># extract base statistics</span>
+ <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>prisma_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>)
+ <span class='no'>test</span>
+ <span class='co'># plot results using ggplot</span>
+ <span class='fu'>ggplot</span>(<span class='no'>test</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>wvl</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span>)) +
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>ID</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>)) +
+   <span class='fu'>facet_wrap</span>(~<span class='no'>ID</span>) +
+   <span class='fu'>theme_light</span>()
+
+ <span class='co'># extract base statistics ands save results as excel file, in "wide" format</span>
+ <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>prisma_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='st'>"D:/Temp/test1.xlsx"</span>,
+                                <span class='kw'>stats_format</span> <span class='kw'>=</span> <span class='st'>"wide"</span>)
+ <span class='no'>test</span>
+
+ <span class='co'># extract custom statistics</span>
+ <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>prisma_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>,
+                                <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"coeffvar"</span>, <span class='st'>"stdev"</span>, <span class='st'>"min"</span>, <span class='st'>"max"</span>))
+ <span class='co'># plot results using ggplot</span>
+ <span class='fu'>ggplot</span>(<span class='no'>test</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>wvl</span>)) +
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>ID</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>)) +
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span> + <span class='no'>stdev</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"grey75"</span>) +
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span> - <span class='no'>stdev</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"grey75"</span>) +
+   <span class='fu'>facet_wrap</span>(~<span class='no'>ID</span>) +
+   <span class='fu'>theme_light</span>()
+
+ <span class='co'># extract custom statistics and quantiles</span>
+ <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>prisma_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                                <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
+ <span class='no'>test</span>
+
+ <span class='co'># extract also all pixels</span>
+ <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>prisma_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>allpix</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                                <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
+ <span class='no'>test</span>$<span class='no'>allpix</span>
+
+ <span class='fu'>ggplot</span>(<span class='no'>test</span>$<span class='no'>allpix</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>wvl</span>)) +
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>value</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>pixel</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>ID</span>), <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)  +
+   <span class='fu'>facet_wrap</span>(~<span class='no'>ID</span>) +
+   <span class='fu'>theme_light</span>()
+
+ }
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
