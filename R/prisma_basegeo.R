@@ -48,13 +48,15 @@ prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
     minlat  <- min(lat, na.rm = TRUE)
     vals    <- raster::values(band)
 
-    columns <- round((lon - minlon) / psize_x)
+    columns <- round((lon - minlon) / psize_x) + 1
     rows    <- nrows - round((lat - minlat) / psize_y)
 
     # columns <- round((lon - minlon) / psize_x) + 1
     # rows    <- nrows - round((lat - minlat) / psize_y) - 1
-    # columns[columns > ncols] <- 0
-    # rows[rows > nrows] <- 0
+
+    #♫ remove data if out of bounds to avoid potential crashes
+    columns[columns > ncols] <- 0
+    rows[rows > nrows] <- 0
 
     for (indpix in 1:(numlines*numcols)) {
         out_grd[rows[indpix], columns[indpix]] <- vals[indpix]
