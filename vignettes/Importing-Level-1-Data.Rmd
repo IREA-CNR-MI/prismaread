@@ -65,6 +65,7 @@ out_format = "ENVI"
 
 # Save a full image, prioritizing the VNIR spectrometer and save in EVI format
 convert_prisma(in_file    = in_file,
+               in_L2_file = in_L2_file, 
                out_folder = out_folder,
                out_format = out_format,
                join_priority = "SWIR",

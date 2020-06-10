@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Importing Level 1 Data • prismaread</title>
+<title>Extracting Data Over Vector Features • prismaread</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Importing Level 1 Data">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Extracting Data Over Vector Features">
 <meta property="og:description" content="prismaread">
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -61,10 +61,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
-    </li>
-    <li>
-      <a href="../articles/Extracting-data-over-vector.html">Importing Level 1 Data</a>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
@@ -101,7 +98,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Importing Level 1 Data</h1>
+      <h1 data-toc-skip>Extracting Data Over Vector Features</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/lbusett/prismaread/blob/master/vignettes/Extracting-data-over-vector.Rmd"><code>vignettes/Extracting-data-over-vector.Rmd</code></a></small>
@@ -115,25 +112,26 @@
 <p>For example, starting from a VNIR Cube obtained with <code>convert_prisma</code> and a vector polygon file:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r">  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">prismaread</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tmap</span>)
   <span class="no">in_file</span> <span class="kw">&lt;-</span> <span class="st">"D:/prismaread/L2D/testL2D_HCO_VNIR.envi"</span>
   <span class="no">in_vect</span> <span class="kw">&lt;-</span> <span class="st">"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
 
-   <span class="co"># extract base statistics, in "long" format</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>)
+  <span class="co"># extract base statistics, in "long" format</span>
+  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"ID"</span>)
   <span class="no">test</span>
 <span class="co">#&gt; # A tibble: 396 x 4</span>
-<span class="co">#&gt;      wvl ID      mean  stdev</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. id_1  0      0     </span>
-<span class="co">#&gt;  2  411. id_1  0.0538 0.0236</span>
-<span class="co">#&gt;  3  419. id_1  0.0636 0.0267</span>
-<span class="co">#&gt;  4  427. id_1  0.0724 0.0282</span>
-<span class="co">#&gt;  5  434. id_1  0.0786 0.0294</span>
-<span class="co">#&gt;  6  441. id_1  0.0797 0.0296</span>
-<span class="co">#&gt;  7  449. id_1  0.0880 0.0311</span>
-<span class="co">#&gt;  8  456. id_1  0.0898 0.0314</span>
-<span class="co">#&gt;  9  464. id_1  0.0937 0.0322</span>
-<span class="co">#&gt; 10  471. id_1  0.0995 0.0332</span>
+<span class="co">#&gt;      wvl ID       mean  stdev</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402. poly_1 0      0     </span>
+<span class="co">#&gt;  2  411. poly_1 0.0538 0.0236</span>
+<span class="co">#&gt;  3  419. poly_1 0.0636 0.0267</span>
+<span class="co">#&gt;  4  427. poly_1 0.0724 0.0282</span>
+<span class="co">#&gt;  5  434. poly_1 0.0786 0.0294</span>
+<span class="co">#&gt;  6  441. poly_1 0.0797 0.0296</span>
+<span class="co">#&gt;  7  449. poly_1 0.0880 0.0311</span>
+<span class="co">#&gt;  8  456. poly_1 0.0898 0.0314</span>
+<span class="co">#&gt;  9  464. poly_1 0.0937 0.0322</span>
+<span class="co">#&gt; 10  471. poly_1 0.0995 0.0332</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
   <span class="co"># plot results using ggplot</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">wvl</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mean</span>)) +
@@ -144,43 +142,43 @@
 <div class="sourceCode" id="cb2"><html><body><pre class="r">
   <span class="co"># extract base statistics ands save results as excel file, in "wide" format</span>
   <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">out_file</span> <span class="kw">=</span> <span class="st">"D:/Temp/test1.xlsx"</span>,
-                                 <span class="kw">stats_format</span> <span class="kw">=</span> <span class="st">"wide"</span>)
+                                 <span class="kw">stats_format</span> <span class="kw">=</span> <span class="st">"wide"</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
   <span class="no">test</span>
 <span class="co">#&gt; # A tibble: 66 x 13</span>
-<span class="co">#&gt;      wvl mean_id_1 stdev_id_1 mean_id_2 stdev_id_2 mean_id_3 stdev_id_3</span>
-<span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402.    0          0         0.0316    0.00469  0.00193     0.00254</span>
-<span class="co">#&gt;  2  411.    0.0538     0.0236    0.0257    0.00479  0.000420    0.00117</span>
-<span class="co">#&gt;  3  419.    0.0636     0.0267    0.0346    0.00494  0.00177     0.00278</span>
-<span class="co">#&gt;  4  427.    0.0724     0.0282    0.0436    0.00531  0.00539     0.00413</span>
-<span class="co">#&gt;  5  434.    0.0786     0.0294    0.0500    0.00569  0.00858     0.00507</span>
-<span class="co">#&gt;  6  441.    0.0797     0.0296    0.0527    0.00610  0.00965     0.00544</span>
-<span class="co">#&gt;  7  449.    0.0880     0.0311    0.0615    0.00640  0.0147      0.00615</span>
-<span class="co">#&gt;  8  456.    0.0898     0.0314    0.0630    0.00648  0.0148      0.00619</span>
-<span class="co">#&gt;  9  464.    0.0937     0.0322    0.0669    0.00681  0.0172      0.00629</span>
-<span class="co">#&gt; 10  471.    0.0995     0.0332    0.0721    0.00712  0.0202      0.00651</span>
-<span class="co">#&gt; # ... with 56 more rows, and 6 more variables: mean_id_4 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   stdev_id_4 &lt;dbl&gt;, mean_id_5 &lt;dbl&gt;, stdev_id_5 &lt;dbl&gt;, mean_id_6 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   stdev_id_6 &lt;dbl&gt;</span>
+<span class="co">#&gt;      wvl mean_X1 stdev_X1 mean_X2 stdev_X2 mean_X3 stdev_X3 mean_X4 stdev_X4</span>
+<span class="co">#&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402.  0        0       0.0316  0.00469 1.93e-3  0.00254 0.0114    0.0144</span>
+<span class="co">#&gt;  2  411.  0.0538   0.0236  0.0257  0.00479 4.20e-4  0.00117 0.00866   0.0124</span>
+<span class="co">#&gt;  3  419.  0.0636   0.0267  0.0346  0.00494 1.77e-3  0.00278 0.0130    0.0161</span>
+<span class="co">#&gt;  4  427.  0.0724   0.0282  0.0436  0.00531 5.39e-3  0.00413 0.0170    0.0191</span>
+<span class="co">#&gt;  5  434.  0.0786   0.0294  0.0500  0.00569 8.58e-3  0.00507 0.0208    0.0214</span>
+<span class="co">#&gt;  6  441.  0.0797   0.0296  0.0527  0.00610 9.65e-3  0.00544 0.0232    0.0229</span>
+<span class="co">#&gt;  7  449.  0.0880   0.0311  0.0615  0.00640 1.47e-2  0.00615 0.0305    0.0248</span>
+<span class="co">#&gt;  8  456.  0.0898   0.0314  0.0630  0.00648 1.48e-2  0.00619 0.0311    0.0251</span>
+<span class="co">#&gt;  9  464.  0.0937   0.0322  0.0669  0.00681 1.72e-2  0.00629 0.0336    0.0266</span>
+<span class="co">#&gt; 10  471.  0.0995   0.0332  0.0721  0.00712 2.02e-2  0.00651 0.0381    0.0266</span>
+<span class="co">#&gt; # ... with 56 more rows, and 4 more variables: mean_X5 &lt;dbl&gt;, stdev_X5 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   mean_X6 &lt;dbl&gt;, stdev_X6 &lt;dbl&gt;</span>
 
   <span class="co"># extract custom statistics</span>
   <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>,
-                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>))
+                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>),
+                                 <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
 
   <span class="no">test</span>
 <span class="co">#&gt; # A tibble: 396 x 7</span>
 <span class="co">#&gt;      wvl ID      mean coeffvar  stdev    min   max</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. id_1  0       NaN     0      0      0    </span>
-<span class="co">#&gt;  2  411. id_1  0.0538    0.439 0.0236 0.0190 0.164</span>
-<span class="co">#&gt;  3  419. id_1  0.0636    0.419 0.0267 0.0263 0.192</span>
-<span class="co">#&gt;  4  427. id_1  0.0724    0.390 0.0282 0.0336 0.211</span>
-<span class="co">#&gt;  5  434. id_1  0.0786    0.374 0.0294 0.0383 0.223</span>
-<span class="co">#&gt;  6  441. id_1  0.0797    0.371 0.0296 0.0383 0.225</span>
-<span class="co">#&gt;  7  449. id_1  0.0880    0.353 0.0311 0.0443 0.242</span>
-<span class="co">#&gt;  8  456. id_1  0.0898    0.350 0.0314 0.0455 0.244</span>
-<span class="co">#&gt;  9  464. id_1  0.0937    0.343 0.0322 0.0484 0.251</span>
-<span class="co">#&gt; 10  471. id_1  0.0995    0.333 0.0332 0.0526 0.262</span>
+<span class="co">#&gt;  1  402. X1    0       NaN     0      0      0    </span>
+<span class="co">#&gt;  2  411. X1    0.0538    0.439 0.0236 0.0190 0.164</span>
+<span class="co">#&gt;  3  419. X1    0.0636    0.419 0.0267 0.0263 0.192</span>
+<span class="co">#&gt;  4  427. X1    0.0724    0.390 0.0282 0.0336 0.211</span>
+<span class="co">#&gt;  5  434. X1    0.0786    0.374 0.0294 0.0383 0.223</span>
+<span class="co">#&gt;  6  441. X1    0.0797    0.371 0.0296 0.0383 0.225</span>
+<span class="co">#&gt;  7  449. X1    0.0880    0.353 0.0311 0.0443 0.242</span>
+<span class="co">#&gt;  8  456. X1    0.0898    0.350 0.0314 0.0455 0.244</span>
+<span class="co">#&gt;  9  464. X1    0.0937    0.343 0.0322 0.0484 0.251</span>
+<span class="co">#&gt; 10  471. X1    0.0995    0.333 0.0332 0.0526 0.262</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
 
   <span class="co"># plot results using ggplot</span>
@@ -195,27 +193,29 @@
 
   <span class="co"># extract custom statistics and quantiles</span>
   <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>))
+                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
+                                 <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
   <span class="no">test</span>
 <span class="co">#&gt; # A tibble: 396 x 9</span>
 <span class="co">#&gt;      wvl ID      mean  stdev quant_5 quant_25 quant_50 quant_75 quant_95</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. id_1  0      0       0        0        0        0        0     </span>
-<span class="co">#&gt;  2  411. id_1  0.0538 0.0236  0.0270   0.0385   0.0485   0.0583   0.0878</span>
-<span class="co">#&gt;  3  419. id_1  0.0636 0.0267  0.0339   0.0487   0.0573   0.0691   0.104 </span>
-<span class="co">#&gt;  4  427. id_1  0.0724 0.0282  0.0431   0.0566   0.0663   0.0782   0.116 </span>
-<span class="co">#&gt;  5  434. id_1  0.0786 0.0294  0.0479   0.0616   0.0720   0.0847   0.123 </span>
-<span class="co">#&gt;  6  441. id_1  0.0797 0.0296  0.0487   0.0627   0.0729   0.0860   0.124 </span>
-<span class="co">#&gt;  7  449. id_1  0.0880 0.0311  0.0551   0.0704   0.0809   0.0947   0.135 </span>
-<span class="co">#&gt;  8  456. id_1  0.0898 0.0314  0.0575   0.0718   0.0827   0.0962   0.136 </span>
-<span class="co">#&gt;  9  464. id_1  0.0937 0.0322  0.0598   0.0760   0.0864   0.0993   0.142 </span>
-<span class="co">#&gt; 10  471. id_1  0.0995 0.0332  0.0652   0.0807   0.0918   0.106    0.150 </span>
+<span class="co">#&gt;  1  402. X1    0      0           NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  2  411. X1    0.0538 0.0236      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  3  419. X1    0.0636 0.0267      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  4  427. X1    0.0724 0.0282      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  5  434. X1    0.0786 0.0294      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  6  441. X1    0.0797 0.0296      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  7  449. X1    0.0880 0.0311      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  8  456. X1    0.0898 0.0314      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt;  9  464. X1    0.0937 0.0322      NA       NA       NA       NA       NA</span>
+<span class="co">#&gt; 10  471. X1    0.0995 0.0332      NA       NA       NA       NA       NA</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
 
 
   <span class="co"># extract also all pixels</span>
   <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">allpix</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>))
+                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
+                                 <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
 
 
   <span class="co"># stats are saved in the "stats" slot of the output</span>
@@ -223,16 +223,16 @@
 <span class="co">#&gt; # A tibble: 396 x 4</span>
 <span class="co">#&gt;      wvl ID      mean  stdev</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. id_1  0      0     </span>
-<span class="co">#&gt;  2  411. id_1  0.0538 0.0236</span>
-<span class="co">#&gt;  3  419. id_1  0.0636 0.0267</span>
-<span class="co">#&gt;  4  427. id_1  0.0724 0.0282</span>
-<span class="co">#&gt;  5  434. id_1  0.0786 0.0294</span>
-<span class="co">#&gt;  6  441. id_1  0.0797 0.0296</span>
-<span class="co">#&gt;  7  449. id_1  0.0880 0.0311</span>
-<span class="co">#&gt;  8  456. id_1  0.0898 0.0314</span>
-<span class="co">#&gt;  9  464. id_1  0.0937 0.0322</span>
-<span class="co">#&gt; 10  471. id_1  0.0995 0.0332</span>
+<span class="co">#&gt;  1  402. X1    0      0     </span>
+<span class="co">#&gt;  2  411. X1    0.0538 0.0236</span>
+<span class="co">#&gt;  3  419. X1    0.0636 0.0267</span>
+<span class="co">#&gt;  4  427. X1    0.0724 0.0282</span>
+<span class="co">#&gt;  5  434. X1    0.0786 0.0294</span>
+<span class="co">#&gt;  6  441. X1    0.0797 0.0296</span>
+<span class="co">#&gt;  7  449. X1    0.0880 0.0311</span>
+<span class="co">#&gt;  8  456. X1    0.0898 0.0314</span>
+<span class="co">#&gt;  9  464. X1    0.0937 0.0322</span>
+<span class="co">#&gt; 10  471. X1    0.0995 0.0332</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
 
   <span class="co"># pixel values are saved in the "allpix" slot of the output</span>

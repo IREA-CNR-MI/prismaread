@@ -105,10 +105,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Creation-of-ATCOR-files.html">Creation of ATCOR files</a>
-    </li>
-    <li>
-      <a href="../articles/Extracting-data-over-vector.html">Importing Level 1 Data</a>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
@@ -160,6 +157,7 @@
   <span class='no'>in_file</span>,
   <span class='no'>in_vect</span>,
   <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dissolve</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>stats</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>),
   <span class='kw'>stats_format</span> <span class='kw'>=</span> <span class='st'>"long"</span>,
@@ -184,7 +182,7 @@ the points/polygons on which data should be extracted</p></td>
     <tr>
       <th>id_field</th>
       <td><p>`character` (Optional), name of the column of the vector
-dataset to be used to "aggregate" the outputs (in case `dissolve` is TRUE).
+dataset to be used to "name" the outputs, and also "aggregate" themin case `dissolve` is TRUE.
 If NULL, a arbitrary `ID` field is created, and each point/polygin
 is considered separately (see Details),  Default: NULL</p></td>
     </tr>
