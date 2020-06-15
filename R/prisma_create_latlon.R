@@ -33,10 +33,14 @@ prisma_create_latlon <- function(f,
             rast_lon  <- raster::flip(rast_lon, 1)
         }
     } else {
-        rast_lat  <- raster::raster(geo$lat, crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                          " +datum=WGS84 +units=m +no_defs"))
-        rast_lon  <- raster::raster(geo$lon, crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                          " +datum=WGS84 +units=m +no_defs"))
+        rast_lat  <- raster::raster(geo$lat,
+                                    crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                 ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                                                 " +datum=WGS84 +units=m +no_defs"))
+        rast_lon  <- raster::raster(geo$lon,
+                                    crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                 ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                                                 " +datum=WGS84 +units=m +no_defs"))
         # rast_lat  <- raster::t(rast_lat)
         # rast_lon  <- raster::t(rast_lon)
         ex <- matrix(c(geo$xmin, geo$xmax,

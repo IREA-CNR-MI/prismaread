@@ -34,9 +34,9 @@ prisma_get_geoloc <- function(f, proc_lev, source, wvl = NULL, in_L2_file = NULL
         return(out)
     } else {
         if (proc_lev == "2D") {
-
             proj_code <- hdf5r::h5attr(f, "Projection_Id")
             proj_name <- hdf5r::h5attr(f, "Projection_Name")
+            proj_epsg <- hdf5r::h5attr(f, "Epsg_Code")
             xmin  <- min(hdf5r::h5attr(f, "Product_ULcorner_easting"),
                          hdf5r::h5attr(f, "Product_LLcorner_easting"))
             xmax  <- max(hdf5r::h5attr(f, "Product_LRcorner_easting"),
@@ -53,6 +53,7 @@ prisma_get_geoloc <- function(f, proc_lev, source, wvl = NULL, in_L2_file = NULL
                         ymax = ymax,
                         proj_code = proj_code,
                         proj_name = proj_name,
+                        proj_epsg = proj_epsg,
                         lat = lat,
                         lon = lon)
             return(out)

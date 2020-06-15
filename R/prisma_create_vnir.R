@@ -91,6 +91,7 @@ prisma_create_vnir <- function(f,
                     message("Importing Band: ", band_vnir, " of: 66")
                     band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
                                            crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                        ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                         " +datum=WGS84 +units=m +no_defs"))
                     band <- raster::t(band)
                     ex <- matrix(c(geo$xmin, geo$xmax,  geo$ymin, geo$ymax),

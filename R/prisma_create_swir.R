@@ -83,6 +83,7 @@ prisma_create_swir <- function(f,
                     message("Importing Band: ", band_swir, " of: 173")
                     band <- raster::raster((swir_cube[,order_swir[band_swir], ]),
                                            crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                        ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                         " +datum=WGS84 +units=m +no_defs"))
                     band <- raster::t(band)
                     ex <- matrix(c(geo$xmin, geo$xmax,

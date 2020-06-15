@@ -27,9 +27,9 @@ prisma_create_pan <- function(f,
         pan_cube <- f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")]][,]
         if (is.null(in_L2_file)){
             pan_lat <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
-                                   "/Geolocation Fields/Latitude")]][,])
+                                           "/Geolocation Fields/Latitude")]][,])
             pan_lon <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
-                                   "/Geolocation Fields/Longitude")]][,])
+                                           "/Geolocation Fields/Longitude")]][,])
         } else {
             f2 <- try(hdf5r::H5File$new(in_L2_file, mode="r+"))
             if (inherits(f2, "try-error")){
@@ -40,9 +40,9 @@ prisma_create_pan <- function(f,
                 stop("in_L2_file is not a L2 PRISMA file. Aborting!")
             }
             pan_lat <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2, "_", gsub("H", "P", source),
-                                   "/Geolocation Fields/Latitude")]][,])
+                                            "/Geolocation Fields/Latitude")]][,])
             pan_lon <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2, "_", gsub("H", "P", source),
-                                   "/Geolocation Fields/Longitude")]][,])
+                                            "/Geolocation Fields/Longitude")]][,])
         }
 
     } else {
@@ -63,9 +63,9 @@ prisma_create_pan <- function(f,
         }
         if (proc_lev  %in% c("2B", "2C")) {
             pan_lat <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
-                                   "/Geolocation Fields/Latitude")]][,])
+                                           "/Geolocation Fields/Latitude")]][,])
             pan_lon <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
-                                   "/Geolocation Fields/Longitude")]][,])
+                                           "/Geolocation Fields/Longitude")]][,])
         }
     }
 
@@ -85,7 +85,8 @@ prisma_create_pan <- function(f,
     } else {
         if (proc_lev == "2D") {
             rast_pan <- raster::raster(pan_cube,
-                                       crs = paste0("+proj=utm +zone=", proj_code,
+                                       crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                    ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                     " +datum=WGS84 +units=m +no_defs"))
             rast_pan <- raster::t(rast_pan)
             ex <- matrix(c(geo$xmin, geo$xmax,

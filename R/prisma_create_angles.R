@@ -48,14 +48,17 @@ prisma_create_angles <- function(f,
         rast_obsang    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Observing_Angle")]][,],
                                          crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                      ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                       " +datum=WGS84 +units=m +no_defs"))
         rast_relazang  <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,],
                                          crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                      ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                       " +datum=WGS84 +units=m +no_defs"))
         rast_solzenang <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,],
                                          crs = paste0("+proj=utm +zone=", geo$proj_code,
+                                                      ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                       " +datum=WGS84 +units=m +no_defs"))
         rast_obsang    <- raster::t(rast_obsang)
         rast_relazang  <- raster::t(rast_relazang)
