@@ -52,6 +52,7 @@ prisma_create_pan <- function(f,
         if (proc_lev == "2D") {
             proj_code <- hdf5r::h5attr(f, "Projection_Id")
             proj_name <- hdf5r::h5attr(f, "Projection_Name")
+            proj_epsg <- hdf5r::h5attr(f, "Epsg_Code")
             xmin  <- hdf5r::h5attr(f, "Product_ULcorner_easting")
             xmax  <- hdf5r::h5attr(f, "Product_LRcorner_easting")
             ymin  <- hdf5r::h5attr(f, "Product_LRcorner_northing")
@@ -59,7 +60,8 @@ prisma_create_pan <- function(f,
             geo <- list(xmin = xmin, xmax = xmax,
                         ymin = ymin, ymax = ymax,
                         proj_code = proj_code,
-                        proj_name = proj_name)
+                        proj_name = proj_name,
+                        proj_epsg = proj_epsg)
         }
         if (proc_lev  %in% c("2B", "2C")) {
             pan_lat <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
