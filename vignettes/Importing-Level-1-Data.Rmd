@@ -52,7 +52,7 @@ The function also saves ancillary data related to wavelengths and fwhms of the d
 
 ## Associating acquisition angles with L1 data
 
-PRIMA L1 data unfortunately does not contain information concerning acquisition angles, that is instead available
+PRISMA L1 data unfortunately does not contain information concerning acquisition angles, that is instead available
 for all L2 datasets. However, if both the L1 and any L2 dataset area available `prismaread` allows to associate the
 ANGLES data retrieved from the L2 dataset to the L1 one. To do that, the user has to specify the additional
 `in_L2_file` in the call to `convert_prisma`, such as in: 

@@ -16,6 +16,9 @@ The goal of `prismaread` is allowing to easily import PRISMA
 hyperspectral data (<http://www.prisma-i.it/index.php/it/>) and convert
 them to a easier to use format (ENVI or GeoTiff).
 
+<a href="http://www.irea.cnr.it/en/">
+<img src="man/figures/logo_irea.png" height="60" align="left" style="vertical-align:middle;margin:0px 10px"/></a>
+
 *`prismaread` is developed and maintained by Lorenzo Busetto and Luigi
 Ranghetti, [Institute of Remote Sensing of
 Environment](http://www.irea.cnr.it/en/) - National Research Council -
