@@ -3,17 +3,10 @@ Title: Import PRISMA L1/L2 hyperspectral data and convert them to
  a more user friendly format
 Version: 0.2.0
 Authors@R: 
-    person(given = "Lorenzo",
-           family = "Busetto",
-           role = c("aut", "cre"),
-           email = "lbusett@gmail.com",
-           comment = c(ORCID = '0000-0001-9634-6038'),
-    person(given = "Luigi", 
-           family = "Ranghetti", 
-           email = "ranghetti.l@irea.cnr.it", 
-           role = c("aut"), 
-           comment = c(ORCID = '0000-0001-6207-5188'))
-           )
+    c(person("Lorenzo", "Busetto", email = "lbusett@gmail.com", role = c("aut", "cre"),
+    comment = c(ORCID = '0000-0001-9634-6038')), 
+    person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut"), 
+    comment = c(ORCID = '0000-0001-6207-5188')))
 Description: The goal of prismaread is allowing to easily import PRISMA (http://www.prisma-i.it/index.php/it/) hyperspectral data and convert them to a easier to use format ENVI or GeoTiff while also extracting other metadata information of interest.
 License: GPL-3
 Encoding: UTF-8

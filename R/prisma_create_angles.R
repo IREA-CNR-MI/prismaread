@@ -63,13 +63,10 @@ prisma_create_angles <- function(f,
         rast_obsang    <- raster::t(rast_obsang)
         rast_relazang  <- raster::t(rast_relazang)
         rast_solzenang <- raster::t(rast_solzenang)
-        ex <- matrix(c(geo$xmin, geo$xmax,
-                       geo$ymin, geo$ymax),
+        ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(band)[2]*30,
+                       geo$ymin - 15, geo$ymin - 15 + dim(band)[1]*30),
                      nrow = 2, ncol = 2, byrow = T)
         ex <- raster::extent(ex)
-        if (fix_geo) {
-            ex <- ex - 90
-        }
         rast_obsang    <- raster::setExtent(rast_obsang, ex, keepres = FALSE)
         rast_relazang  <- raster::setExtent(rast_relazang, ex, keepres = FALSE)
         rast_solzenang <- raster::setExtent(rast_solzenang, ex, keepres = FALSE)

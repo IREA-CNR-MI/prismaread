@@ -43,13 +43,10 @@ prisma_create_latlon <- function(f,
                                                  " +datum=WGS84 +units=m +no_defs"))
         # rast_lat  <- raster::t(rast_lat)
         # rast_lon  <- raster::t(rast_lon)
-        ex <- matrix(c(geo$xmin, geo$xmax,
-                       geo$ymin, geo$ymax),
+        ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(band)[2]*30,
+                       geo$ymin - 15, geo$ymin - 15 + dim(band)[1]*30),
                      nrow = 2, ncol = 2, byrow = T)
         ex <- raster::extent(ex)
-        if (fix_geo) {
-            ex <- ex - 90
-        }
         rast_lat  <- raster::setExtent(rast_lat, ex, keepres = FALSE)
         rast_lon  <- raster::setExtent(rast_lon, ex, keepres = FALSE)
     }

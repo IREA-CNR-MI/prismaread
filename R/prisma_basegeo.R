@@ -38,11 +38,8 @@ prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
     ncols <- ceiling((max(lon, na.rm = TRUE) - min(lon, na.rm = TRUE)) / psize_x)
     nrows <- ceiling((max(lat, na.rm = TRUE) - min(lat, na.rm = TRUE)) / psize_y)
 
-    # Set the grid ground control point (GCP) as [0, 0, MinX, MaxY].
+
     # Map all X and Y entries in the GLT to the output grid, excluding those that
-    # are flagged as "bad." If the image crosses the International Date Line, a
-    # value of 360 is added to X coordinates that are less than 0. This mapping
-    # can be represented as an index into the output grid.
     out_grd <- matrix(data = NA, nrow = nrows, ncol = ncols)
     minlon  <- min(lon, na.rm = TRUE)
     minlat  <- min(lat, na.rm = TRUE)
@@ -51,21 +48,22 @@ prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
     columns <- round((lon - minlon) / psize_x) + 1
     rows    <- nrows - round((lat - minlat) / psize_y)
 
-    # columns <- round((lon - minlon) / psize_x) + 1
-    # rows    <- nrows - round((lat - minlat) / psize_y) - 1
-
     #♫ remove data if out of bounds to avoid potential crashes
     columns[columns > ncols] <- 0
     rows[rows > nrows] <- 0
 
+    # transfer values from 1000*1000 cube to the regular 4326 grid ----
     for (indpix in 1:(numlines*numcols)) {
         out_grd[rows[indpix], columns[indpix]] <- vals[indpix]
     }
+
+    # Transform to raster ----
 
     outrast <- raster::raster(out_grd, xmn = min(lon, na.rm = TRUE), xmx = min(lon, na.rm = TRUE) + ncols*psize_x,
                       ymn = max(lat, na.rm = TRUE) - nrows*psize_y, ymx = max(lat, na.rm = TRUE),
                       crs = "+init=epsg:4326")
 
+    # Fill gaps if requested ----
     if (fill_gaps) {
         message("Filling Gaps")
         outrast <- raster::focal(outrast, w=matrix(1,3,3), fun=mean, na.rm = TRUE, NAonly = TRUE)
