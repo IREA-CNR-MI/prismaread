@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -157,7 +157,6 @@
   <span class='no'>out_format</span>,
   <span class='no'>base_georef</span>,
   <span class='no'>fill_gaps</span>,
-  <span class='no'>fix_geo</span>,
   <span class='no'>wl_swir</span>,
   <span class='no'>order_swir</span>,
   <span class='no'>fwhm_swir</span>,
@@ -202,11 +201,6 @@ Default: TRUE</p></td>
       <td><p>`logical` if TRUE, when georeferencing on L1, L2B/C data,
 substitute missing values with results of a 3x3 focal filter on the georeferenced
 data, Default: TRUE</p></td>
-    </tr>
-    <tr>
-      <th>fix_geo</th>
-      <td><p>`logical` if TRUE, apply a 90 metres correction to georeferencing
-info of l2D data, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>wl_swir</th>
@@ -256,7 +250,7 @@ fields used for bowtie georeferencing are taken from the L2 file instead than fr
 
       <footer>
       <div class="copyright">
-  <p>Developed by .</p>
+  <p>Developed by Lorenzo Busetto, Luigi Ranghetti.</p>
 </div>
 
 <div class="pkgdown">

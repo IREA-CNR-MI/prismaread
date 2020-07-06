@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -157,7 +157,6 @@
   <span class='no'>out_format</span>,
   <span class='no'>base_georef</span>,
   <span class='no'>fill_gaps</span>,
-  <span class='no'>fix_geo</span>,
   <span class='kw'>in_L2_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
 )</pre>
 
@@ -198,11 +197,6 @@ substitute missing values with results of a 3x3 focal filter on the georeference
 data, Default: TRUE</p></td>
     </tr>
     <tr>
-      <th>fix_geo</th>
-      <td><p>`logical` if TRUE, apply a 90 metres correction to georeferencing
-info of l2D data, Default: FALSE</p></td>
-    </tr>
-    <tr>
       <th>in_L2_file</th>
       <td><p>`character` full path of an L2 file to be used to extract better georeeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
@@ -225,7 +219,7 @@ fields used for bowtie georeferencing are taken from the L2 file instead than fr
 
       <footer>
       <div class="copyright">
-  <p>Developed by .</p>
+  <p>Developed by Lorenzo Busetto, Luigi Ranghetti.</p>
 </div>
 
 <div class="pkgdown">
