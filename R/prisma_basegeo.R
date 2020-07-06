@@ -59,8 +59,11 @@ prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
 
     # Transform to raster ----
 
-    outrast <- raster::raster(out_grd, xmn = min(lon, na.rm = TRUE), xmx = min(lon, na.rm = TRUE) + ncols*psize_x,
-                      ymn = max(lat, na.rm = TRUE) - nrows*psize_y, ymx = max(lat, na.rm = TRUE),
+    outrast <- raster::raster(out_grd,
+                              xmn = min(lon, na.rm = TRUE) - 0.5 * psize_x,
+                              xmx = min(lon, na.rm = TRUE) - 0.5 * psize_x + ncols*psize_x,
+                              ymn = max(lat, na.rm = TRUE) + 0.5 * psize_y - nrows*psize_y,
+                              ymx = max(lat, na.rm = TRUE) + 0.5 * psize_y,
                       crs = "+init=epsg:4326")
 
     # Fill gaps if requested ----
