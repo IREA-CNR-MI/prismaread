@@ -107,7 +107,10 @@ prisma_create_pan <- function(f,
                     scale_min = panscale_min,
                     scale_max = panscale_max)
     rm(rast_pan)
-    rm(pan_lon)
-    rm(pan_lat)
+
+    if (proc_lev  %in% c("2B", "2C")) {
+        rm(pan_lon)
+        rm(pan_lat)
+    }
     gc()
 }
