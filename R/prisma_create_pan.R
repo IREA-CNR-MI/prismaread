@@ -91,8 +91,8 @@ prisma_create_pan <- function(f,
                                                     ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                     " +datum=WGS84 +units=m +no_defs"))
             rast_pan <- raster::t(rast_pan)
-            ex <- matrix(c(geo$xmin - 5, geo$xmin - 5 + dim(band)[2]*5,
-                           geo$ymin - 5, geo$ymin - 5 + dim(band)[1]*5),
+            ex <- matrix(c(geo$xmin - 5, geo$xmin - 5 + dim(rast_pan)[2]*5,
+                           geo$ymin - 5, geo$ymin - 5 + dim(rast_pan)[1]*5),
                          nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
             if (fix_geo) {
