@@ -85,7 +85,7 @@
 #' }
 #' @rdname prisma_extract_spectra
 #' @export
-#' @importFrom raster brick
+#' @importFrom raster brick res
 #' @importFrom tools file_path_sans_ext
 #' @importFrom sf st_read st_transform st_crs
 #' @importFrom exactextractr exact_extract
@@ -97,6 +97,7 @@
 #' @importFrom utils write.csv read.table tail
 #' @importFrom stats median quantile var
 #' @importFrom tidyselect everything
+#' @importFrom rlang sym
 
 prisma_extract_spectra <- function(in_file,
                                    in_vect,
@@ -214,7 +215,7 @@ prisma_extract_spectra <- function(in_file,
     if (dissolve && !is.null(id_field)){
       if(length(in_sf[[id_field]]) != length(unique(in_sf[[id_field]]))){
          in_sf <- in_sf %>%
-             dplyr::group_by(!!sym(id_field))%>%
+             dplyr::group_by(!!rlang::sym(id_field))%>%
              dplyr::summarise()
       }
     }
@@ -224,7 +225,7 @@ prisma_extract_spectra <- function(in_file,
 
     # workaround to allow extraction over points
     if (all(sf::st_dimension(in_sf) == 0)) {
-        in_sf <- sf::st_buffer(in_sf, res(in_rast)[1] / 10000)
+        in_sf <- sf::st_buffer(in_sf, raster::res(in_rast)[1] / 10000)
     }
 
     if (stats) {
