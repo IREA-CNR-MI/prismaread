@@ -1,3 +1,11 @@
+# prismaread 0.2.1 - 2019-07-03
+
+* Major changes
+
+    - Fixed coordinates of georeferenced images considering that coordinates 
+      provided in metadata and geolocation fields correspond to the center of the
+      pixel. 
+      
 # prismaread 0.2.0 - 2019-06-04
 
 * Major changes

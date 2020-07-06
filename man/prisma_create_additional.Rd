@@ -11,7 +11,6 @@ prisma_create_additional(
   out_format,
   base_georef,
   fill_gaps,
-  fix_geo,
   in_L2_file = NULL
 )
 }
@@ -32,9 +31,6 @@ Default: TRUE}
 \item{fill_gaps}{`logical` if TRUE, when georeferencing on L1, L2B/C data,
 substitute missing values with results of a 3x3 focal filter on the georeferenced
 data, Default: TRUE}
-
-\item{fix_geo}{`logical` if TRUE, apply a 90 metres correction to georeferencing
-info of l2D data, Default: FALSE}
 
 \item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON

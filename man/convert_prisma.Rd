@@ -11,15 +11,14 @@ convert_prisma(
   out_format = "ENVI",
   base_georef = TRUE,
   fill_gaps = TRUE,
-  fix_geo = TRUE,
   VNIR = TRUE,
-  SWIR = TRUE,
+  SWIR = FALSE,
   FULL = FALSE,
   source = "HCO",
   join_priority = "SWIR",
   ATCOR = FALSE,
   ATCOR_wls = NULL,
-  PAN = TRUE,
+  PAN = FALSE,
   CLOUD = FALSE,
   LC = FALSE,
   GLINT = FALSE,
@@ -53,9 +52,6 @@ Default: TRUE}
 \item{fill_gaps}{`logical` if TRUE, when georeferencing on L1, L2B/C data,
 substitute missing values with results of a 3x3 focal filter on the georeferenced
 data, Default: TRUE}
-
-\item{fix_geo}{`logical` if TRUE, apply a 90 metres correction to georeferencing
-info of l2D data, Default: FALSE}
 
 \item{VNIR}{`logical` if TRUE, create the VNIR image, Default: TRUE}
 

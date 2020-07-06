@@ -15,8 +15,6 @@
 #' @param fill_gaps `logical` if TRUE, when georeferencing on L1, L2B/C data,
 #'  substitute missing values with results of a 3x3 focal filter on the georeferenced
 #'  data, Default: TRUE
-#' @param fix_geo `logical` if TRUE, apply a 90 metres correction to georeferencing
-#' info of l2D data, Default: FALSE
 #' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'
 #' @param VNIR `logical` if TRUE, create the VNIR image, Default: TRUE
 #' @param SWIR `logical` if TRUE, create the SWIR image, Default: TRUE
@@ -109,7 +107,6 @@ convert_prisma <- function(in_file,
                            out_format    = "ENVI",
                            base_georef   = TRUE,
                            fill_gaps     = TRUE,
-                           fix_geo       = FALSE,
                            VNIR          = TRUE,
                            SWIR          = FALSE,
                            FULL          = FALSE,
@@ -236,7 +233,6 @@ convert_prisma <- function(in_file,
                          out_format,
                          base_georef,
                          fill_gaps,
-                         fix_geo,
                          wl_vnir,
                          order_vnir,
                          fwhm_vnir,
@@ -282,7 +278,6 @@ convert_prisma <- function(in_file,
                          out_format,
                          base_georef,
                          fill_gaps,
-                         fix_geo,
                          wl_swir,
                          order_swir,
                          fwhm_swir,
@@ -393,7 +388,6 @@ convert_prisma <- function(in_file,
                         out_format,
                         base_georef,
                         fill_gaps,
-                        fix_geo,
                         in_L2_file = in_L2_file)
 
     }
@@ -416,7 +410,6 @@ convert_prisma <- function(in_file,
                            out_format,
                            base_georef,
                            fill_gaps,
-                           fix_geo,
                            in_L2_file = in_L2_file)
 
     }
@@ -440,7 +433,6 @@ convert_prisma <- function(in_file,
                              out_format,
                              base_georef,
                              fill_gaps,
-                             fix_geo,
                              in_L2_file = in_L2_file)
 
       }
@@ -466,8 +458,7 @@ convert_prisma <- function(in_file,
                                  out_file_cld,
                                  out_format,
                                  base_georef,
-                                 fill_gaps,
-                                 fix_geo)
+                                 fill_gaps)
 
       }
     }
@@ -487,8 +478,7 @@ convert_prisma <- function(in_file,
                                  out_file_glnt,
                                  out_format,
                                  base_georef,
-                                 fill_gaps,
-                                 fix_geo)
+                                 fill_gaps)
       }
     }
     # Save LC if requested ----
@@ -507,8 +497,7 @@ convert_prisma <- function(in_file,
                                  out_file_lc,
                                  out_format,
                                  base_georef,
-                                 fill_gaps,
-                                 fix_geo)
+                                 fill_gaps)
       }
     }
   }

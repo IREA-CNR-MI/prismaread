@@ -13,7 +13,6 @@ prisma_create_angles <- function(f,
                                  out_format,
                                  base_georef,
                                  fill_gaps,
-                                 fix_geo,
                                  in_L2_file = NULL){
 
     message(" - Accessing ANGLES dataset - ")

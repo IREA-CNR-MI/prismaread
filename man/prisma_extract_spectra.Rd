@@ -29,6 +29,9 @@ dataset to be used to "name" the outputs, and also "aggregate" themin case `diss
 If NULL, a arbitrary `ID` field is created, and each point/polygin
 is considered separately (see Details),  Default: NULL}
 
+\item{dissolve}{`logical` If TRUE and `id_field` was specified, in case multiple features of the input
+vector share a common id, they are dissolved before extracting the data, Default: FALSE}
+
 \item{stats}{`logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
 on the vector features, Default: TRUE}
 

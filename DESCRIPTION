@@ -1,7 +1,7 @@
 Package: prismaread
 Title: Import PRISMA L1/L2 hyperspectral data and convert them to 
  a more user friendly format
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     c(person("Lorenzo", "Busetto", email = "lbusett@gmail.com", role = c("aut", "cre"),
     comment = c(ORCID = '0000-0001-9634-6038')), 

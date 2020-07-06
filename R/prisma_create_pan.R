@@ -15,7 +15,6 @@ prisma_create_pan <- function(f,
                               out_format,
                               base_georef,
                               fill_gaps,
-                              fix_geo,
                               in_L2_file = NULL){
 
     # Get geo info ----
@@ -95,9 +94,6 @@ prisma_create_pan <- function(f,
                            geo$ymin - 2.5, geo$ymin - 2.5 + dim(rast_pan)[1]*5),
                          nrow = 2, ncol = 2, byrow = T)
             ex <- raster::extent(ex)
-            if (fix_geo) {
-                ex <- ex - 90
-            }
             rast_pan <- raster::setExtent(rast_pan, ex, keepres = FALSE)
         }
     }
