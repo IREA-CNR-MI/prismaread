@@ -79,7 +79,7 @@ if(interactive()){
  in_file <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
  # extract base statistics
- test <- prisma_extract_spectra(in_file, in_vect)
+ test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx")
  test
  # plot results using ggplot
  ggplot(test, aes(x = wvl, y = mean)) +

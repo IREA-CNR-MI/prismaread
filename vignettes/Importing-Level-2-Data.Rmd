@@ -37,7 +37,7 @@ in_file    = "/home/lb/tmp/test/PRS_L2B_STD_20190825103112_20190825103117_0001.h
 out_folder = "/home/lb/tmp/test/"
 out_format = "ENVI"
 
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
 convert_prisma(in_file    = in_file,
                out_folder = out_folder,
                out_format = out_format,

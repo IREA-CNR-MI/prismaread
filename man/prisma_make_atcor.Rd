@@ -37,7 +37,7 @@ columns 200 and 800 are saved.)}
 
 \item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
 the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
-Default: "VNIR"}
+Default: "SWIR"}
 
 \item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
 }

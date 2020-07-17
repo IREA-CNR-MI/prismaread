@@ -42,7 +42,7 @@
 #'  in_file <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
 #'  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
 #'  # extract base statistics
-#'  test <- prisma_extract_spectra(in_file, in_vect)
+#'  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx")
 #'  test
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl, y = mean)) +
@@ -111,256 +111,270 @@ prisma_extract_spectra <- function(in_file,
                                    allpix    = FALSE,
                                    out_file  = NULL) {
 
-    . <- pixel <- ID <- wvl <- value <- NULL
+  . <- pixel <- ID <- wvl <- value <- NULL
 
-    # Get the raster dataset ----
-    if (!file.exists(in_file)) {
-        stop("Input file does not exist. Aborting!")
-    }
+  # Get the raster dataset ----
+  if (!file.exists(in_file)) {
+    stop("Input file does not exist. Aborting!")
+  }
 
-    if (!is.null(out_file)) {
-        if(!dir.exists(dirname(out_file))) {
-            stop("Folder specified for the output does not exist.
+  if (!is.null(out_file)) {
+    if(!dir.exists(dirname(out_file))) {
+      stop("Folder specified for the output does not exist.
                  Please create it beforehand! Aborting!")
-        } else {
-            basefilename <- tools::file_path_sans_ext(out_file)
-            ext <- tools::file_ext(out_file)
-            if (!(ext %in% c("RData", "csv", "xls", "xlsx"))){
-                stop("Extension for output file must be
-                     \"RData\", \"csv\", \"xls\" or \"xlsx\". Aborting!")
-            }
-        }
-    }
-
-    if (!is.null(out_file)) {
-        if(!dir.exists(dirname(out_file))) {
-            stop("Folder specified for the output does not exist.
-                 Please create it beforehand! Aborting!")
-        } else {
-            basefilename <- tools::file_path_sans_ext(out_file)
-            ext <- tools::file_ext(out_file)
-        }
-    }
-
-    in_rast <- try(raster::brick(in_file))
-    in_type <- utils::tail(strsplit(basename(tools::file_path_sans_ext(in_file)), "_",
-                                    fixed = TRUE)[[1]], 1)
-
-    if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLNT", "ANGLES", "LATLON")) {
-        stop("Input file does not seem to be a PRISMA file obtained from PRISMAREAD. Aborting!")
-    }
-
-    if (in_type %in% c("VNIR", "SWIR", "FULL")) {
-        in_file_wvl <- paste0(tools::file_path_sans_ext(in_file), ".wvl")
-        wvl_ok <- FALSE
-        if (tools::file_ext(in_file) == "envi"){
-            # attempt to retrieve wavelengths from band names (works for ENVI files)
-            tmpnames <- names(in_rast)
-            tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
-            wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..", fixed = TRUE)[[2]])
-            if (is.numeric(wvls) && all(!is.na(wvls))) {
-                wvl_ok <- TRUE
-            } else {
-                message("Unable to retrieve wavelengths from ENVI band names - trying to use .wvl file")
-            }
-        }
-
-        if (!wvl_ok) {
-            if (file.exists(in_file_wvl)) {
-                wvls <- utils::read.table(in_file_wvl, header = TRUE)
-                wvls <- wvls$wl
-                if (is.numeric(wvls) && all(!is.na(wvls))) {
-                    wvl_ok <- TRUE
-                } else {
-                    message("Unable to retrieve wavelengths from .wvl file. Wavelengths set to
-                            band index.")
-                    wvl <- 1:dim(in_rast)[3]
-                }
-            } else {
-                message("Input Wavelengths file ", basename(in_file_wvl), " not found.",
-                        "Wavelengths set to band index. If you created the input file with an older version",
-                        "of prismaread and want to use this function, re-extract it to be able to retrieve",
-                        "wavelengths!")
-            }
-        }
-
-
-
-    }
-
-    if (!all(selstats %in% c("mean", "stdev", "variance", "min", "max", "coeffvar"))) {
-        stop("Invalid statistics requested. Supported statistics are:
-             \"mean\", \"stdev\", \"variance\", \"min\", \"max\", \"coeffvar\". Aborting!")
-    }
-
-    # Get the vector dataset ----
-    if(is.character(in_vect)){
-        if(file.exists(in_vect)) {
-            in_sf <- try(sf::st_read(in_vect, quiet = TRUE))
-            if(inherits(in_sf, "try-error")) {
-                stop("in_vect does not appear to be a valid vector file. Aborting!")
-            }
-        } else {
-            stop("in_vect file does not exist. Aborting!")
-        }
     } else {
-        if (!inherits(in_vect, "sf")) {
-            stop("in_vect must be a `sf` object or a vector file in a GDAL-readable format. Aborting!")
-        } else {
-            in_sf <- in_vect
-        }
+      basefilename <- tools::file_path_sans_ext(out_file)
+      ext <- tools::file_ext(out_file)
+      if (!(ext %in% c("RData", "csv", "xls", "xlsx"))){
+        stop("Extension for output file must be
+                     \"RData\", \"csv\", \"xls\" or \"xlsx\". Aborting!")
+      }
     }
+  }
 
-    # dissolve features if needed ----
-    if (dissolve && !is.null(id_field)){
-      if(length(in_sf[[id_field]]) != length(unique(in_sf[[id_field]]))){
-         in_sf <- in_sf %>%
-             dplyr::group_by(!!rlang::sym(id_field))%>%
-             dplyr::summarise()
+  if (!is.null(out_file)) {
+    if(!dir.exists(dirname(out_file))) {
+      stop("Folder specified for the output does not exist.
+                 Please create it beforehand! Aborting!")
+    } else {
+      basefilename <- tools::file_path_sans_ext(out_file)
+      ext <- tools::file_ext(out_file)
+    }
+  }
+
+  in_rast <- try(raster::brick(in_file))
+  in_type <- utils::tail(strsplit(basename(tools::file_path_sans_ext(in_file)), "_",
+                                  fixed = TRUE)[[1]], 1)
+
+  if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLNT", "ANGLES", "LATLON")) {
+    stop("Input file does not seem to be a PRISMA file obtained from PRISMAREAD. Aborting!")
+  }
+
+  if (in_type %in% c("VNIR", "SWIR", "FULL")) {
+    in_file_wvl <- paste0(tools::file_path_sans_ext(in_file), ".wvl")
+    wvl_ok <- FALSE
+    if (tools::file_ext(in_file) == "envi"){
+      # attempt to retrieve wavelengths from band names (works for ENVI files)
+      tmpnames <- names(in_rast)
+      tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
+      wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..", fixed = TRUE)[[2]])
+      if (is.numeric(wvls) && all(!is.na(wvls))) {
+        wvl_ok <- TRUE
+      } else {
+        message("Unable to retrieve wavelengths from ENVI band names - trying to use .wvl file")
       }
     }
 
-    # extract the stats if needed ----
-    in_sf <- sf::st_transform(in_sf, sf::st_crs(in_rast))
-
-    # workaround to allow extraction over points
-    if (all(sf::st_dimension(in_sf) == 0)) {
-        in_sf <- sf::st_buffer(in_sf, raster::res(in_rast)[1] / 10000)
+    if (!wvl_ok) {
+      if (file.exists(in_file_wvl)) {
+        wvls <- utils::read.table(in_file_wvl, header = TRUE)
+        wvls <- wvls$wl
+        if (is.numeric(wvls) && all(!is.na(wvls))) {
+          wvl_ok <- TRUE
+        } else {
+          message("Unable to retrieve wavelengths from .wvl file. Wavelengths set to
+                            band index.")
+          wvl <- 1:dim(in_rast)[3]
+        }
+      } else {
+        message("Input Wavelengths file ", basename(in_file_wvl), " not found.",
+                "Wavelengths set to band index. If you created the input file with an older version",
+                "of prismaread and want to use this function, re-extract it to be able to retrieve",
+                "wavelengths!")
+      }
     }
+
+
+
+  }
+
+  if (!all(selstats %in% c("mean", "stdev", "variance", "min", "max", "coeffvar"))) {
+    stop("Invalid statistics requested. Supported statistics are:
+             \"mean\", \"stdev\", \"variance\", \"min\", \"max\", \"coeffvar\". Aborting!")
+  }
+
+  # Get the vector dataset ----
+  if(is.character(in_vect)){
+    if(file.exists(in_vect)) {
+      in_sf <- try(sf::st_read(in_vect, quiet = TRUE))
+      if(inherits(in_sf, "try-error")) {
+        stop("in_vect does not appear to be a valid vector file. Aborting!")
+      }
+    } else {
+      stop("in_vect file does not exist. Aborting!")
+    }
+  } else {
+    if (!inherits(in_vect, "sf")) {
+      stop("in_vect must be a `sf` object or a vector file in a GDAL-readable format. Aborting!")
+    } else {
+      in_sf <- in_vect
+    }
+  }
+
+  # dissolve features if needed ----
+  if (dissolve && !is.null(id_field)){
+    if(length(in_sf[[id_field]]) != length(unique(in_sf[[id_field]]))){
+      in_sf <- in_sf %>%
+        dplyr::group_by(!!rlang::sym(id_field))%>%
+        dplyr::summarise()
+    }
+  }
+
+  # extract the stats if needed ----
+  in_sf <- sf::st_transform(in_sf, sf::st_crs(in_rast))
+
+  # workaround to allow extraction over points
+  if (all(sf::st_dimension(in_sf) == 0)) {
+    in_sf <- sf::st_buffer(in_sf, raster::res(in_rast)[1] / 10000)
+  }
+
+  if (stats) {
+    message("Extracting statistics")
+
+    selstats_tmp <- selstats
+    if ("coeffvar" %in% selstats) {
+      selstats_tmp[which(selstats_tmp == "coeffvar")] <- "coefficient_of_variation"
+    }
+    out_vect <- t(exactextractr::exact_extract(in_rast, in_sf, selstats_tmp, progress = FALSE))
+
+    if (!is.null(id_field)) {
+      colnames(out_vect) <- in_sf[[id_field]]
+    } else {
+      colnames(out_vect) <- paste0("id_", seq_len(dim(in_sf)[1]))
+    }
+
+
+
+    varnames <- rep(selstats, each = dim(in_rast)[3])
+
+    out_df <- data.frame(wvl = wvls, var = varnames, out_vect, row.names = NULL)
+
+    out_df_w_stats <- out_df %>%
+      tidyr::pivot_wider(., names_from = var, values_from =  3:dim(.)[2])
+
+    out_df_l_stats <- out_df %>%
+      tidyr::pivot_longer(., 3:dim(.)[2], names_to = "ID") %>%
+      tidyr::pivot_wider(., names_from = c("var"), values_from = "value") %>%
+      dplyr::arrange(ID, wvl)
+  }
+  # extract the pixels if needed----
+  if (allpix | (stats & quantiles)) {
+    message("Extracting pixel data")
+    out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf, progress = FALSE)
+    names(out_all_tmp) <-   if (!is.null(id_field)) {
+      in_sf[[id_field]]
+    } else {
+      paste0("id_", seq_len(dim(in_sf)[1]))
+    }
+
+    out_all   <- list()
+    out_all_w <- list()
+    for (ind in seq_along(out_all_tmp)) {
+
+      tmp <- t(out_all_tmp[[ind]])
+      out_df_all <- data.frame(wvl = c(wvls, "cov_frac"),  var = "value", tmp, row.names = NULL)
+      out_df_all_cov <- dplyr::filter(out_df_all, wvl == "cov_frac")
+      out_df_w_all <- out_df_all %>%
+        dplyr::filter(., wvl != "cov_frac") %>%
+        tidyr::pivot_wider(., names_from = var, values_from =  3:dim(.)[2])
+      colnames(out_df_w_all) <- c("wvl",paste0("pix_",
+                                               stringr::str_pad(seq_along(colnames(tmp)), max(nchar(colnames(tmp))), "left", "0")))
+      out_df_w_all$wvl <- as.numeric(as.character(out_df_w_all$wvl))
+      # out_df_l_all <- out_df_all %>%
+      #     tidyr::pivot_longer(., 3:dim(.)[2], names_to = "PIX")
+      out_df_w_all$ID <- ifelse(is.null("id_field"), in_sf$id_field[[ind]], paste0("id_", ind))
+      out_df_w_all <- dplyr::select(out_df_w_all, ID, tidyselect::everything())
+      #
+      out_all_w[[ind]] <- out_df_w_all
+      out_all[[ind]]   <- out_df_all
+    }
+    out_all_w <- data.table::rbindlist(out_all_w, fill = TRUE)
+    out_all_l <- out_all_w %>%
+      tidyr::pivot_longer(., 3:dim(.)[2], names_to = "pixel") %>%
+      dplyr::arrange(ID, pixel, wvl)
+
+    if (stats && quantiles) {
+      for (qq in percs) {
+        message("Computing quantiles - ", qq)
+        perccol <- out_all_l %>%
+          dplyr::group_by(ID, wvl) %>%
+          dplyr::summarise(., perc = quantile(value, probs  = qq, na.rm = TRUE)) %>%
+          dplyr::ungroup() %>%
+          dplyr::arrange(., ID, wvl)
+        names(perccol)[3] <- paste0("quant_", 100*qq)
+        out_df_l_stats <- out_df_l_stats %>%
+          dplyr::left_join(perccol, by = c("ID", "wvl"))
+      }
+    }
+  } else {
+    out_all_l = NULL
+  }
+  # Save if requested ----
+
+
+  if(!allpix) {
+    out_all_l <- NULL
+  }
+
+  if (stats && stats_format == "wide") {
+    n_stats <- length(selstats)
+    if (quantiles) {
+      n_stats <- n_stats + length(percs)
+    }
+    n_ids <- length(unique(out_df_l_stats$ID))
+    ordcol <- NULL
+    for (st in 1:n_ids) {
+      ordcol <- c(ordcol, 1 + st + (0:(n_stats-1)) * n_ids)
+    }
+    out_df_l_stats <- out_df_l_stats %>%
+      tidyr::pivot_wider(., names_from = ID, values_from =  3:dim(.)[2]) %>%
+      dplyr::select(c(1, ordcol))
+  }
+  # return ----
+
+  if (stats | allpix) {
+    out <- list("stats"  = out_df_l_stats,
+                "allpix" = out_all_l)
+  } else {
+    if(!allpix) {
+      out <- out_df_l_stats
+    } else {
+      out <- out_all_l
+    }
+  }
+
+  # write to output file ----
+  #
+  if (!is.null(out_file)) {
 
     if (stats) {
-        message("Extracting statistics")
+      outfile_stats <- file.path(paste0(basefilename, "_stats.", ext))
 
-        selstats_tmp <- selstats
-        if ("coeffvar" %in% selstats) {
-            selstats_tmp[which(selstats_tmp == "coeffvar")] <- "coefficient_of_variation"
-        }
-        out_vect <- t(exactextractr::exact_extract(in_rast, in_sf, selstats_tmp, progress = FALSE))
-
-        if (!is.null(id_field)) {
-            colnames(out_vect) <- in_sf[[id_field]]
-        } else {
-            colnames(out_vect) <- paste0("id_", seq_len(dim(in_sf)[1]))
-        }
-
-
-
-        varnames <- rep(selstats, each = dim(in_rast)[3])
-
-        out_df <- data.frame(wvl = wvls, var = varnames, out_vect, row.names = NULL)
-
-        out_df_w_stats <- out_df %>%
-            tidyr::pivot_wider(., names_from = var, values_from =  3:dim(.)[2])
-
-        out_df_l_stats <- out_df %>%
-            tidyr::pivot_longer(., 3:dim(.)[2], names_to = "ID") %>%
-            tidyr::pivot_wider(., names_from = c("var"), values_from = "value") %>%
-            dplyr::arrange(ID, wvl)
-    }
-    # extract the pixels if needed----
-    if (allpix | (stats & quantiles)) {
-        message("Extracting pixel data")
-        out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf, progress = FALSE)
-        names(out_all_tmp) <-   if (!is.null(id_field)) {
-            in_sf[[id_field]]
-        } else {
-            paste0("id_", seq_len(dim(in_sf)[1]))
-        }
-
-        out_all   <- list()
-        out_all_w <- list()
-        for (ind in seq_along(out_all_tmp)) {
-
-            tmp <- t(out_all_tmp[[ind]])
-            out_df_all <- data.frame(wvl = c(wvls, "cov_frac"),  var = "value", tmp, row.names = NULL)
-            out_df_all_cov <- dplyr::filter(out_df_all, wvl == "cov_frac")
-            out_df_w_all <- out_df_all %>%
-                dplyr::filter(., wvl != "cov_frac") %>%
-                tidyr::pivot_wider(., names_from = var, values_from =  3:dim(.)[2])
-            colnames(out_df_w_all) <- c("wvl",paste0("pix_",
-                                                     stringr::str_pad(seq_along(colnames(tmp)), max(nchar(colnames(tmp))), "left", "0")))
-            out_df_w_all$wvl <- as.numeric(as.character(out_df_w_all$wvl))
-            # out_df_l_all <- out_df_all %>%
-            #     tidyr::pivot_longer(., 3:dim(.)[2], names_to = "PIX")
-            out_df_w_all$ID <- ifelse(is.null("id_field"), in_sf$id_field[[ind]], paste0("id_", ind))
-            out_df_w_all <- dplyr::select(out_df_w_all, ID, tidyselect::everything())
-            #
-            out_all_w[[ind]] <- out_df_w_all
-            out_all[[ind]]   <- out_df_all
-        }
-        out_all_w <- data.table::rbindlist(out_all_w, fill = TRUE)
-        out_all_l <- out_all_w %>%
-            tidyr::pivot_longer(., 3:dim(.)[2], names_to = "pixel") %>%
-            dplyr::arrange(ID, pixel, wvl)
-
-        if (stats && quantiles) {
-            for (qq in percs) {
-                message("Computing quantiles - ", qq)
-                perccol <- out_all_l %>%
-                    dplyr::group_by(ID, wvl) %>%
-                    dplyr::summarise(., perc = quantile(value, probs  = qq, na.rm = TRUE)) %>%
-                    dplyr::ungroup() %>%
-                    dplyr::arrange(., ID, wvl)
-                names(perccol)[3] <- paste0("quant_", 100*qq)
-                out_df_l_stats <- out_df_l_stats %>%
-                    dplyr::left_join(perccol, by = c("ID", "wvl"))
-            }
-        }
-    } else {
-        out_all_l = NULL
-    }
-    # Save if requested ----
-
-
-    if(!allpix) {
-        out_all_l <- NULL
+      if (ext == "csv") {
+        utils::write.csv(out_df_l_stats, file = outfile_stats, row.names = FALSE)
+      }
+      if (ext %in% c("xls", "xlsx")) {
+        openxlsx::write.xlsx(out_df_l_stats, file = outfile_stats,
+                             rowNames = FALSE)
+      }
+      if (ext == "RData") {
+        save(out_df_l_stats, file = outfile_stats)
+      }
     }
 
-    if (stats && stats_format == "wide") {
-        n_stats <- length(selstats)
-        if (quantiles) {
-            n_stats <- n_stats + length(percs)
-        }
-        n_ids <- length(unique(out_df_l_stats$ID))
-        ordcol <- NULL
-        for (st in 1:n_ids) {
-            ordcol <- c(ordcol, 1 + st + (0:(n_stats-1)) * n_ids)
-        }
-        out_df_l_stats <- out_df_l_stats %>%
-            tidyr::pivot_wider(., names_from = ID, values_from =  3:dim(.)[2]) %>%
-            dplyr::select(c(1, ordcol))
+    if (allpix) {
+      outfile_all   <- file.path(paste0(basefilename, "_allpix.", ext))
+      if (ext == "csv") {
+        utils::write.csv(out_all_l, file = outfile_all, row.names = FALSE)
+      }
+      if (ext %in% c("xls", "xlsx")) {
+        openxlsx::write.xlsx(out_all_l, file = outfile_all,
+                             rowNames = FALSE)
+      }
+      if (ext == "RData") {
+        save(out_all_l, file = outfile_all)
+      }
     }
-    # return ----
-
-    if (stats & allpix) {
-        out <- list("stats"  = out_df_l_stats,
-                    "allpix" = out_all_l)
-        if (!is.null(out_file)) {
-            outfile_all   <- file.path(paste0(basefilename, "_allpix.", ext))
-            outfile_stats <- file.path(paste0(basefilename, "_stats.", ext))
-            if (ext == "csv") {
-                utils::write.csv(out_all_l, file = outfile_all, row.names = FALSE)
-                utils::write.csv(out_df_l_stats, file = outfile_stats, row.names = FALSE)
-            }
-            if (ext %in% c("xls", "xlsx")) {
-                ext <- "xlsx"
-                openxlsx::write.xlsx(out_all_l, file = outfile_all,
-                                     rowNames = FALSE)
-                openxlsx::write.xlsx(out_df_l_stats, file = outfile_stats,
-                                     rowNames = FALSE)
-            }
-            if (ext == "RData") {
-                save(out_all_l, file = outfile_all)
-                save(out_df_l_stats, file = outfile_stats)
-            }
-        }
-    } else {
-        if(!allpix) {
-            out <- out_df_l_stats
-        } else {
-            out <- out_all_l
-        }
-    }
-
-    return(out)
+  }
+  return(out)
 }

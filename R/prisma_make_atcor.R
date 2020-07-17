@@ -96,7 +96,7 @@ prisma_make_atcor <- function(f,
                 for (col in ATCOR_wls) {
                     dir.create(file.path(ATCOR_fold, trimws(col)), showWarnings = FALSE)
                     out_file_wvl <- file.path(ATCOR_fold, trimws(col),
-                                              paste0(tools::file_path_sans_ext(basename(out_file)),
+                                              paste0(tools::file_opath_sans_ext(basename(out_file)),
                                                      paste0("_atcor_wvl_", trimws(col), ".wvl")))
                     out <- data.frame(`channel number`            = 1:dim(wl_mat_tot)[2],
                                       `channel center wavelength` = round(wl_mat_tot[col,]/1000, digits = 6),

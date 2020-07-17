@@ -34,7 +34,7 @@ in_file    = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_00
 out_folder = "/home/lb/tmp/test/"
 out_format = "ENVI"
 
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+# Save a full image, prioritizing the SWIR spectrometer and save in ENVI format
 convert_prisma(in_file    = in_file,
                out_folder = out_folder,
                out_format = out_format,
@@ -63,7 +63,7 @@ in_L2_file = "/home/lb/tmp/test/PRS_L2B_STD_OFFL_20190825103112_20190825103117_0
 out_folder = "/home/lb/tmp/test/"
 out_format = "ENVI"
 
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+# Save a full image, prioritizing the SWIR spectrometer and save in ENVI format
 convert_prisma(in_file    = in_file,
                in_L2_file = in_L2_file, 
                out_folder = out_folder,
@@ -116,9 +116,9 @@ in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001
 out_folder = "/home/lb/tmp/test/"
 out_format = "ENVI"
 
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
 convert_prisma(in_file    = in_file,
-               out_file   = out_folder,
+               out_folder   = out_folder,
                out_format = out_format,
                join_priority = "VNIR", 
                ATCOR = TRUE, 
@@ -137,18 +137,18 @@ from the `KDP_AUX/Cw_Vnir_Matrix`, `KDP_AUX/Cw_Swir_Matrix`, `KDP_AUX/Cw_Fwhm_Ma
 
 ```{r atcor2, eval=FALSE}
 in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-out_file = "/home/lb/tmp/test/test_1"
+out_folder = "/home/lb/pro"
 out_format = "ENVI"
 
-# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
 convert_prisma(in_file    = in_file,
-               out_file   = out_file,
+               out_folder   = out_folder,
                out_format = out_format,
-               join_priority = "VNIR", 
+               join_priority = "SWIR", 
                ATCOR = TRUE, 
                ATCOR_wls = c(200,800), 
                FULL = TRUE,
-               PAN  = TRUE,
+               PAN  = TRUE, 
                CLOUD  = TRUE)
 
 ```

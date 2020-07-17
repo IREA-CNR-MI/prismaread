@@ -22,7 +22,7 @@
 #'  VNIR and SWIR, Default: FALSE
 #' @param join_priority `character` ["VNIR" | "SWIR"], spectrometer to consider in
 #'  the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
-#'  Default: "VNIR"
+#'  Default: "SWIR"
 #' @param ATCOR  logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;
 #' @param ATCOR_wls  NULL, or `numeric` If NULL the only ATCOR wvl file
 #'  created is the one containing Nominal wavelengths. If a numeric vector is provided,
