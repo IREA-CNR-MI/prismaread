@@ -33,4 +33,4 @@ Suggests: testthat,
     ggplot2
 Remotes: 
     isciences/exactextractr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
