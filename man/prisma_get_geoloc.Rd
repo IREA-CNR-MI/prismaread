@@ -15,9 +15,10 @@ prisma_get_geoloc(f, proc_lev, source, wvl = NULL, in_L2_file = NULL)
 
 \item{wvl}{`character` "VNIR" or "SWIR" - passed by caller}
 
-\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+\item{in_L2_file}{`character` full path of an L2B/C file to be used to extract georeeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.}
 }
 \value{
 `list` containing required info according to `proc_lev`

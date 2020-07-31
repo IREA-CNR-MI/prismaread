@@ -76,28 +76,55 @@ columns 200 and 800 are saved.)}
 
 \item{PAN}{`logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)}
 
-\item{CLOUD}{`logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data)}
+\item{CLOUD}{`logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data).
+It is coded as:
+  0 for not cloudy pixel
+  1 for cloudy pixel
+  10 = for not of all previous classification
+  255 = error}
 
-\item{LC}{`logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)}
+\item{LC}{`logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
+It is coded as:
+ 0 for water pixel
+ 1 for snow pixel (and ice)
+ 2 for not-vegetated land pixel :bare soil)
+ 3 for crop and rangeland pixel
+ 4 for forst pixel
+ 5 for wetland pixel
+ 6 for not-vegetated land pixel :urban component
+10 for not of all previous classification
+255 for error}
 
-\item{GLINT}{`logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)}
+\item{GLINT}{`logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
+It is coded as:
+0 for not sun glint
+1 for sun glint
+10 for not of all previous classification
+255 = error}
 
 \item{ANGLES}{if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
-a 3-band raster. Band 1 contains "obs_ang", Band 2 contains "relaz_ang" and
+a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains "relaz_ang" and
 Band 3 contains "solzen_ang"), default: FALSE}
 
 \item{LATLON}{if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
 a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE}
 
-\item{ERR_MATRIX}{Not yet implemented!}
+\item{ERR_MATRIX}{`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
+SATURATION ERROR MATRIX is coded as:
+ 0=pixel ok;
+ 1=DEFECTIVE PIXEL from KDP
+ 2= Pixel in saturation.
+ 3= Pixel with lower radiometric accuracy, due to coregistration effects.
+ 4= Pixel becomes NaN or Inf during processing.}
 
 \item{apply_errmatrix}{Not yet implemented!}
 
 \item{overwrite}{`logical` if TRUE, existing files are overwritten, default: FALSE}
 
-\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+\item{in_L2_file}{`character` full path of an L2B/C file to be used to extract georeeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.}
 
 \item{selbands_vnir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
 the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}

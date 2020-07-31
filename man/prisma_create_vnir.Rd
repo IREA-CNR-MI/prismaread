@@ -49,14 +49,21 @@ data, Default: TRUE}
 
 \item{apply_errmatrix}{Not yet implemented!}
 
-\item{ERR_MATRIX}{Not yet implemented!}
+\item{ERR_MATRIX}{`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
+SATURATION ERROR MATRIX is coded as:
+ 0=pixel ok;
+ 1=DEFECTIVE PIXEL from KDP
+ 2= Pixel in saturation.
+ 3= Pixel with lower radiometric accuracy, due to coregistration effects.
+ 4= Pixel becomes NaN or Inf during processing.}
 
 \item{selbands_vnir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
 the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
 
-\item{in_L2_file}{`character` full path of an L2 file to be used to extract better georeeferencing
+\item{in_L2_file}{`character` full path of an L2B/C file to be used to extract georeeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file}
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.}
 }
 \value{
 the function is called for its side effects
