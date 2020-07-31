@@ -15,6 +15,7 @@ prisma_create_angles <- function(f,
                                  fill_gaps,
                                  in_L2_file = NULL){
 
+
     message(" - Accessing ANGLES dataset - ")
 
     # Get geo info ----
@@ -28,23 +29,23 @@ prisma_create_angles <- function(f,
     }
 
     if (proc_lev != "2D") {
-        rast_obsang    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+        rast_viewzen    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Observing_Angle")]][,])
         rast_relazang  <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,])
         rast_solzenang <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,])
         if (base_georef) {
-            rast_obsang    <- prisma_basegeo(rast_obsang, geo$lon, geo$lat, fill_gaps)
+            rast_viewzen   <- prisma_basegeo(rast_viewzen, geo$lon, geo$lat, fill_gaps)
             rast_relazang  <- prisma_basegeo(rast_relazang, geo$lon, geo$lat, fill_gaps)
             rast_solzenang <- prisma_basegeo(rast_solzenang, geo$lon, geo$lat, fill_gaps)
         } else {
-            rast_obsang    <- raster::flip(rast_obsang, 1)
+            rast_viewzen   <- raster::flip(rast_viewzen, 1)
             rast_relazang  <- raster::flip(rast_relazang, 1)
             rast_solzenang <- raster::flip(rast_solzenang, 1)
         }
     } else {
-        rast_obsang    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+        rast_viewzen    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                                                    "_HCO/Geometric Fields/Observing_Angle")]][,],
                                          crs = paste0("+proj=utm +zone=", geo$proj_code,
                                                       ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
@@ -59,23 +60,23 @@ prisma_create_angles <- function(f,
                                          crs = paste0("+proj=utm +zone=", geo$proj_code,
                                                       ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                                       " +datum=WGS84 +units=m +no_defs"))
-        rast_obsang    <- raster::t(rast_obsang)
+        rast_viewzen   <- raster::t(rast_viewzen)
         rast_relazang  <- raster::t(rast_relazang)
         rast_solzenang <- raster::t(rast_solzenang)
-        ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(rast_obsang)[2]*30,
-                       geo$ymin - 15, geo$ymin - 15 + dim(rast_obsang)[1]*30),
+        ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(rast_viewzen)[2]*30,
+                       geo$ymin - 15, geo$ymin - 15 + dim(rast_viewzen)[1]*30),
                      nrow = 2, ncol = 2, byrow = T)
         ex <- raster::extent(ex)
-        rast_obsang    <- raster::setExtent(rast_obsang, ex, keepres = FALSE)
+        rast_viewzen    <- raster::setExtent(rast_viewzen, ex, keepres = FALSE)
         rast_relazang  <- raster::setExtent(rast_relazang, ex, keepres = FALSE)
         rast_solzenang <- raster::setExtent(rast_solzenang, ex, keepres = FALSE)
 
     }
-    rastang <- raster::stack(rast_obsang,
+    rastang <- raster::stack(rast_viewzen,
                              rast_relazang,
                              rast_solzenang)
     rastang[rastang == 0 ] <- NA
-    names(rastang) <- c("obs_ang", "relaz_ang", "solzen_ang")
+    names(rastang) <- c("view_zenang", "relaz_ang", "solzen_ang")
     gc()
     message(" - Writing ANGLES raster - ")
     rastwrite_lines(rastang, out_file, out_format)
