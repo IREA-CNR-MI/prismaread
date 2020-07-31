@@ -67,6 +67,11 @@ prisma_create_swir <- function(f,
                         band <- (band / swir_scale) - swir_offset
                     }
                     band <- prisma_basegeo(band, lon, lat, fill_gaps)
+                    if (ERR_MATRIX) {
+                        satband <- raster::raster((err_cube[,order_swir[band_swir], ]),
+                                                  crs = "+proj=longlat +datum=WGS84")
+                        satband <- prisma_basegeo(satband, lon, lat, fill_gaps)
+                    }
                 } else {
                     message("Importing Band: ", band_swir, " of: 173")
                     band <- raster::raster(swir_cube[,order_swir[band_swir], ],
@@ -75,6 +80,12 @@ prisma_create_swir <- function(f,
                         band <- (band / swir_scale) - swir_offset
                     }
                     band <- raster::flip(band, 1)
+
+                    if (ERR_MATRIX) {
+                        satband <- raster::raster((err_cube[,order_swir[band_swir], ]),
+                                                  crs = "+proj=longlat +datum=WGS84")
+                        satband <- raster::flip(satband, 1)
+                    }
                 }
 
             } else {
@@ -95,8 +106,10 @@ prisma_create_swir <- function(f,
             # Add band to stack ----
             if (ind_band == 1) {
                 rast_swir <- band
+                if (ERR_MATRIX) rast_err <- satband
             } else {
                 rast_swir <- raster::stack(rast_swir, band)
+                if (ERR_MATRIX) rast_err <- raster::stack(rast_err, satband)
             }
             ind_band <- ind_band + 1
         } else {
@@ -106,13 +119,11 @@ prisma_create_swir <- function(f,
 
     # Write the cube ----
     if (is.null(selbands_swir)) {
-        # names(rast_vnir) <- paste0("b", seqbands, "_", round(wl_vnir, digits = 3))
         orbands <- seqbands[wl_swir != 0]
         names(rast_swir) <- paste0("b", orbands)
         wl_sub   <- wl_swir[wl_swir != 0]
         fwhm_sub <- fwhm_swir[wl_swir != 0]
     } else {
-        # names(rast_vnir) <- paste0("b", seqbands, "_", round(wl_vnir[seqbands], digits = 3))
         orbands <- seqbands
         names(rast_swir) <- paste0("b", orbands)
         wl_sub   <- wl_swir[seqbands]
@@ -129,6 +140,18 @@ prisma_create_swir <- function(f,
                     proc_lev,
                     scale_min = swir_min,
                     scale_max = swir_max)
+
+    if (ERR_MATRIX) {
+        message("- Writing SATERR raster -")
+        out_file_swir_err <- gsub("SWIR", "SATERR", out_file_swir)
+        rastwrite_lines(rast_err,
+                        out_file_swir,
+                        out_format,
+                        "SATERR",
+                        scale_min = NULL,
+                        scale_max = NULL)
+    }
+
 
     if (out_format == "ENVI") {
         cat("band names = {", paste(names(rast_swir),collapse=","), "}", "\n",

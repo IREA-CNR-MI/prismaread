@@ -76,6 +76,13 @@ prisma_create_vnir <- function(f,
                         band <- (band / vnir_scale) - vnir_offset
                     }
                     band <- prisma_basegeo(band, lon, lat, fill_gaps)
+
+                    if (ERR_MATRIX) {
+                        satband <- raster::raster((err_cube[,order_vnir[band_vnir], ]),
+                                                  crs = "+proj=longlat +datum=WGS84")
+                        satband <- prisma_basegeo(satband, lon, lat, fill_gaps)
+                    }
+
                 } else {
                     message("Importing Band: ", band_vnir, " of: 66")
                     band <- raster::raster((vnir_cube[,order_vnir[band_vnir], ]),
@@ -84,6 +91,12 @@ prisma_create_vnir <- function(f,
                         band <- (band / vnir_scale) - vnir_offset
                     }
                     band <- raster::flip(band, 1)
+
+                    if (ERR_MATRIX) {
+                        satband <- raster::raster((err_cube[,order_vnir[band_vnir], ]),
+                                                  crs = "+proj=longlat +datum=WGS84")
+                        satband <- raster::flip(satband, 1)
+                    }
                 }
             } else {
                 if (proc_lev == "2D") {
@@ -100,13 +113,30 @@ prisma_create_vnir <- function(f,
                                  nrow = 2, ncol = 2, byrow = T)
                     ex <- raster::extent(ex)
                     band <- raster::setExtent(band, ex, keepres = FALSE)
+
+                    if (ERR_MATRIX) {
+                        satband <- raster::raster((err_cube[,order_vnir[band_vnir], ]),
+                                                  crs = "+proj=longlat +datum=WGS84")
+                        satband <- raster::flip(satband, 1)
+                        satband <- raster::t(satband)
+                        ex <- matrix(c(geo$xmin - 15,
+                                       geo$xmin - 15 + dim(satband)[2]*30,
+                                       geo$ymin - 15,
+                                       geo$ymin - 15 + dim(satband)[1]*30),
+                                     nrow = 2, ncol = 2, byrow = T)
+                        ex <- raster::extent(ex)
+                        satband <- raster::setExtent(satband, ex, keepres = FALSE)
+                    }
+
                 }
             }
 
             if (ind_vnir == 1) {
                 rast_vnir <- band
+                if (ERR_MATRIX) rast_err <- satband
             } else {
                 rast_vnir <- raster::stack(rast_vnir, band)
+                if (ERR_MATRIX) rast_err <- raster::stack(rast_err, satband)
             }
             ind_vnir <- ind_vnir + 1
         } else {
@@ -144,6 +174,17 @@ prisma_create_vnir <- function(f,
                     proc_lev,
                     scale_min = vnir_min,
                     scale_max = vnir_max)
+
+    if (ERR_MATRIX) {
+         message("- Writing SATERR raster -")
+        out_file_vnir_err <- gsub("VNIR", "SATERR", out_file_vnir)
+        rastwrite_lines(rast_err,
+                        out_file_vnir_err,
+                        out_format,
+                        "SATERR",
+                        scale_min = NULL,
+                        scale_max = NULL)
+    }
 
     if (out_format == "ENVI") {
         cat("band names = {", paste(names(rast_vnir),collapse=","), "}", "\n",
