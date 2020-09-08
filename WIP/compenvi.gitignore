@@ -1,0 +1,80 @@
+library(rgdal)
+
+rgdal::GDALinfo("D:/prismaread/PRS_L2D_STD_20190616102249_20190616102253_0001.he5")
+
+
+convert_prisma("D:/prismaread/L1/PRS_L1_STD_OFFL_20200215103028_20200215103033_0001.he5",
+               "D:/prismaread/L1/out_vnir", SWIR = FALSE,
+               CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = FALSE, GLINT = FALSE, overwrite = T)
+
+
+envi <- raster::stack("D:/prismaread/PRS_L2D_STD_20190616102249_20190616102253_0001_VNIR_Cube")
+randenvi <- as.numeric(envi[500,730,])
+
+pread <- raster::stack("D:/prismaread/testvnir3_HCO_VNIR.envi")
+randpr <- as.numeric(pread[500,730,])
+
+randenvi/randpr
+
+
+all.equal(randenvi, randpr)
+
+convert_prisma("D:/prismaread/PRS_L2D_STD_20190616102249_20190616102253_0001.he5",
+               "D:/prismaread/testfull_l2d", SWIR = TRUE,
+               CLOUD = FALSE, ATCOR = FALSE, FULL = TRUE, PAN = FALSE, GLINT = FALSE)
+
+
+"D:/prismaread/PRS_L2D_STD_20190616102249_20190616102253_0001.he5"://HDFEOS/SWATHS/PRS_L2D_HCO/Data_Fields/VNIR_Cube
+
+
+gdal <- raster::stack("D:/prismaread/test1.tif")
+randpr <- as.numeric(gdal[,530,730])
+
+
+convert_prisma("D:/prismaread/L1/PRS_L1_STD_OFFL_20200215103028_20200215103033_0001.he5",
+               "D:/prismaread/testvnirl3", SWIR = FALSE,
+               CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = FALSE, GLINT = FALSE)
+
+
+envi <- raster::stack("D:/prismaread/L1/PRS_L1_STD_OFFL_20200215103028_20200215103033_0001_VNIR_Cube")
+randenvi <- as.numeric(envi[200,730,])
+
+pread <- raster::stack("D:/prismaread/testvnirl1_HCO_VNIR.envi")
+randpr <- as.numeric(pread[200,730,])
+
+randenvi/randpr
+
+
+convert_prisma("D:/prismaread/l1_new/PRS_L1_STD_OFFL_20200119061819_20200119061823_0001.he5",
+               out_folder = "D:/prismaread/l1_new/", SWIR = FALSE, VNIR = TRUE, PAN = FALSE,
+               selbands_vnir = c(750,650,550),
+               CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = FALSE, GLINT = FALSE)
+
+envi2 <- raster::stack("D:/prismaread/l1_new/PRS_L1_STD_OFFL_20200119061819_20200119061823_0001_VNIR_Cube")
+randenvi <- as.numeric(envi2[200,730,])
+
+pread2 <- raster::stack("D:/prismaread/l1_new/testvnir_new_HCO_VNIR.envi")
+randpr <- as.numeric(pread2[200,730,])
+
+
+# L2C
+convert_prisma("D:/prismaread/prisma_L2C/PRS_L2C_STD_20200215103028_20200215103033_0001.he5",
+               "D:/prismaread/prisma_L2C/testvnir_l2c", SWIR = FALSE,
+               CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PANst = FALSE, GLINT = FALSE ,overwrite = T)
+
+envi2 <- raster::
+    stack("D:/prismaread/l1_new/PRS_L1_STD_OFFL_20200119061819_20200119061823_0001_VNIR_Cube")
+randenvi <- as.numeric(envi2[200,730,])
+
+pread2 <- raster::stack("D:/prismaread/l1_new/testvnir_new_HCO_VNIR.envi")
+randpr <- as.numeric(pread2[200,730,])
+
+convert_prisma("D:/prismaread/L2B/PRS_L2B_STD_20200215103028_20200215103033_0001.he5",
+               "D:/prismaread/L2b/testfull_l2b", FALSE,
+               CLOUD = FALSE, ATCOR = FALSE, FULL = FALSE, PAN = FALSE, GLINT = FALSE)
+
+
+
+
+inraast <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
+invect <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
