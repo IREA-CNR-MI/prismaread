@@ -1,3 +1,17 @@
+# prismaread 1.0.0 - 2019-09-08
+
+* Major changes
+
+    - Addition of `pr_compute_indexes` function for automatic computation of spectral 
+      indexes
+    - Implementation of functionality for saving and applying the error matrix on 
+      top of VNIR and SWIR cubes
+    - Modification of function names to `pr_<suffix>` for future ropensci submission. 
+    
+* Minor changes    
+
+    - Code cleaning
+
 # prismaread 0.2.1 - 2019-07-03
 
 * Major changes
