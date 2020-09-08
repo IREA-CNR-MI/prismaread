@@ -23,29 +23,36 @@ prisma_create_pan <- function(f,
     if (proc_lev %in% c("1")) {
         pan_scale  <- hdf5r::h5attr(f, "ScaleFactor_Pan")
         pan_offset <- hdf5r::h5attr(f, "Offset_Pan")
-        pan_cube <- f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source), "/Data Fields/Cube")]][,]
+        pan_cube <- f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+                              "/Data Fields/Cube")]][,]
         if (is.null(in_L2_file)){
-            pan_lat <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+            pan_lat <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_",
+                                           gsub("H", "P", source),
                                            "/Geolocation Fields/Latitude")]][,])
-            pan_lon <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_", gsub("H", "P", source),
+            pan_lon <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L1_",
+                                           gsub("H", "P", source),
                                            "/Geolocation Fields/Longitude")]][,])
         } else {
             f2 <- try(hdf5r::H5File$new(in_L2_file, mode="r+"))
             if (inherits(f2, "try-error")){
-                stop("Unable to open the input accessory L2 file as a hdf5 file. Verify your inputs. Aborting!")
+                stop("Unable to open the input accessory L2 file as a hdf5 ",
+                     "file. Verify your inputs. Aborting!")
             }
             proc_lev_f2 <- hdf5r::h5attr(f2, "Processing_Level")
             if (proc_lev_f2 == "1") {
                 stop("in_L2_file is not a L2 PRISMA file. Aborting!")
             }
-            pan_lat <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2, "_", gsub("H", "P", source),
+            pan_lat <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2,
+                                            "_", gsub("H", "P", source),
                                             "/Geolocation Fields/Latitude")]][,])
-            pan_lon <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2, "_", gsub("H", "P", source),
+            pan_lon <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2,
+                                            "_", gsub("H", "P", source),
                                             "/Geolocation Fields/Longitude")]][,])
         }
 
     } else {
-        pan_cube  <- f[[paste0("//HDFEOS/SWATHS/PRS_L", proc_lev, "_PCO/Data Fields/Cube")]][,]
+        pan_cube  <- f[[paste0("//HDFEOS/SWATHS/PRS_L", proc_lev,
+                               "_PCO/Data Fields/Cube")]][,]
         panscale_min <- hdf5r::h5attr(f, "L2ScalePanMin")
         panscale_max <- hdf5r::h5attr(f, "L2ScalePanMax")
         if (proc_lev == "2D") {
@@ -63,10 +70,14 @@ prisma_create_pan <- function(f,
                         proj_epsg = proj_epsg)
         }
         if (proc_lev  %in% c("2B", "2C")) {
-            pan_lat <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
-                                           "/Geolocation Fields/Latitude")]][,])
-            pan_lon <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev, "_", gsub("H", "P", source),
-                                           "/Geolocation Fields/Longitude")]][,])
+            pan_lat <- raster::t(f[[paste0(
+                "/HDFEOS/SWATHS/PRS_L", proc_lev,
+                "_", gsub("H", "P", source),
+                "/Geolocation Fields/Latitude")]][,])
+            pan_lon <- raster::t(f[[paste0(
+                "/HDFEOS/SWATHS/PRS_L", proc_lev,
+                "_", gsub("H", "P", source),
+                "/Geolocation Fields/Longitude")]][,])
         }
     }
 
@@ -74,7 +85,8 @@ prisma_create_pan <- function(f,
 
         if (base_georef) {
             message("Applying bowtie georeferencing")
-            rast_pan <- raster::raster(pan_cube, crs = "+proj=longlat +datum=WGS84")
+            rast_pan <- raster::raster(pan_cube,
+                                       crs = "+proj=longlat +datum=WGS84")
             if (proc_lev == "1") {
                 rast_pan <- (rast_pan / pan_scale) - pan_offset
             }
@@ -86,10 +98,12 @@ prisma_create_pan <- function(f,
         }
     } else {
         if (proc_lev == "2D") {
-            rast_pan <- raster::raster(pan_cube,
-                                       crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                    ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                                    " +datum=WGS84 +units=m +no_defs"))
+            rast_pan <- raster::raster(
+                pan_cube,
+                crs = paste0("+proj=utm +zone=", geo$proj_code,
+                             ifelse(substring(geo$proj_epsg, 3, 3) == 7,
+                                    " +south", ""),
+                             " +datum=WGS84 +units=m +no_defs"))
             rast_pan <- raster::t(rast_pan)
             ex <- matrix(c(geo$xmin - 2.5, geo$xmin - 2.5 + dim(rast_pan)[2]*5,
                            geo$ymin - 2.5, geo$ymin - 2.5 + dim(rast_pan)[1]*5),

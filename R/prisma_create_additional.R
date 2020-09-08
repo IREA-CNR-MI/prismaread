@@ -24,10 +24,11 @@ prisma_create_additional <- function(f,
         cube <- f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"]][,]
     }
 
-    cube <- switch(type,
-                   "CLD"  = f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"]][,],
-                   "LC"   = f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/LandCover_Mask"]][,],
-                   "GLNT" = f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"]][,],
+    cube <- switch(
+        type,
+        "CLD"  = f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/Cloud_Mask"]][,],
+        "LC"   = f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/LandCover_Mask"]][,],
+        "GLNT" = f[["/HDFEOS/SWATHS/PRS_L1_HCO/Data Fields/SunGlint_Mask"]][,],
     )
 
     rast <- raster::raster(cube)

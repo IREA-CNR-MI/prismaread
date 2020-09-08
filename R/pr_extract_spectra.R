@@ -85,33 +85,33 @@
 #' }
 #' @rdname pr_extract_spectra
 #' @export
+#' @importFrom tools file_path_sans_ext file_ext
 #' @importFrom raster brick res
-#' @importFrom tools file_path_sans_ext
-#' @importFrom sf st_read st_transform st_crs
+#' @importFrom utils tail read.table write.csv
+#' @importFrom data.table tstrsplit rbindlist
+#' @importFrom sf st_read st_transform st_crs st_dimension st_buffer
+#' @importFrom dplyr group_by summarise arrange filter select ungroup left_join
+#' @importFrom rlang sym
 #' @importFrom exactextractr exact_extract
 #' @importFrom tidyr pivot_wider pivot_longer
-#' @importFrom dplyr arrange filter select
 #' @importFrom stringr str_pad
-#' @importFrom data.table rbindlist
-#' @importFrom openxlsx write.xlsx
-#' @importFrom utils write.csv read.table tail
-#' @importFrom stats median quantile var
 #' @importFrom tidyselect everything
-#' @importFrom rlang sym
+#' @importFrom openxlsx write.xlsx
+#' @importFrom stats quantile
 
 pr_extract_spectra <- function(in_file,
-                                   in_vect,
-                                   id_field  = NULL,
-                                   dissolve  = FALSE,
-                                   stats     = TRUE,
-                                   selstats  = c("mean", "stdev"),
-                                   stats_format = "long",
-                                   quantiles = FALSE,
-                                   percs     =  c(0.05, 0.25,0.50,0.75,0.95),
-                                   allpix    = FALSE,
-                                   out_file  = NULL) {
+                               in_vect,
+                               id_field  = NULL,
+                               dissolve  = FALSE,
+                               stats     = TRUE,
+                               selstats  = c("mean", "stdev"),
+                               stats_format = "long",
+                               quantiles = FALSE,
+                               percs     =  c(0.05, 0.25,0.50,0.75,0.95),
+                               allpix    = FALSE,
+                               out_file  = NULL) {
 
-  . <- pixel <- ID <- wvl <- value <- NULL
+  . <- pixel <- ID <- wvl <- value <- var <- NULL
 
   # Get the raster dataset ----
   if (!file.exists(in_file)) {
@@ -143,11 +143,14 @@ pr_extract_spectra <- function(in_file,
   }
 
   in_rast <- try(raster::brick(in_file))
-  in_type <- utils::tail(strsplit(basename(tools::file_path_sans_ext(in_file)), "_",
+  in_type <- utils::tail(strsplit(basename(tools::file_path_sans_ext(in_file)),
+                                  "_",
                                   fixed = TRUE)[[1]], 1)
 
-  if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLNT", "ANGLES", "LATLON")) {
-    stop("Input file does not seem to be a PRISMA file obtained from PRISMAREAD. Aborting!")
+  if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLNT",
+                      "ANGLES", "LATLON")) {
+    stop("Input file does not seem to be a PRISMA file obtained from ",
+         "PRISMAREAD. Aborting!")
   }
 
   if (in_type %in% c("VNIR", "SWIR", "FULL")) {
@@ -157,11 +160,13 @@ pr_extract_spectra <- function(in_file,
       # attempt to retrieve wavelengths from band names (works for ENVI files)
       tmpnames <- names(in_rast)
       tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
-      wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..", fixed = TRUE)[[2]])
+      wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..",
+                                               fixed = TRUE)[[2]])
       if (is.numeric(wvls) && all(!is.na(wvls))) {
         wvl_ok <- TRUE
       } else {
-        message("Unable to retrieve wavelengths from ENVI band names - trying to use .wvl file")
+        message("Unable to retrieve wavelengths from ENVI band names - ",
+                "trying to use .wvl file")
       }
     }
 
@@ -178,9 +183,9 @@ pr_extract_spectra <- function(in_file,
         }
       } else {
         message("Input Wavelengths file ", basename(in_file_wvl), " not found.",
-                "Wavelengths set to band index. If you created the input file with an older version",
-                "of prismaread and want to use this function, re-extract it to be able to retrieve",
-                "wavelengths!")
+                "Wavelengths set to band index. If you created the input file ",
+                "with an older version of prismaread and want to use this ",
+                "function, re-extract it to be able to retrieve wavelengths!")
       }
     }
 
@@ -188,9 +193,11 @@ pr_extract_spectra <- function(in_file,
 
   }
 
-  if (!all(selstats %in% c("mean", "stdev", "variance", "min", "max", "coeffvar"))) {
-    stop("Invalid statistics requested. Supported statistics are:
-             \"mean\", \"stdev\", \"variance\", \"min\", \"max\", \"coeffvar\". Aborting!")
+  if (!all(selstats %in% c("mean", "stdev", "variance", "min", "max",
+                           "coeffvar"))) {
+    stop("Invalid statistics requested. Supported statistics are:",
+         "\"mean\", \"stdev\", \"variance\", \"min\", \"max\", \"coeffvar\". ",
+         "Aborting!")
   }
 
   # Get the vector dataset ----
@@ -205,7 +212,8 @@ pr_extract_spectra <- function(in_file,
     }
   } else {
     if (!inherits(in_vect, "sf")) {
-      stop("in_vect must be a `sf` object or a vector file in a GDAL-readable format. Aborting!")
+      stop("in_vect must be a `sf` object or a vector file in a GDAL-readable ",
+           "format. Aborting!")
     } else {
       in_sf <- in_vect
     }
@@ -233,9 +241,11 @@ pr_extract_spectra <- function(in_file,
 
     selstats_tmp <- selstats
     if ("coeffvar" %in% selstats) {
-      selstats_tmp[which(selstats_tmp == "coeffvar")] <- "coefficient_of_variation"
+      selstats_tmp[which(selstats_tmp == "coeffvar")] <-
+        "coefficient_of_variation"
     }
-    out_vect <- t(exactextractr::exact_extract(in_rast, in_sf, selstats_tmp, progress = FALSE))
+    out_vect <- t(exactextractr::exact_extract(in_rast, in_sf, selstats_tmp,
+                                               progress = FALSE))
 
     if (!is.null(id_field)) {
       colnames(out_vect) <- in_sf[[id_field]]
@@ -260,7 +270,8 @@ pr_extract_spectra <- function(in_file,
   # extract the pixels if needed----
   if (allpix | (stats & quantiles)) {
     message("Extracting pixel data")
-    out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf, progress = FALSE)
+    out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf,
+                                                progress = FALSE)
     names(out_all_tmp) <-   if (!is.null(id_field)) {
       in_sf[[id_field]]
     } else {
@@ -272,17 +283,23 @@ pr_extract_spectra <- function(in_file,
     for (ind in seq_along(out_all_tmp)) {
 
       tmp <- t(out_all_tmp[[ind]])
-      out_df_all <- data.frame(wvl = c(wvls, "cov_frac"),  var = "value", tmp, row.names = NULL)
+      out_df_all <- data.frame(wvl = c(wvls, "cov_frac"),
+                               var = "value",
+                               tmp, row.names = NULL)
       out_df_all_cov <- dplyr::filter(out_df_all, wvl == "cov_frac")
       out_df_w_all <- out_df_all %>%
         dplyr::filter(., wvl != "cov_frac") %>%
         tidyr::pivot_wider(., names_from = var, values_from =  3:dim(.)[2])
-      colnames(out_df_w_all) <- c("wvl",paste0("pix_",
-                                               stringr::str_pad(seq_along(colnames(tmp)), max(nchar(colnames(tmp))), "left", "0")))
+      colnames(out_df_w_all) <- c(
+        "wvl",
+        paste0("pix_",
+               stringr::str_pad(seq_along(colnames(tmp)), max(nchar(colnames(tmp))),
+                                "left", "0")))
       out_df_w_all$wvl <- as.numeric(as.character(out_df_w_all$wvl))
       # out_df_l_all <- out_df_all %>%
       #     tidyr::pivot_longer(., 3:dim(.)[2], names_to = "PIX")
-      out_df_w_all$ID <- ifelse(is.null("id_field"), in_sf$id_field[[ind]], paste0("id_", ind))
+      out_df_w_all$ID <- ifelse(is.null("id_field"), in_sf$id_field[[ind]],
+                                paste0("id_", ind))
       out_df_w_all <- dplyr::select(out_df_w_all, ID, tidyselect::everything())
       #
       out_all_w[[ind]] <- out_df_w_all
@@ -298,7 +315,8 @@ pr_extract_spectra <- function(in_file,
         message("Computing quantiles - ", qq)
         perccol <- out_all_l %>%
           dplyr::group_by(ID, wvl) %>%
-          dplyr::summarise(., perc = quantile(value, probs  = qq, na.rm = TRUE)) %>%
+          dplyr::summarise(., perc = stats::quantile(value, probs  = qq,
+                                              na.rm = TRUE)) %>%
           dplyr::ungroup() %>%
           dplyr::arrange(., ID, wvl)
         names(perccol)[3] <- paste0("quant_", 100*qq)
@@ -351,7 +369,8 @@ pr_extract_spectra <- function(in_file,
       outfile_stats <- file.path(paste0(basefilename, "_stats.", ext))
 
       if (ext == "csv") {
-        utils::write.csv(out_df_l_stats, file = outfile_stats, row.names = FALSE)
+        utils::write.csv(out_df_l_stats, file = outfile_stats,
+                         row.names = FALSE)
       }
       if (ext %in% c("xls", "xlsx")) {
         openxlsx::write.xlsx(out_df_l_stats, file = outfile_stats,

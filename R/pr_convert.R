@@ -575,7 +575,8 @@ pr_convert <- function(in_file,
                               paste0(out_file_latlon, ".envi"))
 
     if (file.exists(out_file_latlon) & !overwrite) {
-      message("LATLON file already exists - use overwrite = TRUE or change output file name to reprocess")
+      message("LATLON file already exists - use overwrite = TRUE or change ",
+              "output file name to reprocess")
     } else {
       if (LATLON) {
         prisma_create_latlon(f,
@@ -589,7 +590,8 @@ pr_convert <- function(in_file,
       }
     }
 
-    if (proc_lev %in% c("2B", "2C", "2D") | (proc_lev == "1" & !is.null(in_L2_file))) {
+    if (proc_lev %in% c("2B", "2C", "2D") | (proc_lev == "1" &
+                                             !is.null(in_L2_file))) {
       # Save ANGLES if requested ----
       out_file_ang<- paste0(tools::file_path_sans_ext(out_file), "_", source,
                             "_ANG")
@@ -598,7 +600,8 @@ pr_convert <- function(in_file,
                              paste0(out_file_ang, ".envi"))
 
       if (file.exists(out_file_ang) & !overwrite) {
-        message("ANG file already exists - use overwrite = TRUE or change output file name to reprocess")
+        message("ANG file already exists - use overwrite = TRUE or change ",
+                "output file name to reprocess")
       } else {
         if (ANGLES) {
           prisma_create_angles(f,
@@ -624,7 +627,8 @@ pr_convert <- function(in_file,
                              paste0(out_file_cld, ".envi"))
 
       if (file.exists(out_file_cld) & !overwrite) {
-        message("CLD file already exists - use overwrite = TRUE or change output file name to reprocess")
+        message("CLD file already exists - use overwrite = TRUE or change ",
+                "output file name to reprocess")
       } else {
         if (CLOUD) {
           prisma_create_additional(f,
@@ -645,7 +649,8 @@ pr_convert <- function(in_file,
                               paste0(out_file_glnt, ".envi"))
 
       if (file.exists(out_file_glnt) & !overwrite) {
-        message("GLINT file already exists - use overwrite = TRUE or change output file name to reprocess")
+        message("GLINT file already exists - use overwrite = TRUE or change " ,
+                "output file name to reprocess")
       } else {
         if (GLINT) {
           prisma_create_additional(f,
@@ -666,7 +671,8 @@ pr_convert <- function(in_file,
 
       if (LC) {
         if (file.exists(out_file_lc) & !overwrite) {
-          message("LC file already exists - use overwrite = TRUE or change output file name to reprocess")
+          message("LC file already exists - use overwrite = TRUE or change ",
+                  "output file name to reprocess")
         } else {
           prisma_create_additional(f,
                                    type = "LC",

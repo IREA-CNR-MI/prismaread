@@ -8,7 +8,11 @@
 #' @inheritParams pr_convert
 #' @importFrom hdf5r h5attr
 #'
-prisma_get_geoloc <- function(f, proc_lev, source, wvl = NULL, in_L2_file = NULL) {
+prisma_get_geoloc <- function(f,
+                              proc_lev,
+                              source,
+                              wvl        = NULL,
+                              in_L2_file = NULL) {
     if (proc_lev == "1") {
         if (is.null(in_L2_file)) {
             if (is.null(wvl) | wvl == "VNIR") {

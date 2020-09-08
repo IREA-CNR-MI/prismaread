@@ -39,8 +39,9 @@ pr_compute_indexes <- function(in_file,
   }
   assertthat::see_if(out_format %in% c("ENVI", "GTiff"))
   assertthat::see_if(dir.exists(dirname(out_file)),
-                     msg = stop("Folder:", dirname(dirname(out_file)),
-                                " does not exist. Please create it beforehand!"))
+                     msg = stop(
+                       "Folder:", dirname(dirname(out_file)),
+                       " does not exist. Please create it beforehand!"))
 
   out_file_txt <- paste0(tools::file_path_sans_ext(in_file), ".wvl")
 
@@ -65,7 +66,8 @@ pr_compute_indexes <- function(in_file,
   bad_indexes <- which(!indexes %in% names(av_indexes))
 
   if (length(bad_indexes)) {
-    warning("index(es) ", indexes[bad_indexes], " are not in the current list of ",
+    warning("index(es) ", indexes[bad_indexes],
+            " are not in the current list of ",
             "available indexes and will not be computed!")
 
   }
@@ -92,7 +94,8 @@ pr_compute_indexes <- function(in_file,
         req_wls <- as.numeric(substring(
           stringr::str_extract_all(indform, "R[0-9,.]*")[[1]],2,100))
         which_bands <- unlist(lapply(req_wls,
-                                     FUN = function(x) which.min(abs(x - rast_wls))))
+                                     FUN = function(x) which.min(
+                                       abs(x - rast_wls))))
 
         diffs <- lapply(req_wls, FUN = function(x) min(abs(x - rast_wls)))
 
@@ -102,8 +105,10 @@ pr_compute_indexes <- function(in_file,
         } else {
           indstring <- indform
           for(nn in seq_along(req_wls)) {
-            indform   <- gsub(req_wls[nn], paste0("[,", which_bands[nn], "]"), indform)
-            indstring <- gsub(req_wls[nn], round(rast_wls[nn], digits = 4), indstring)
+            indform   <- gsub(req_wls[nn], paste0("[,", which_bands[nn], "]"),
+                              indform)
+            indstring <- gsub(req_wls[nn], round(rast_wls[nn], digits = 4),
+                              indstring)
           }
 
           indform <- gsub("R", "x", indform)
@@ -119,7 +124,8 @@ pr_compute_indexes <- function(in_file,
 
           for (i in 1:bs$n) {
             message("Writing Block: ", i, " of: ", bs$n)
-            x <- raster::getValues(in_rast, row = bs$row[i], nrows = bs$nrows[i] )
+            x <- raster::getValues(in_rast, row = bs$row[i],
+                                   nrows = bs$nrows[i])
             x <- eval(parse(text = indform))
             out <- raster::writeValues(out, x, bs$row[i])
           }

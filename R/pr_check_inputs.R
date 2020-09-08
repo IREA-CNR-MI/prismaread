@@ -1,7 +1,8 @@
 #' @title pr_check_inputs
 #' @description helper function used to check consistency of pr_convert arguments
 #' @inheritParams pr_convert
-#' @return Upon success of all checks, the input hdf file, opened using `hdf5r::H5File`
+#' @return Upon success of all checks, the input hdf file, opened using
+#'  `hdf5r::H5File`
 #' @rdname pr_check_inputs
 #' @importFrom assertthat see_if
 #' @importFrom hdf5r H5File h5attr
