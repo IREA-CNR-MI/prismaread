@@ -28,7 +28,7 @@ rastwrite_lines <- function(rast_in,
     }
     bs <-  raster::blockSize(out)
 
-    if (proc_lev == "SATERR") {
+    if (proc_lev == "ERR") {
         datatype = "INT1U"
     }
 

@@ -210,7 +210,7 @@ prisma_create_vnir <- function(f,
         rastwrite_lines(rast_err,
                         out_file_vnir_err,
                         out_format,
-                        "SATERR",
+                        "ERR",
                         scale_min = NULL,
                         scale_max = NULL)
     }
