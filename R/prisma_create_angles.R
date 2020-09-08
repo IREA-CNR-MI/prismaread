@@ -3,7 +3,7 @@
 #' @param f input data he5 from caller
 #' @param out_file output file name for glint
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
-#' @inheritParams convert_prisma
+#' @inheritParams pr_convert
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
 #'
@@ -24,42 +24,60 @@ prisma_create_angles <- function(f,
         f <- try(hdf5r::H5File$new(in_L2_file, mode="r+"))
         proc_lev <- hdf5r::h5attr(f, "Processing_Level")
         if (inherits(f, "try-error")){
-            stop("Unable to open the input accessory L2 file as a hdf5 file. Verify your inputs. Aborting!")
+            stop("Unable to open the input accessory L2 file as a hdf5 file.
+                 Verify your inputs. Aborting!")
         }
     }
 
     if (proc_lev != "2D") {
-        rast_viewzen    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                                                   "_HCO/Geometric Fields/Observing_Angle")]][,])
-        rast_relazang  <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                                                   "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,])
-        rast_solzenang <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                                                   "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,])
+        rast_viewzen    <- raster::raster(
+            f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+                      "_HCO/Geometric Fields/Observing_Angle")]][,])
+        rast_relazang  <- raster::raster(
+            f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+                      "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,])
+        rast_solzenang <- raster::raster(
+            f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+                      "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,])
         if (base_georef) {
-            rast_viewzen   <- prisma_basegeo(rast_viewzen, geo$lon, geo$lat, fill_gaps)
-            rast_relazang  <- prisma_basegeo(rast_relazang, geo$lon, geo$lat, fill_gaps)
-            rast_solzenang <- prisma_basegeo(rast_solzenang, geo$lon, geo$lat, fill_gaps)
+            rast_viewzen   <- prisma_basegeo(rast_viewzen, geo$lon, geo$lat,
+                                             fill_gaps)
+            rast_relazang  <- prisma_basegeo(rast_relazang, geo$lon, geo$lat,
+                                             fill_gaps)
+            rast_solzenang <- prisma_basegeo(rast_solzenang, geo$lon, geo$lat,
+            )
         } else {
             rast_viewzen   <- raster::flip(rast_viewzen, 1)
             rast_relazang  <- raster::flip(rast_relazang, 1)
             rast_solzenang <- raster::flip(rast_solzenang, 1)
+            raster::projection(rast_viewzen) <- NA
+            raster::projection(rast_relazang) <- NA
+            raster::projection(rast_solzenang) <- NA
         }
     } else {
-        rast_viewzen    <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                                                   "_HCO/Geometric Fields/Observing_Angle")]][,],
-                                         crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                      ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                                      " +datum=WGS84 +units=m +no_defs"))
-        rast_relazang  <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                                                   "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,],
-                                         crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                      ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                                      " +datum=WGS84 +units=m +no_defs"))
-        rast_solzenang <- raster::raster(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                                                   "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,],
-                                         crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                      ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                                      " +datum=WGS84 +units=m +no_defs"))
+        rast_viewzen    <- raster::raster(
+            f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+                      "_HCO/Geometric Fields/Observing_Angle")]][,],
+            crs = paste0(
+                "+proj=utm +zone=", geo$proj_code,
+                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                " +datum=WGS84 +units=m +no_defs"))
+
+        rast_relazang  <- raster::raster(
+            f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+                      "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,],
+            crs = paste0(
+                "+proj=utm +zone=", geo$proj_code,
+                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                " +datum=WGS84 +units=m +no_defs"))
+
+        rast_solzenang <- raster::raster(
+            f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
+                      "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,],
+            crs = paste0(
+                "+proj=utm +zone=", geo$proj_code,
+                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                " +datum=WGS84 +units=m +no_defs"))
         rast_viewzen   <- raster::t(rast_viewzen)
         rast_relazang  <- raster::t(rast_relazang)
         rast_solzenang <- raster::t(rast_solzenang)
@@ -81,7 +99,8 @@ prisma_create_angles <- function(f,
     message(" - Writing ANGLES raster - ")
     rastwrite_lines(rastang, out_file, out_format)
     if (out_format == "ENVI") {
+        out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
         cat("band names = {", paste(names(rastang),collapse=","), "}", "\n",
-            file=raster::extension(out_file, "hdr"), append=TRUE)
+            file=out_hdr, append=TRUE)
     }
 }

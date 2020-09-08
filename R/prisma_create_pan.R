@@ -3,7 +3,7 @@
 #' @param f input data he5 from caller
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
 #' @param out_file_pan output file name for PAN
-#' @inheritParams convert_prisma
+#' @inheritParams pr_convert
 #' @return The function is called for its side effects
 #' @importFrom hdf5r h5attr
 #' @importFrom raster raster extent flip setExtent t
@@ -82,6 +82,7 @@ prisma_create_pan <- function(f,
         } else {
             rast_pan <- raster::raster(pan_cube)
             rast_pan <- raster::flip(rast_pan, 1)
+            raster::projection(rast_pan) <- NA
         }
     } else {
         if (proc_lev == "2D") {

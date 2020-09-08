@@ -7,7 +7,7 @@
 #' @param order_swir passed by caller - ordering of array of PRISMA SWIR wavelengths
 #' @param f input data he5 from caller
 #' @param out_file main prismaread output file name - passed by caller
-#' @inheritParams convert_prisma
+#' @inheritParams pr_convert
 #' @return `list` containing required info according to `proc_lev`
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table

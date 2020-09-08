@@ -3,7 +3,7 @@
 #' @param f input data he5 from caller
 #' @param out_file output file name for the dataset
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
-#' @inheritParams convert_prisma
+#' @inheritParams pr_convert
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
 #'
@@ -30,16 +30,22 @@ prisma_create_latlon <- function(f,
         } else {
             rast_lat  <- raster::flip(rast_lat, 1)
             rast_lon  <- raster::flip(rast_lon, 1)
+            raster::projection(rast_lat) <- NA
+            raster::projection(rast_lon) <- NA
         }
     } else {
-        rast_lat  <- raster::raster(geo$lat,
-                                    crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                 ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                                 " +datum=WGS84 +units=m +no_defs"))
-        rast_lon  <- raster::raster(geo$lon,
-                                    crs = paste0("+proj=utm +zone=", geo$proj_code,
-                                                 ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                                 " +datum=WGS84 +units=m +no_defs"))
+        rast_lat  <- raster::raster(
+            geo$lat,
+            crs = paste0(
+                "+proj=utm +zone=", geo$proj_code,
+                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                " +datum=WGS84 +units=m +no_defs"))
+        rast_lon  <- raster::raster(
+            geo$lon,
+            crs = paste0(
+                "+proj=utm +zone=", geo$proj_code,
+                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                " +datum=WGS84 +units=m +no_defs"))
         # rast_lat  <- raster::t(rast_lat)
         # rast_lon  <- raster::t(rast_lon)
         ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(rast_lat)[2]*30,
@@ -56,7 +62,8 @@ prisma_create_latlon <- function(f,
     message(" - Writing LATLON raster - ")
     rastwrite_lines(rastang, out_file, out_format)
     if (out_format == "ENVI") {
+        out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
         cat("band names = {", paste(names(rastang),collapse=","), "}", "\n",
-            file=raster::extension(out_file, "hdr"), append=TRUE)
+            file=out_hdr, append=TRUE)
     }
 }

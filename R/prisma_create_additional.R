@@ -1,9 +1,9 @@
 #' @title prisma_create_additional
 #' @description helper function used to process and save additional data sets such as CLOUD, LC and GLINT
 #' @param f input data he5 from caller
-#' @param type `character` type of dataset to be created ("CLD", "LC" or "GlNT")
+#' @param type `character` type of dataset to be created ("CLD", "LC" or "GLNT")
 #' @param out_file output file name for the dataset
-#' @inheritParams convert_prisma
+#' @inheritParams pr_convert
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
 #'
@@ -36,6 +36,7 @@ prisma_create_additional <- function(f,
         rast <- prisma_basegeo(rast, geo$lon, geo$lat, fill_gaps)
     } else {
         rast <- raster::flip(rast, 1)
+        raster::projection(rast) <- NA
     }
 
     if (type %in% c("CLD", "LC", "GLNT")) {
