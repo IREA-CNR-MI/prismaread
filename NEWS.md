@@ -42,8 +42,7 @@
     - Automatic application of scale and offset on L1 data, with results as radiances
     
     - Added argument `base_georef` to turn "ballpark" georeferencing of
-      L1, L2B and L2C data on or off. Also, improved results thanks to proper chacking
-      of corners
+      L1, L2B and L2C data on or off. Also, improved results thanks to proper       checking of corners
       
     - Check for proper "orientation" of imported L1, L2B and L2C data
     

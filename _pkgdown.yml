@@ -5,3 +5,25 @@ home:
     The goal of prismaread is allowing to easily import PRISMA (http://www.prisma-i.it/index.php/it/) hyperspectral data and convert them to a easier to use format ENVI or GeoTiff while also extracting other metadata information of interest
 url:
   https://github.com/lbusett/prismaread/
+template:
+  params:
+    bootswatch: united
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - Importing-Level-1-Data
+  - Importing-Level-2-Data
+  - Computing-Spectral-Indexes
+  - Output-Format-and-Naming
+  - Extracting-data-over-vector
+reference:
+- title: "Exported Functions"
+  desc: >
+    Processing functions available for the user
+- contents:
+  - pr_convert
+  - pr_extract_spectra
+  - pr_compute_indexes
+  - pr_listindexes
+  - pr_addindex

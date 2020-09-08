@@ -4,4 +4,4 @@ language: R
 cache: packages
 
 before_install:
-    - sudo apt-get install -y libhdf5-dev
+    - sudo apt-get install -y libhdf5-dev libudunits2-dev libgdal-dev libgeos-dev libproj-dev
