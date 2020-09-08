@@ -7,7 +7,7 @@
 prisma_basegeo(band, lon, lat, fill_gaps = TRUE)
 }
 \arguments{
-\item{band}{`Raster` layer to be georefewrenced}
+\item{band}{`Raster` layer to be georeferenced}
 
 \item{lon}{`Matrix` containing the longitudes of each pixel (as derived from the
 geolocation fields datasets of the hdf5)}
@@ -29,8 +29,8 @@ Function used to create a georeferenced raster from L1/L2B/L2C datasets,
 \details{
 The function is based on the "GLT and Bowtie Correction" technique used in ENVI, and
 described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
-Note that the 7x7 interpolation step for pixels still missing aftere the 3x3 interpolation is not (yet)
-implemnted, as well as the nearest neighbour interpolation.
+Note that the 7x7 interpolation step for pixels still missing after the 3x3 interpolation is not (yet)
+implemented, as well as the nearest neighbour interpolation.
 }
 \seealso{
 \code{\link[raster]{getValues}}

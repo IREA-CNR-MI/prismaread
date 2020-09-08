@@ -1,12 +1,13 @@
-pandoc: 2.7.3
+pandoc: 2.9.2.1
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
+  Computing-Spectral-Indexes: Computing-Spectral-Indexes.html
   Extracting-data-over-vector: Extracting-data-over-vector.html
   Importing-Level-1-Data: Importing-Level-1-Data.html
   Importing-Level-2-Data: Importing-Level-2-Data.html
   Output-Format-and-Naming: Output-Format-and-Naming.html
-last_built: 2020-07-06T13:45Z
+last_built: 2020-09-07T15:24Z
 urls:
   reference: https://github.com/lbusett/prismaread//reference
   article: https://github.com/lbusett/prismaread//articles

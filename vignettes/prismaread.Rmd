@@ -1,0 +1,456 @@
+---
+title: "prismaread"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+  vignette: >
+    %\VignetteIndexEntry{prismaread}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(prismaread)
+```
+
+`prismaread` allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/)  from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.
+
+# Importing L1 data
+
+The function to be used to import PRISMA L1 data is `pr_convert`. 
+It takes as input the full path of a PRISMA L1 hdf5 image, an output folder name and format, and a series of switches
+allowing to decide which hyperspectral cubes and ancillary datasets should be crated.
+
+In particular: 
+
+ - the `VNIR` and `SWIR` logical arguments allow to decide if importing the VNIR and SWIR hyperspectral cubes; 
+ - the `FULL` logical argument `FULL` argument allows deciding if a complete VNIR+SWIR cube has to be created
+alongside the "single" VNIR and SWIR ones. In that case, the 'join_priority' 
+keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
+cube in the wavelength were they overlap. 
+ - the `PAN`, `LATLON`, `CLOUD`, `GLINT` and `LC` logical argument allow to decide which of the 
+ corresponding ancillary datasets should be created (see the PRISMA manual for additional info)
+
+A "base" georeferencing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
+described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html, unless the `base_georef`
+argument is set to FALSE.
+
+For example the following code:
+
+```{r l1example, eval=FALSE}
+in_file    = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+out_folder = "/home/lb/tmp/test/"
+out_format = "ENVI"
+
+# Save a full image, prioritizing the SWIR spectrometer and save in ENVI format
+pr_convert(in_file    = in_file,
+               out_folder = out_folder,
+               out_format = out_format,
+               join_priority = "SWIR",
+               FULL   = TRUE,
+               LATLON = TRUE,
+               PAN    = TRUE,
+               CLOUD  = TRUE)
+
+```
+
+accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN, ANGLES and CLOUD datasets __See [documentation](reference/pr_convert.html) of the pr_convert() function for info on available arguments__. 
+
+The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files (See [Output format and Naming Conventions](articles/Output-Format-and-Naming.html). 
+
+## Associating acquisition angles with L1 data
+
+PRISMA L1 data unfortunately does not contain information concerning acquisition angles, that is instead available
+for all L2 datasets. However, if both the L1 and any L2 dataset area available `prismaread` allows to associate the
+ANGLES data retrieved from the L2 dataset to the L1 one. To do that, the user has to specify the additional
+`in_L2_file` in the call to `pr_convert`, such as in: 
+
+```{r l1example4, eval=FALSE}
+in_file    = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+in_L2_file = "/home/lb/tmp/test/PRS_L2B_STD_OFFL_20190825103112_20190825103117_0001.he5"
+out_folder = "/home/lb/tmp/test/"
+out_format = "ENVI"
+
+# Save a full image, prioritizing the SWIR spectrometer and save in ENVI format
+pr_convert(in_file    = in_file,
+               in_L2_file = in_L2_file, 
+               out_folder = out_folder,
+               out_format = out_format,
+               join_priority = "SWIR",
+               FULL   = TRUE,
+               LATLON = TRUE,
+               PAN    = TRUE,
+               CLOUD  = TRUE, 
+               ANGLES = TRUE)
+```
+
+__Note that in this case also the georeferencing information used for the GLT georeferencing is taken 
+from the L2 dataset!__
+
+## Importing only selected bands
+
+The `selbands_vnir` e `selbands_swir` arguments allow to select only a specified subset of 
+PRISMA bands, by specifying an array of required wavelengths. For example: 
+
+``` {r l1example2, eval=FALSE}
+pr_convert(in_file    = in_file,
+               out_folder = out_folder,
+               out_format = out_format,
+               VNIR = TRUE, 
+               SwiR = TRUE, 
+               selbands_vnir = c(450,550,650), 
+               selbands_swir = c(1000,1330), 
+               join_priority = "SWIR",
+               FULL   = TRUE)
+```
+
+will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the original 
+PRISMA bands whit wavelengths closer to the requested ones. 
+
+
+## Creation of ATCOR files
+
+When working on L1 data, the `pr_convert` function also allows automatic creation of text files required to run 
+an atmospheric correction using ATCOR. Those files are saved in the "ATCOR" subfolder of the
+main output folder. 
+
+In "standard" behaviour, only the three "standard" ATCOR files (`.wvl`, `.dat` and `.cal`) are created,
+within the "ATCOR" subfolder of the main output folder, with the `.wvl` file containing nominal wavelengths and FWHMs derived from the `cw` and `fwhm` attributes of the _.he5_ file. 
+
+For example, this code: 
+
+```{r atcor1, eval=FALSE}
+in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+out_folder = "/home/lb/tmp/test/"
+out_format = "ENVI"
+
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
+pr_convert(in_file    = in_file,
+               out_folder   = out_folder,
+               out_format = out_format,
+               join_priority = "VNIR", 
+               ATCOR = TRUE, 
+               FULL = TRUE,
+               PAN  = TRUE,
+               CLOUD  = TRUE)
+
+```
+
+will create input files for ATCOR useful for correction of the full hyperspectral cube. 
+
+The user can however also choose to generate additional ATCOR files, containing data about
+wavelengths and FWHMs related to different "columns" of the data cube, as derived 
+from the `KDP_AUX/Cw_Vnir_Matrix`, `KDP_AUX/Cw_Swir_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix` HDF layers. This could allow running different atmospheric corrections for different columns of the data, potentially allowing compensating
+"smile" effects on the retrieved surface reflectances. For example, this code: 
+
+```{r atcor2, eval=FALSE}
+in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
+out_folder = "/home/lb/pro"
+out_format = "ENVI"
+
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
+pr_convert(in_file    = in_file,
+               out_folder   = out_folder,
+               out_format = out_format,
+               join_priority = "SWIR", 
+               ATCOR = TRUE, 
+               ATCOR_wls = c(200,800), 
+               FULL = TRUE,
+               PAN  = TRUE, 
+               CLOUD  = TRUE)
+
+```
+
+
+## Importing L2 data
+
+The function to be used to import PRISMA L2(B,C or D) data is `pr_convert`. 
+It takes as input the full path of a PRISMA L2 hdf5 image, an output folder name and format, and a series of switches
+allowing to decide which hyperspectral cubes and ancillary datasets should be crated.
+
+In particular: 
+
+ - the `VNIR` and `SWIR` logical arguments allow to decide if importing the VNIR and SWIR hyperspectral cubes; 
+ - the `FULL` logical argument `FULL` argument allows deciding if a complete VNIR+SWIR cube has to be created
+alongside the "single" VNIR and SWIR ones. In that case, the 'join_priority' 
+keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
+cube in the wavelength were they overlap. 
+ - the `PAN`, `LATLON` and `ANGLES` allow to decide which of the 
+ corresponding ancillary datasets should be created (see the PRISMA manual for additional info)
+
+If working with __L2B__ or __L2C__ data, a "base" georeferencing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
+described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html, unless the `base_georef`
+argument is set to FALSE.
+
+If working with __L2D__, the output datasets are already georeferenced (usually in UTM projection), although 
+accuracy of geolocation should be checked. 
+
+For example the following code:
+
+```{r l2example, eval=FALSE}
+in_file    = "/home/lb/tmp/test/PRS_L2B_STD_20190825103112_20190825103117_0001.he5"
+out_folder = "/home/lb/tmp/test/"
+out_format = "ENVI"
+
+# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
+pr_convert(in_file    = in_file,
+               out_folder = out_folder,
+               out_format = out_format,
+               VNIR   = TRUE, 
+               SWIR   = FALSE,
+               FULL   = FALSE,
+               LATLON = TRUE,
+               PAN    = TRUE,
+               ANGLES  = TRUE)
+
+```
+
+The following code accesses the input file and saves the VNIR and SWIR cubes, as well as a full hyperspectral cube and the ANGLES and LATLON datasets __See [documentation](reference/convert_prisma.html) of the convert_prisma() function for info on available arguments__.
+
+```{r l2example2, eval=FALSE}
+in_file    = "/home/lb/tmp/test/PRS_L2D_STD_20190825103112_20190825103117_0001.he5"
+out_folder = "/home/lb/tmp/test/"
+out_format = "ENVI"
+
+# Save a full image, prioritizing the VNIR spectrometer and save in EVI format
+convert_prisma(in_file    = in_file,
+               out_folder = out_folder,
+               out_format = out_format,
+               VNIR   = TRUE, 
+               SWIR   = TRUE,
+               FULL   = TRUE,
+               LATLON = TRUE,
+               ANGLES  = TRUE)
+
+```
+
+The function also saves ancillary data related to wavelengths and fwhms of the different images, 
+and to hour and sun geometry at acquisition in ancillary txt files (See [Output format and Naming Conventions](articles/Output-Format-and-Naming.html). 
+
+## Importing only selected bands
+
+The `selbands_vnir` e `selbands_swir` arguments allow to select only a specified subset of 
+PRISMA bands, by specifying an array of required wavelengths. For example: 
+
+``` {r l1example3, eval=FALSE}
+convert_prisma(in_file    = in_file,
+               out_folder = out_folder,
+               out_format = out_format,
+               VNIR = TRUE, 
+               SwiR = TRUE, 
+               selbands_vnir = c(450,550,650), 
+               selbands_swir = c(1000,1330), 
+               join_priority = "SWIR",
+               FULL   = TRUE)
+```
+
+will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the original 
+PRISMA bands with wavelengths closer to the requested ones. 
+
+# Computing Spectral Indexes
+
+`prismaread` allows to automatically compute spectral indexes starting from either an original PRISMA hdf image, or from an hyperspectral cube already processed with `convert prisma`.
+
+## Computing spectral indexes from a predefined list 
+
+Spectral Indexes to be computed can be selected from a list of predefined ones. To do so, either specify a vector of desired indexes as the `indexes` argument of `pr_convert` to compute them directly from the hdf prisma data:
+
+```{r index_1, eval=FALSE, message=FALSE, warning=FALSE}
+in_file <- "D:/prismaread/L2D/PRS_L2D_STD_20190616102249_20190616102253_0001.he5"
+pr_convert(in_file,
+               out_format = "ENVI",
+               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
+               indexes = c("GI", "MTCI"))
+```
+
+, or use function `pr_compute_indexes` to compute them starting from an hyperspectral cube already processed:
+
+```{r index_2, eval=FALSE}
+in_file  <- "PRS_L2D_STD_20190616102249_20190616102253_0001_HCO_FULL.envi"
+out_file <- "D:/prismaread/L2D/testL2D/ENVI/outfile_indexes"
+pr_compute_indexes(in_file,
+                       out_file = out_file,
+                       out_format = "ENVI",
+                       indexes = c("GI", "MTCI"))
+```
+
+Output file names are created by adding a suffix corresponding to the indexes names to the base output filename. In addition, an ancillary file containing the formulas used to compute each index is saved (extension = *.formulas*) for reference. the file shows the formulas used, giving reference to the true wavelengths of the PRISMA bands used in the computation.
+
+The list of available indexes, shown below, was derived from the list of spectral indexes available in package [`hsdar`](https://cran.r-project.org/web/packages/hsdar/hsdar.pdf), as well as from the list reported [HERE](https://cubert-gmbh.com/applications/vegetation-indices/).
+
+```{r tbl, echo=FALSE, message=FALSE, warning=FALSE}
+library(prismaread)
+pr_listindexes()
+
+```
+
+**NOTE** Although a check was done on indexes formulas, we do not guarantee that all of them are correct. Please check the formulas in the table to be sure!
+
+**IMPORTANT NOTE**
+
+Computation of spectral indexes can be done alongside extraction of spectral cubes/ancillary info. For example, this commands: 
+
+```{r index2, eval=FALSE}
+in_file  <- "PRS_L2D_STD_20190616102249_20190616102253_0001_HCO_FULL.envi"
+out_file <- "D:/prismaread/L2D/testL2D/ENVI/outfile_indexes"
+pr_compute_indexes(in_file,
+                       out_file = out_file,
+                       VNIR = TRUE, LATLON = TRUE, ANGLES = TRUE,
+                       out_format = "ENVI",
+                       indexes = c("GI", "MTCI"))
+```
+
+will save in output the VNIR cube, LATLON and ANGLES datasets and compute and save
+images relative to the "GI" and "MTCI" indexes. 
+
+### Adding a new index to the list
+
+Additional spectral indexes can be added to the aforementioned list using function `pr_addindex()`, as in the following example
+
+```{r l1example5, eval=FALSE}
+pr_addindex(Name = "myindex", Formula = "R600 / R700", 
+            Description = "My custom Index", 
+            Reference = "Me (2020)"
+```
+
+## Computing custom spectral indexes
+
+Custom spectral indexes can also be computed on the fly by specifying the `cust_indexes`
+argument, as a __named list__, such as in:
+
+```{r l1example6, eval=FALSE}
+pr_convert(in_file,
+               out_format = "ENVI",
+               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
+               indexes = c("GI", "MTCI"), 
+               cust_indexes = list(myindex1 = "R500 / R600",
+                                   myindex2 = "(R800 - R680) / (R800 + R680)"))
+```
+
+# Output Format and naming Conventions
+
+### Format of output rasters
+
+- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format`
+  argument of `convert_prisma`. 
+
+### Naming conventions
+
+- Filenames are built starting from the output folder name provided by the user, by
+adding appropriate suffixes. If `out_basefile` is not specified (or set to `auto`, the Default), 
+output file names are created based on the filename of the hdf5 input. For example, if 
+in_file is "PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5", the output file for the VNIR cube will be `PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_VNIR.envi` (or .tif), that for SWIR will be
+`PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_SWIR.envi` ), etcetera. 
+
+If `out_basefile` is specified, the filenames are created substituting the specified string. For example, if 
+out_basefile is "myprisma", the output file for the VNIR cube will be `myprisma_HCO_VNIR.envi` (or .tif), that for SWIR will be
+`myprisma_HCO_SWIR.envi` ), etcetera.
+
+### Measure Units
+
+- Measure units of the output hyperspectral data are as follows: 
+
+  ```{r echo=FALSE, message=FALSE, warning=FALSE}
+  my_tbl <- tibble::tribble(
+    ~LEVEL, ~Variable, ~"Measure Units",
+    "L1",   "Radiance", "W / m^2 * sr * um",
+    "L2B",  "Radiance", "W / m^2 * sr * um",
+    "L2C",  "Reflectance", "unitless (ratio)",
+    "L2D",  "Reflectance", "unitless (ratio)"
+  )
+  knitr::kable(my_tbl, digits = 3, row.names = FALSE, align = "c",
+              caption = NULL)
+  ```
+
+### Ancillary info
+
+- If output format is "ENVI", the wavelengths of the different bands for the hyperspectral 
+cubes are properly written in the appropriate header (.hdr) file. 
+
+- Irrespective from output format, info about wavelengths and fwhms of the hyperspectral 
+cubes are saved in appropriate txt files. For example, if the output file is 
+`D:/myoutfolder/myoutfil_HCO_VNIR.envi`, info about the wavelengths is saved in 
+`D:/myoutfolder/myoutfil_HCO_VNIR.wvl`
+
+- Info about acquisition date and angles is saved in a dedicated txt file. For example, if
+output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is saved in 
+`D:/myoutfolder/myoutfil_HCO_VNIR.ang`
+
+# Extracting Data over Vector Features
+
+`prismaread` provides a very efficient function based on package `exactextractr`(<https://github.com/isciences/exactextractr>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (**See [documentation](reference/pr_extract_spectra.html) of the prisma\_extract\_spectra() function for info on available arguments**).
+
+For example, starting from a VNIR Cube obtained with `pr_convert` and a vector polygon file:
+
+```{r message=FALSE, warning=FALSE}
+  library(prismaread)
+  library(ggplot2)
+  
+  in_file <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
+  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
+
+  # extract base statistics, in "long" format
+  test <- pr_extract_spectra(in_file, in_vect, id_field = "ID")
+  test
+  # plot results using ggplot
+  ggplot(test, aes(x = wvl, y = mean)) +
+    geom_line(aes(color = ID, group = ID)) +
+    facet_wrap(~ID) +
+    theme_light()
+
+  # extract base statistics ands save results as excel file, in "wide" format
+  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
+                                 stats_format = "wide", id_field = "id")
+  test
+
+  # extract custom statistics
+  test <- pr_extract_spectra(in_file, in_vect,
+                                 selstats = c("mean", "coeffvar", "stdev", "min", "max"),
+                                 id_field = "id")
+  
+  test
+  
+  # plot results using ggplot
+  ggplot(test, aes(x = wvl)) +
+    geom_line(aes(y = mean, color = ID, group = ID)) +
+    geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
+    geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
+    facet_wrap(~ID) +
+    theme_light()
+
+  
+  # extract custom statistics and quantiles
+  test <- pr_extract_spectra(in_file, in_vect, quantiles = TRUE,
+                                 selstats = c("mean", "stdev"),
+                                 id_field = "id")
+  test
+
+  
+  # extract also all pixels
+  test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
+                                 selstats = c("mean", "stdev"),
+                                 id_field = "id")
+  
+  
+  # stats are saved in the "stats" slot of the output
+  test$stats
+  
+  # pixel values are saved in the "allpix" slot of the output
+  test$allpix
+
+  ggplot(test$allpix, aes(x = wvl)) +
+    geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
+    facet_wrap(~ID) +
+    theme_light()
+
+```
+
+

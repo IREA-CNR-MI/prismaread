@@ -19,8 +19,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="rastwrite_lines — rastwrite_lines" />
-<meta property="og:description" content="Write a raster object by blocks of lines" />
+<meta property="og:description" content="Write a raster object by blocks of lines
+Write a raster object by blocks of lines" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -103,16 +104,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
-    </li>
-    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+    </li>
+    <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+    <li>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
   </ul>
 </li>
@@ -141,15 +145,26 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>rastwrite_lines</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/rastwrite_lines.R'><code>R/rastwrite_lines.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/rastwrite_lines.R'><code>R/rastwrite_lines.R</code></a>, <a href='https://github.com/lbusett/prismaread/blob/master/R/rastwrite_lines_t.R'><code>R/rastwrite_lines_t.R</code></a></small>
     <div class="hidden name"><code>rastwrite_lines.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Write a raster object by blocks of lines</p>
+<p>Write a raster object by blocks of lines</p>
     </div>
 
     <pre class="usage"><span class='fu'>rastwrite_lines</span>(
+  <span class='no'>rast_in</span>,
+  <span class='no'>out_file</span>,
+  <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"tif"</span>,
+  <span class='kw'>proc_lev</span> <span class='kw'>=</span> <span class='st'>"1"</span>,
+  <span class='kw'>scale_min</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>scale_max</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>join</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)
+
+<span class='fu'>rastwrite_lines_t</span>(
   <span class='no'>rast_in</span>,
   <span class='no'>out_file</span>,
   <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"tif"</span>,
@@ -195,9 +210,11 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>the function is called for its side effects</p>
+<p>the function is called for its side effects</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>DETAILS</p>
+<p>DETAILS</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

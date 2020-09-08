@@ -31,9 +31,11 @@ columns 200 and 800 are saved.)}
 
 \item{fwhms}{passed by caller - array of PRISMA fwhms}
 
-\item{order_vnir}{passed by caller - ordering of array of PRISMA VNIR wavelengths}
+\item{order_vnir}{passed by caller - ordering of array of PRISMA VNIR
+wavelengths}
 
-\item{order_swir}{passed by caller - ordering of array of PRISMA SWIR wavelengths}
+\item{order_swir}{passed by caller - ordering of array of PRISMA SWIR
+wavelengths}
 
 \item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
 the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.

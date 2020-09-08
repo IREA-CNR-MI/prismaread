@@ -4,9 +4,6 @@
     <loc>https://github.com/lbusett/prismaread//index.html</loc>
   </url>
   <url>
-    <loc>https://github.com/lbusett/prismaread//reference/convert_prisma.html</loc>
-  </url>
-  <url>
     <loc>https://github.com/lbusett/prismaread//reference/pipe.html</loc>
   </url>
   <url>
@@ -31,16 +28,34 @@
     <loc>https://github.com/lbusett/prismaread//reference/prisma_create_vnir.html</loc>
   </url>
   <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_extract_spectra.html</loc>
-  </url>
-  <url>
     <loc>https://github.com/lbusett/prismaread//reference/prisma_get_geoloc.html</loc>
   </url>
   <url>
     <loc>https://github.com/lbusett/prismaread//reference/prisma_make_atcor.html</loc>
   </url>
   <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_addindex.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_check_formulas.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_compute_indexes.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_convert.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_extract_spectra.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_listindexes.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/lbusett/prismaread//reference/rastwrite_lines.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//articles/Computing-Spectral-Indexes.html</loc>
   </url>
   <url>
     <loc>https://github.com/lbusett/prismaread//articles/Extracting-data-over-vector.html</loc>

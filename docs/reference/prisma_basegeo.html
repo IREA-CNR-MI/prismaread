@@ -19,8 +19,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -105,16 +105,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
-    </li>
-    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+    </li>
+    <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+    <li>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
   </ul>
 </li>
@@ -160,7 +163,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>band</th>
-      <td><p>`Raster` layer to be georefewrenced</p></td>
+      <td><p>`Raster` layer to be georeferenced</p></td>
     </tr>
     <tr>
       <th>lon</th>
@@ -186,8 +189,8 @@ filled based on a 3x3 average focal filter of the neighbouring valid pixels, Def
 
     <p>The function is based on the "GLT and Bowtie Correction" technique used in ENVI, and
 described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
-Note that the 7x7 interpolation step for pixels still missing aftere the 3x3 interpolation is not (yet)
-implemnted, as well as the nearest neighbour interpolation.</p>
+Note that the 7x7 interpolation step for pixels still missing after the 3x3 interpolation is not (yet)
+implemented, as well as the nearest neighbour interpolation.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/raster/man/getValues.html'>getValues</a></code></p></div>

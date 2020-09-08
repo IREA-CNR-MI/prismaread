@@ -30,7 +30,7 @@ prisma_create_swir(
 
 \item{out_file_swir}{output file name for SWIR}
 
-\item{out_format}{`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'}
+\item{out_format}{`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'}
 
 \item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
 using the "Georeference from input GLT" procedure explained here:
@@ -60,7 +60,7 @@ SATURATION ERROR MATRIX is coded as:
 \item{selbands_swir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
 the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
 
-\item{in_L2_file}{`character` full path of an L2B/C file to be used to extract georeeferencing
+\item{in_L2_file}{`character` full path of an L2B/C file to be used to extract georeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
 fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
 data are also retrieved from the L2 file.}

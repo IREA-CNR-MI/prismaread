@@ -19,8 +19,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -102,16 +102,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
-    </li>
-    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+    </li>
+    <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+    <li>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
   </ul>
 </li>
@@ -153,8 +156,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-exported-functions" class="hasAnchor"><a href="#section-exported-functions" class="anchor"></a>Exported Functions</h2>
+          <p class="section-desc"><p>Processing functions available for the user</p></p>
         </th>
       </tr>
       
@@ -165,75 +168,33 @@
       <tr>
         
         <td>
-          <p><code><a href="convert_prisma.html">convert_prisma()</a></code> </p>
+          <p><code><a href="pr_convert.html">pr_convert()</a></code> </p>
         </td>
-        <td><p>convert_prisma</p></td>
+        <td><p>pr_convert</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prisma_basegeo.html">prisma_basegeo()</a></code> </p>
+          <p><code><a href="pr_extract_spectra.html">pr_extract_spectra()</a></code> </p>
         </td>
-        <td><p>prisma_basegeo</p></td>
+        <td><p>pr_extract_spectra</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prisma_create_additional.html">prisma_create_additional()</a></code> </p>
+          <p><code><a href="pr_compute_indexes.html">pr_compute_indexes()</a></code> </p>
         </td>
-        <td><p>prisma_create_additional</p></td>
+        <td><p>pr_compute_indexes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prisma_create_angles.html">prisma_create_angles()</a></code> </p>
+          <p><code><a href="pr_listindexes.html">pr_listindexes()</a></code> </p>
         </td>
-        <td><p>prisma_create_angles</p></td>
+        <td><p>pr_listindexes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="prisma_create_latlon.html">prisma_create_latlon()</a></code> </p>
+          <p><code><a href="pr_addindex.html">pr_addindex()</a></code> </p>
         </td>
-        <td><p>prisma_create_additional</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prisma_create_pan.html">prisma_create_pan()</a></code> </p>
-        </td>
-        <td><p>prisma_create_pan</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prisma_create_swir.html">prisma_create_swir()</a></code> </p>
-        </td>
-        <td><p>prisma_create_swir</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prisma_create_vnir.html">prisma_create_vnir()</a></code> </p>
-        </td>
-        <td><p>prisma_create_vnir</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prisma_extract_spectra.html">prisma_extract_spectra()</a></code> </p>
-        </td>
-        <td><p>prisma_extract_spectra</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prisma_get_geoloc.html">prisma_get_geoloc()</a></code> </p>
-        </td>
-        <td><p>prisma_get_geoloc</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prisma_make_atcor.html">prisma_make_atcor()</a></code> </p>
-        </td>
-        <td><p>prisma_make_atcor</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rastwrite_lines.html">rastwrite_lines()</a></code> </p>
-        </td>
-        <td><p>rastwrite_lines</p></td>
+        <td><p>pr_addindex</p></td>
       </tr>
     </tbody>
     </table>

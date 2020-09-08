@@ -1,0 +1,89 @@
+---
+title: "Computing Spectral Indexes"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(prismaread)
+```
+
+`prismaread` allows to automatically compute spectral indexes starting from either an original PRISMA hdf image, or from an hyperspectral cube already processed with `convert prisma`.
+
+## Computing spectral indexes from a predefined list 
+
+Spectral Indexes to be computed can be selected from a list of predefined ones. To do so, either specify a vector of desired indexes as the `indexes` argument of `pr_convert` to compute them directly from the hdf prisma data:
+
+```{r index_1, eval=FALSE, message=FALSE, warning=FALSE}
+in_file <- "D:/prismaread/L2D/PRS_L2D_STD_20190616102249_20190616102253_0001.he5"
+pr_convert(in_file,
+               out_format = "ENVI",
+               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
+               indexes = c("GI", "MTCI"))
+```
+
+, or use function `pr_compute_indexes` to compute them starting from an hyperspectral cube already processed:
+
+```{r index_2, eval=FALSE}
+in_file  <- "PRS_L2D_STD_20190616102249_20190616102253_0001_HCO_FULL.envi"
+out_file <- "D:/prismaread/L2D/testL2D/ENVI/outfile_indexes"
+pr_compute_indexes(in_file,
+                       out_file = out_file,
+                       out_format = "ENVI",
+                       indexes = c("GI", "MTCI"))
+```
+
+Output file names are created by adding a suffix corresponding to the indexes names to the base output filename. In addition, an ancillary file containing the formulas used to compute each index is saved (extension = *.formulas*) for reference. the file shows the formulas used, giving reference to the true wavelengths of the PRISMA bands used in the computation.
+
+The list of available indexes, shown below, was derived from the list of spectral indexes available in package [`hsdar`](https://cran.r-project.org/web/packages/hsdar/hsdar.pdf), as well as from the list reported [HERE](https://cubert-gmbh.com/applications/vegetation-indices/).
+
+```{r tbl, echo=FALSE, message=FALSE, warning=FALSE}
+
+pr_listindexes()
+
+```
+
+**NOTE** Although a check was done on indexes formulas, we do not guarantee that all of them are correct. Please check the formulas in the table to be sure!
+
+**IMPORTANT NOTE**
+
+Computation of spectral indexes can be done alongside extraction of spectral cubes/ancillary info. For example, this commands: 
+
+```{r index2, eval=FALSE}
+in_file  <- "PRS_L2D_STD_20190616102249_20190616102253_0001_HCO_FULL.envi"
+out_file <- "D:/prismaread/L2D/testL2D/ENVI/outfile_indexes"
+pr_compute_indexes(in_file,
+                       out_file = out_file,
+                       VNIR = TRUE, LATLON = TRUE, ANGLES = TRUE,
+                       out_format = "ENVI",
+                       indexes = c("GI", "MTCI"))
+```
+
+will save in output the VNIR cube, LATLON and ANGLES datasets and compute and save
+images relative to the "GI" and "MTCI" indexes. 
+
+### Adding a new index to the list
+
+Additional spectral indexes can be added to the aforementioned list using function `pr_addindex()`, as in the following example
+
+```{r l1example4, eval=FALSE}
+pr_addindex(Name = "myindex", Formula = "R600 / R700", 
+            Description = "My custom Index", 
+            Reference = "Me (2020)"
+```
+
+## Computing custom spectral indexes
+
+Custom spectral indexes can also be computed on the fly by specifying the `cust_indexes`
+argument, as a __named list__, such as in:
+
+```{r l1example2, eval=FALSE}
+pr_convert(in_file,
+               out_format = "ENVI",
+               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
+               indexes = c("GI", "MTCI"), 
+               cust_indexes = list(myindex1 = "R500 / R600",
+                                   myindex2 = "(R800 - R680) / (R800 + R680)"))
+```

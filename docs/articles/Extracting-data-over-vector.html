@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -61,16 +61,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
-    </li>
-    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+    </li>
+    <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+    <li>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
   </ul>
 </li>
@@ -95,7 +98,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="Extracting-data-over-vector_files/header-attrs-2.3/header-attrs.js"></script><script src="Extracting-data-over-vector_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Extracting Data Over Vector Features</h1>
@@ -108,8 +111,8 @@
 
     
     
-<p><code>prismaread</code> provides a very efficient function based on package <code>exactextractr</code>(<a href="https://github.com/isciences/exactextractr" class="uri">https://github.com/isciences/exactextractr</a>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (<strong>See <a href="reference/prisma_extract_spectra.html">documentation</a> of the prisma_extract_spectra() function for info on available arguments</strong>).</p>
-<p>For example, starting from a VNIR Cube obtained with <code>convert_prisma</code> and a vector polygon file:</p>
+<p><code>prismaread</code> provides a very efficient function based on package <code>exactextractr</code>(<a href="https://github.com/isciences/exactextractr" class="uri">https://github.com/isciences/exactextractr</a>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (<strong>See <a href="reference/pr_extract_spectra.html">documentation</a> of the prisma_extract_spectra() function for info on available arguments</strong>).</p>
+<p>For example, starting from a VNIR Cube obtained with <code>pr_convert</code> and a vector polygon file:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r">  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">prismaread</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tmap</span>)
@@ -117,7 +120,7 @@
   <span class="no">in_vect</span> <span class="kw">&lt;-</span> <span class="st">"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
 
   <span class="co"># extract base statistics, in "long" format</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"ID"</span>)
+  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"ID"</span>)
   <span class="no">test</span>
 <span class="co">#&gt; # A tibble: 396 x 4</span>
 <span class="co">#&gt;      wvl ID       mean  stdev</span>
@@ -141,7 +144,7 @@
 <p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r">
   <span class="co"># extract base statistics ands save results as excel file, in "wide" format</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">out_file</span> <span class="kw">=</span> <span class="st">"D:/Temp/test1.xlsx"</span>,
+  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">out_file</span> <span class="kw">=</span> <span class="st">"D:/Temp/test1.xlsx"</span>,
                                  <span class="kw">stats_format</span> <span class="kw">=</span> <span class="st">"wide"</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
   <span class="no">test</span>
 <span class="co">#&gt; # A tibble: 66 x 13</span>
@@ -161,7 +164,7 @@
 <span class="co">#&gt; #   mean_X6 &lt;dbl&gt;, stdev_X6 &lt;dbl&gt;</span>
 
   <span class="co"># extract custom statistics</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>,
+  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>,
                                  <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>),
                                  <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
 
@@ -192,7 +195,7 @@
 <div class="sourceCode" id="cb3"><html><body><pre class="r">
 
   <span class="co"># extract custom statistics and quantiles</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                                  <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
                                  <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
   <span class="no">test</span>
@@ -213,7 +216,7 @@
 
 
   <span class="co"># extract also all pixels</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/prisma_extract_spectra.html">prisma_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">allpix</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">allpix</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                                  <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
                                  <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
 

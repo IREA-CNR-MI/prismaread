@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The function to be used to import PRISMA L2(B,C or D) data is `convert_prisma`. 
+The function to be used to import PRISMA L2(B,C or D) data is `pr_convert`. 
 It takes as input the full path of a PRISMA L2 hdf5 image, an output folder name and format, and a series of switches
 allowing to decide which hyperspectral cubes and ancillary datasets should be crated.
 
@@ -23,7 +23,7 @@ cube in the wavelength were they overlap.
  - the `PAN`, `LATLON` and `ANGLES` allow to decide which of the 
  corresponding ancillary datasets should be created (see the PRISMA manual for additional info)
 
-If working with __L2B__ or __L2C__ data, a "base" georeferincing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
+If working with __L2B__ or __L2C__ data, a "base" georeferencing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
 described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html, unless the `base_georef`
 argument is set to FALSE.
 
@@ -38,7 +38,7 @@ out_folder = "/home/lb/tmp/test/"
 out_format = "ENVI"
 
 # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
-convert_prisma(in_file    = in_file,
+pr_convert(in_file    = in_file,
                out_folder = out_folder,
                out_format = out_format,
                VNIR   = TRUE, 

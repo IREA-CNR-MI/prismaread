@@ -9,11 +9,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-`prismaread` provides a very efficient function based on package `exactextractr`(https://github.com/isciences/exactextractr) for extracting and summarizing data from the converted 
-hyperspectral cubes over features of vector spatial files. The function allows to compute several 
-statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (__See [documentation](reference/prisma_extract_spectra.html) of the prisma_extract_spectra() function for info on available arguments__).
+`prismaread` provides a very efficient function based on package `exactextractr`(<https://github.com/isciences/exactextractr>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (**See [documentation](reference/pr_extract_spectra.html) of the prisma\_extract\_spectra() function for info on available arguments**).
 
-For example, starting from a VNIR Cube obtained with `convert_prisma` and a vector polygon file: 
+For example, starting from a VNIR Cube obtained with `pr_convert` and a vector polygon file:
 
 ```{r message=FALSE, warning=FALSE}
   library(prismaread)
@@ -23,7 +21,7 @@ For example, starting from a VNIR Cube obtained with `convert_prisma` and a vect
   in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
 
   # extract base statistics, in "long" format
-  test <- prisma_extract_spectra(in_file, in_vect, id_field = "ID")
+  test <- pr_extract_spectra(in_file, in_vect, id_field = "ID")
   test
   # plot results using ggplot
   ggplot(test, aes(x = wvl, y = mean)) +
@@ -32,12 +30,12 @@ For example, starting from a VNIR Cube obtained with `convert_prisma` and a vect
     theme_light()
 
   # extract base statistics ands save results as excel file, in "wide" format
-  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
+  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
                                  stats_format = "wide", id_field = "id")
   test
 
   # extract custom statistics
-  test <- prisma_extract_spectra(in_file, in_vect,
+  test <- pr_extract_spectra(in_file, in_vect,
                                  selstats = c("mean", "coeffvar", "stdev", "min", "max"),
                                  id_field = "id")
   
@@ -53,14 +51,14 @@ For example, starting from a VNIR Cube obtained with `convert_prisma` and a vect
 
   
   # extract custom statistics and quantiles
-  test <- prisma_extract_spectra(in_file, in_vect, quantiles = TRUE,
+  test <- pr_extract_spectra(in_file, in_vect, quantiles = TRUE,
                                  selstats = c("mean", "stdev"),
                                  id_field = "id")
   test
 
   
   # extract also all pixels
-  test <- prisma_extract_spectra(in_file, in_vect, allpix = TRUE,
+  test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
                                  selstats = c("mean", "stdev"),
                                  id_field = "id")
   
@@ -77,7 +75,3 @@ For example, starting from a VNIR Cube obtained with `convert_prisma` and a vect
     theme_light()
 
 ```
-
-
-
-

@@ -19,8 +19,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -103,16 +103,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
-    </li>
-    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+    </li>
+    <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+    <li>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
   </ul>
 </li>
@@ -220,7 +223,13 @@ data, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>ERR_MATRIX</th>
-      <td><p>Not yet implemented!</p></td>
+      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
+SATURATION ERROR MATRIX is coded as:
+ 0=pixel ok;
+ 1=DEFECTIVE PIXEL from KDP
+ 2= Pixel in saturation.
+ 3= Pixel with lower radiometric accuracy, due to coregistration effects.
+ 4= Pixel becomes NaN or Inf during processing.</p></td>
     </tr>
     <tr>
       <th>selbands_swir</th>
@@ -229,9 +238,10 @@ the SWIR data cube. If not NULL, only the bands with wavelengths closest to thes
     </tr>
     <tr>
       <th>in_L2_file</th>
-      <td><p>`character` full path of an L2 file to be used to extract better georeeferencing
+      <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file</p></td>
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.</p></td>
     </tr>
     </table>
 

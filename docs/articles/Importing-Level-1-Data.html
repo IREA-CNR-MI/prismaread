@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -61,16 +61,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
-    </li>
-    <li>
       <a href="../articles/Importing-Level-1-Data.html">Importing Level 1 Data</a>
     </li>
     <li>
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+    </li>
+    <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
+    </li>
+    <li>
+      <a href="../articles/Extracting-data-over-vector.html">Extracting Data Over Vector Features</a>
     </li>
   </ul>
 </li>
@@ -95,7 +98,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="Importing-Level-1-Data_files/header-attrs-2.3/header-attrs.js"></script><script src="Importing-Level-1-Data_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Importing Level 1 Data</h1>
@@ -108,21 +111,21 @@
 
     
     
-<p>The function to be used to import PRISMA L1 data is <code>convert_prisma</code>. It takes as input the full path of a PRISMA L1 hdf5 image, an output folder name and format, and a series of switches allowing to decide which hyperspectral cubes and ancillary datasets should be crated.</p>
+<p>The function to be used to import PRISMA L1 data is <code>pr_convert</code>. It takes as input the full path of a PRISMA L1 hdf5 image, an output folder name and format, and a series of switches allowing to decide which hyperspectral cubes and ancillary datasets should be crated.</p>
 <p>In particular:</p>
 <ul>
 <li>the <code>VNIR</code> and <code>SWIR</code> logical arguments allow to decide if importing the VNIR and SWIR hyperspectral cubes;</li>
 <li>the <code>FULL</code> logical argument <code>FULL</code> argument allows deciding if a complete VNIR+SWIR cube has to be created alongside the “single” VNIR and SWIR ones. In that case, the ‘join_priority’ keyword is used to decide if keeping bands from the “VNIR” or the “SWIR” data cube in the wavelength were they overlap.</li>
 <li>the <code>PAN</code>, <code>LATLON</code>, <code>CLOUD</code>, <code>GLINT</code> and <code>LC</code> logical argument allow to decide which of the corresponding ancillary datasets should be created (see the PRISMA manual for additional info)</li>
 </ul>
-<p>A “base” georeferincing in Lat/Lon WGS-84 based on the “GLT and Bowtie Correction” technique used in ENVI, and described in <a href="https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html" class="uri">https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html</a>, unless the <code>base_georef</code> argument is set to FALSE.</p>
+<p>A “base” georeferencing in Lat/Lon WGS-84 based on the “GLT and Bowtie Correction” technique used in ENVI, and described in <a href="https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html" class="uri">https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html</a>, unless the <code>base_georef</code> argument is set to FALSE.</p>
 <p>For example the following code:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="no">in_file</span>    <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
 <span class="no">out_folder</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/"</span>
 <span class="no">out_format</span> <span class="kw">=</span> <span class="st">"ENVI"</span>
 
-<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span>
-<span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
+<span class="co"># Save a full image, prioritizing the SWIR spectrometer and save in ENVI format</span>
+<span class="fu"><a href="../reference/pr_convert.html">pr_convert</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
                <span class="kw">out_folder</span> <span class="kw">=</span> <span class="no">out_folder</span>,
                <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
                <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"SWIR"</span>,
@@ -130,19 +133,19 @@
                <span class="kw">LATLON</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">PAN</span>    <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">CLOUD</span>  <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p>accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN, ANGLES and CLOUD datasets <strong>See <a href="reference/convert_prisma.html">documentation</a> of the convert_prisma() function for info on available arguments</strong>.</p>
+<p>accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN, ANGLES and CLOUD datasets <strong>See <a href="reference/pr_convert.html">documentation</a> of the pr_convert() function for info on available arguments</strong>.</p>
 <p>The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files (See <a href="articles/Output-Format-and-Naming.html">Output format and Naming Conventions</a>.</p>
 <div id="associating-acquisition-angles-with-l1-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#associating-acquisition-angles-with-l1-data" class="anchor"></a>Associating acquisition angles with L1 data</h2>
-<p>PRISMA L1 data unfortunately does not contain information concerning acquisition angles, that is instead available for all L2 datasets. However, if both the L1 and any L2 dataset area available <code>prismaread</code> allows to associate the ANGLES data retrieved from the L2 dataset to the L1 one. To do that, the user has to specify the additional <code>in_L2_file</code> in the call to <code>convert_prisma</code>, such as in:</p>
+<p>PRISMA L1 data unfortunately does not contain information concerning acquisition angles, that is instead available for all L2 datasets. However, if both the L1 and any L2 dataset area available <code>prismaread</code> allows to associate the ANGLES data retrieved from the L2 dataset to the L1 one. To do that, the user has to specify the additional <code>in_L2_file</code> in the call to <code>pr_convert</code>, such as in:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">in_file</span>    <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
 <span class="no">in_L2_file</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L2B_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
 <span class="no">out_folder</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/"</span>
 <span class="no">out_format</span> <span class="kw">=</span> <span class="st">"ENVI"</span>
 
-<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span>
-<span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
+<span class="co"># Save a full image, prioritizing the SWIR spectrometer and save in ENVI format</span>
+<span class="fu"><a href="../reference/pr_convert.html">pr_convert</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
                <span class="kw">in_L2_file</span> <span class="kw">=</span> <span class="no">in_L2_file</span>,
                <span class="kw">out_folder</span> <span class="kw">=</span> <span class="no">out_folder</span>,
                <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
@@ -158,7 +161,7 @@
 <h2 class="hasAnchor">
 <a href="#importing-only-selected-bands" class="anchor"></a>Importing only selected bands</h2>
 <p>The <code>selbands_vnir</code> e <code>selbands_swir</code> arguments allow to select only a specified subset of PRISMA bands, by specifying an array of required wavelengths. For example:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/pr_convert.html">pr_convert</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
                <span class="kw">out_folder</span> <span class="kw">=</span> <span class="no">out_folder</span>,
                <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
                <span class="kw">VNIR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
@@ -172,16 +175,16 @@
 <div id="creation-of-atcor-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#creation-of-atcor-files" class="anchor"></a>Creation of ATCOR files</h2>
-<p>When working on L1 data, the <code>convert_prisma</code> function also allows automatic creation of text files required to run an atmospheric correction using ATCOR. Those files are saved in the “ATCOR” subfolder of the main output folder.</p>
+<p>When working on L1 data, the <code>pr_convert</code> function also allows automatic creation of text files required to run an atmospheric correction using ATCOR. Those files are saved in the “ATCOR” subfolder of the main output folder.</p>
 <p>In “standard” behaviour, only the three “standard” ATCOR files (<code>.wvl</code>, <code>.dat</code> and <code>.cal</code>) are created, within the “ATCOR” subfolder of the main output folder, with the <code>.wvl</code> file containing nominal wavelengths and FWHMs derived from the <code>cw</code> and <code>fwhm</code> attributes of the <em>.he5</em> file.</p>
 <p>For example, this code:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">in_file</span>  <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
 <span class="no">out_folder</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/"</span>
 <span class="no">out_format</span> <span class="kw">=</span> <span class="st">"ENVI"</span>
 
-<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span>
-<span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
-               <span class="kw">out_file</span>   <span class="kw">=</span> <span class="no">out_folder</span>,
+<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in ENVI format</span>
+<span class="fu"><a href="../reference/pr_convert.html">pr_convert</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
+               <span class="kw">out_folder</span>   <span class="kw">=</span> <span class="no">out_folder</span>,
                <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
                <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"VNIR"</span>,
                <span class="kw">ATCOR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
@@ -191,20 +194,20 @@
 <p>will create input files for ATCOR useful for correction of the full hyperspectral cube.</p>
 <p>The user can however also choose to generate additional ATCOR files, containing data about wavelengths and FWHMs related to different “columns” of the data cube, as derived from the <code>KDP_AUX/Cw_Vnir_Matrix</code>, <code>KDP_AUX/Cw_Swir_Matrix</code>, <code>KDP_AUX/Cw_Fwhm_Matrix</code>, <code>KDP_AUX/Cw_Fwhm_Matrix</code> HDF layers. This could allow running different atmospheric corrections for different columns of the data, potentially allowing compensating “smile” effects on the retrieved surface reflectances. For example, this code:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">in_file</span>  <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
-<span class="no">out_file</span> <span class="kw">=</span> <span class="st">"/home/lb/tmp/test/test_1"</span>
+<span class="no">out_folder</span> <span class="kw">=</span> <span class="st">"/home/lb/pro"</span>
 <span class="no">out_format</span> <span class="kw">=</span> <span class="st">"ENVI"</span>
 
-<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in EVI format</span>
-<span class="fu"><a href="../reference/convert_prisma.html">convert_prisma</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
-               <span class="kw">out_file</span>   <span class="kw">=</span> <span class="no">out_file</span>,
+<span class="co"># Save a full image, prioritizing the VNIR spectrometer and save in ENVI format</span>
+<span class="fu"><a href="../reference/pr_convert.html">pr_convert</a></span>(<span class="kw">in_file</span>    <span class="kw">=</span> <span class="no">in_file</span>,
+               <span class="kw">out_folder</span>   <span class="kw">=</span> <span class="no">out_folder</span>,
                <span class="kw">out_format</span> <span class="kw">=</span> <span class="no">out_format</span>,
-               <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"VNIR"</span>,
+               <span class="kw">join_priority</span> <span class="kw">=</span> <span class="st">"SWIR"</span>,
                <span class="kw">ATCOR</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">ATCOR_wls</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">200</span>,<span class="fl">800</span>),
                <span class="kw">FULL</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">PAN</span>  <span class="kw">=</span> <span class="fl">TRUE</span>,
                <span class="kw">CLOUD</span>  <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
-<p>will create additional ATCOR imput files with wavelengths corresponding to those of the columns 200 and 800.</p>
+<p>will create additional ATCOR input files with wavelengths corresponding to those of the columns 200 and 800.</p>
 <p><strong>IMPORTANT NOTE</strong></p>
 <p>The latter functionality may be only appliable to “HRC” L1 data cubes. We are currently investigating this - proceed with caution!</p>
 </div>
