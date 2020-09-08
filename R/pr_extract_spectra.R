@@ -1,20 +1,20 @@
-#' @title prisma_extract_spectra
+#' @title pr_extract_spectra
 #' @description function to extract values of a PRISMA image converted
 #'  with prismaread on points/polygons saved on a vector file or on
 #'  a `sf` object
-#' @param in_file input PRISMA file obtained with `convert_prisma`
+#' @param in_file input PRISMA file obtained with `pr_convert`
 #' @param in_vect either the full path to a vector file, or a `sf` object containing
 #'  the points/polygons on which data should be extracted
 #' @param id_field `character` (Optional), name of the column of the vector
-#'  dataset to be used to "name" the outputs, and also "aggregate" themin case `dissolve` is TRUE.
-#'  If NULL, a arbitrary `ID` field is created, and each point/polygin
+#'  dataset to be used to "name" the outputs, and also "aggregate" them in case `dissolve` is TRUE.
+#'  If NULL, a arbitrary `ID` field is created, and each point/polygon
 #'  is considered separately (see Details),  Default: NULL
 #' @param dissolve `logical` If TRUE and `id_field` was specified, in case multiple features of the input
 #'  vector share a common id, they are dissolved before extracting the data, Default: FALSE
 #' @param stats `logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
 #'  on the vector features, Default: TRUE
 #' @param selstats `character` containing the statistics to be computed. Possible values are:
-#'   "mean", "stdev","variance","coefficent_of_variation",
+#'   "mean", "stdev","variance","coefficient_of_variation",
 #'   "min","max"
 #' @param stats_format `character` ["long" | "wide"] defines the format used for statistics output.
 #'  If "long", the output has one column for the ID of the feature, and one column for each statistic.
@@ -29,8 +29,8 @@
 #'  extension. Valid extensions are ".csv", ".xls", ".xlsx" and ".RData". If NULL, output
 #'  is not saved, Default: NULL
 #' @return format of the output varies based on arguments `allpix` and `stats`
-#'  1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted stastistics,
-#'     for each fature of the input and each wavelength. Format depends on `statsformat`;
+#'  1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted statistics,
+#'     for each feature of the input and each wavelength. Format depends on `stat_sformat`;
 #'  2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted raster values,
 #'     for each pixel of each feature of the input and each wavelength;
 #'  3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot contains
@@ -39,10 +39,10 @@
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  in_file <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
+#'  in_file <- "D:/prismareaetd/L2D/testL2D_HCO_VNIR.envi"
 #'  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
 #'  # extract base statistics
-#'  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx")
+#'  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx")
 #'  test
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl, y = mean)) +
@@ -51,12 +51,12 @@
 #'    theme_light()
 #'
 #'  # extract base statistics ands save results as excel file, in "wide" format
-#'  test <- prisma_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
+#'  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
 #'                                 stats_format = "wide")
 #'  test
 #'
 #'  # extract custom statistics
-#'  test <- prisma_extract_spectra(in_file, in_vect,
+#'  test <- pr_extract_spectra(in_file, in_vect,
 #'                                 selstats = c("mean", "coeffvar", "stdev", "min", "max"))
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl)) +
@@ -67,12 +67,12 @@
 #'    theme_light()
 #'
 #'  # extract custom statistics and quantiles
-#'  test <- prisma_extract_spectra(in_file, in_vect, quantiles = TRUE,
+#'  test <- pr_extract_spectra(in_file, in_vect, quantiles = TRUE,
 #'                                 selstats = c("mean", "stdev"))
 #'  test
 #'
 #'  # extract also all pixels
-#'  test <- prisma_extract_spectra(in_file, in_vect, allpix = TRUE, quantiles = TRUE,
+#'  test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE, quantiles = TRUE,
 #'                                 selstats = c("mean", "stdev"))
 #'  test$allpix
 #'
@@ -83,7 +83,7 @@
 #'
 #'  }
 #' }
-#' @rdname prisma_extract_spectra
+#' @rdname pr_extract_spectra
 #' @export
 #' @importFrom raster brick res
 #' @importFrom tools file_path_sans_ext
@@ -99,7 +99,7 @@
 #' @importFrom tidyselect everything
 #' @importFrom rlang sym
 
-prisma_extract_spectra <- function(in_file,
+pr_extract_spectra <- function(in_file,
                                    in_vect,
                                    id_field  = NULL,
                                    dissolve  = FALSE,
@@ -332,7 +332,7 @@ prisma_extract_spectra <- function(in_file,
   }
   # return ----
 
-  if (stats | allpix) {
+  if (stats & allpix) {
     out <- list("stats"  = out_df_l_stats,
                 "allpix" = out_all_l)
   } else {
