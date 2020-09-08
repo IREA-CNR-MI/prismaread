@@ -390,7 +390,7 @@ output file is `D:/myoutfolder/myoutfil_VNIR.envi`, info about the angles is sav
 
 For example, starting from a VNIR Cube obtained with `pr_convert` and a vector polygon file:
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, eval=FALSE}
   library(prismaread)
   library(ggplot2)
   
