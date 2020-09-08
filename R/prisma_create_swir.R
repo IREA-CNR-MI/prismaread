@@ -194,7 +194,7 @@ prisma_create_swir <- function(f,
         message("- Writing ERR raster -")
         out_file_swir_err <- gsub("SWIR", "SWIR_ERR", out_file_swir)
         rastwrite_lines(rast_err,
-                        out_file_swir,
+                        out_file_swir_err,
                         out_format,
                         "ERR",
                         scale_min = NULL,
