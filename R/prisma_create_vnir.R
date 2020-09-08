@@ -123,7 +123,7 @@ prisma_create_vnir <- function(f,
                             ifelse(substring(
                                 geo$proj_epsg, 3, 3) == 7, " +south", ""),
                             " +datum=WGS84 +units=m +no_defs"))
-
+                    band <- raster::t(band)
                     ex   <- matrix(c(geo$xmin - 15,
                                      geo$xmin - 15 + dim(band)[2]*30,
                                      geo$ymin - 15,
@@ -132,7 +132,7 @@ prisma_create_vnir <- function(f,
                     ex   <- raster::extent(ex)
                     band <- raster::setExtent(band, ex, keepres = FALSE)
                     # traspose the band to get it right
-                    band <- raster::t(band)
+
                     if (apply_errmatrix | ERR_MATRIX) {
                         satband <- raster::raster(
                             err_cube[,order_vnir[band_vnir], ],
@@ -141,6 +141,7 @@ prisma_create_vnir <- function(f,
                                 ifelse(substring(
                                     geo$proj_epsg, 3, 3) == 7, " +south", ""),
                                 " +datum=WGS84 +units=m +no_defs"))
+                        satband <- raster::t(satband)
                         ex <- matrix(c(geo$xmin - 15,
                                        geo$xmin - 15 + dim(satband)[2]*30,
                                        geo$ymin - 15,
@@ -149,7 +150,7 @@ prisma_create_vnir <- function(f,
                         ex <- raster::extent(ex)
                         satband <- raster::setExtent(satband, ex,
                                                      keepres = FALSE)
-                        satband <- raster::t(satband)
+
                     }
                     if (apply_errmatrix) {
                         band[satband > 0] <- NA
