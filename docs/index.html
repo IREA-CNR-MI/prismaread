@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -49,6 +49,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
@@ -107,7 +110,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><code>prismaread</code> allows easily importing PRISMA hyperspectral data (<a href="http://www.prisma-i.it/index.php/it/" class="uri">http://www.prisma-i.it/index.php/it/</a>) from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality to automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function <code>pr_convert</code>, and for easily and quickly extract data and compute statistics for the different bands over areas of interest.</p>
+<p><code>prismaread</code> allows easily importing PRISMA hyperspectral data (<a href="http://www.prisma-i.it/index.php/it/" class="uri">http://www.prisma-i.it/index.php/it/</a>) from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function <code>pr_convert</code>, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.</p>
 <p><a href="http://www.irea.cnr.it/en/"> <img src="reference/figures/logo_irea.png" height="60" align="left" style="vertical-align:middle;margin:0px 10px"></a></p>
 <p><em><code>prismaread</code> is developed and maintained by Lorenzo Busetto and Luigi Ranghetti, <a href="http://www.irea.cnr.it/en/">Institute of Remote Sensing of Environment</a> - National Research Council - Italy (CNR-IREA)</em></p>
 </div>
@@ -115,18 +118,28 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can install the last stable version of <code>prismaread</code> from <a href="https://github.com/">GitHub</a> using:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>, <span class="kw">ref</span> <span class="kw">=</span> <span class="st">"v0.2.0"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">prismaread</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># install.packages("remotes")</span>
+<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>, ref = <span class="st">"v1.0.0"</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
+</pre></div>
 <p>, or the last development version using:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("remotes")</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">prismaread</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># install.packages("remotes")</span>
+<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
+</pre></div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h1>
-<p>See <code>prismaread</code> <a href="https://lbusett.github.io/prismaread/">website</a> for further instructions and info on output formats.</p>
+<p>See the <strong>Articles</strong> section of the website for detailed info on usage.</p>
+<ul>
+<li><p>Instructions for importing PRISMA <a href="articles/Importing-Level-1-Data.html"><strong>L1</strong></a> and <a href="articles/Importing-Level-2-Data.html"><strong>L2</strong></a></p></li>
+<li><p>Instructions for <a href="articles/Computing-Spectral-Indexes">computing spectral indexes</a></p></li>
+<li><p>Info about <a href="articles/Output-Format-and-Naming.html">Output format and Naming Conventions</a></p></li>
+<li><p>Instructions for <a href="articles/Extracting-data-over-vector.html">extracting Data from PRISMA images over features of a vector dataset</a></p></li>
+</ul>
 </div>
 <div id="future-work" class="section level1">
 <h1 class="hasAnchor">
@@ -140,7 +153,7 @@
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>To cite <code>prismaread</code> please use:</p>
-<p>L. Busetto (2020) prismaread: An R package for importing PRISMA L1/L2 hyperspectral data and convert them to a more user friendly format - v0.1.0, URL: <a href="https://github.com/lbusett/prismaread" class="uri">https://github.com/lbusett/prismaread</a>, doi: <a href="https://doi.org/10.5281/zenodo.3727671" class="uri">https://doi.org/10.5281/zenodo.3727671</a></p>
+<p>Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: <a href="https://lbusett.github.io/prismaread/" class="uri">https://lbusett.github.io/prismaread/</a>, doi: <a href="https://doi.org/10.5281/zenodo.3727671" class="uri">https://doi.org/10.5281/zenodo.3727671</a></p>
 </div>
 <div id="website" class="section level2">
 <h2 class="hasAnchor">
@@ -205,7 +218,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

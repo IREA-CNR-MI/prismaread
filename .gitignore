@@ -3,3 +3,7 @@
 .RData
 
 inst/doc
+manifest.json
+inst/testdata/*.zip, inst/testdata/*.he5
+
+inst/testdata/

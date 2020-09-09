@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
 [![Lifecycle: beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
-[![DOI](https://zenodo.org/badge/211091818.svg)](https://zenodo.org/badge/latestdoi/211091818)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4019081.svg)](https://doi.org/10.5281/zenodo.4019081)
 <!-- badges: end -->
 
 `prismaread` allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/)  from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.
@@ -31,13 +31,22 @@ _`prismaread` is developed and maintained by Lorenzo Busetto and Luigi Ranghetti
 
 # Installation
 
-You can install the development version from [GitHub](https://github.com/) with:
+You can install the last stable version of `prismaread` from [GitHub](https://github.com/) using: 
 
 ``` {r install, eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("lbusett/prismaread", ref = "v1.0.0")
+library(prismaread)
+```
+
+, or the last development version using:
+
+``` {r install2, eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("lbusett/prismaread")
 library(prismaread)
 ```
+
 
 # Usage
 
@@ -67,8 +76,4 @@ grids functionality in package `stars`
   
 To cite `prismaread` please use:
 
-Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.3727671
-
-## Website
-
-For more information, documentation and examples of use, __see also the prismaread website at [https://github.com/lbusett/prismaread/](https://github.com/lbusett/prismaread/)__ 
+Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.4019081

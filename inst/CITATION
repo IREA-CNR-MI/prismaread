@@ -10,5 +10,5 @@ citEntry(
   number   = "",
   pages    = "",
   url      = "https://lbusett.github.io/prismaread/",
-  textVersion = paste("Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.3727671")
+  textVersion = paste("Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.4019081")
 )

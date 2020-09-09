@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
 [![Lifecycle: beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
-[![DOI](https://zenodo.org/badge/211091818.svg)](https://zenodo.org/badge/latestdoi/211091818)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4019081.svg)](https://doi.org/10.5281/zenodo.4019081)
 <!-- badges: end -->
 
 `prismaread` allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/)  from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality to automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extract
@@ -35,7 +35,7 @@ You can install the last stable version of `prismaread` from [GitHub](https://gi
 
 ``` {r install, eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("lbusett/prismaread", ref = "v0.2.0")
+remotes::install_github("lbusett/prismaread", ref = "v1.0.0")
 library(prismaread)
 ```
 
@@ -63,7 +63,7 @@ on output formats.
   
 To cite `prismaread` please use:
 
-Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.3727671
+Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.4019081
 
 ## Website
 

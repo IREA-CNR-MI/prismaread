@@ -17,7 +17,7 @@ prisma_create_additional(
 \arguments{
 \item{f}{input data he5 from caller}
 
-\item{type}{`character` type of dataset to be created ("CLD", "LC" or "GLNT")}
+\item{type}{`character` type of dataset to be created ("CLD", "LC" or "GLINT")}
 
 \item{out_file}{output file name for the dataset}
 

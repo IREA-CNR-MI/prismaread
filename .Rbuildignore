@@ -16,3 +16,6 @@ vignettes/Extracting-data-over-vector.Rmd
 vignettes/Importing-Level-1-Data.Rmd
 vignettes/Importing-Level-2-Data.Rmd
 vignettes/Output-Format-and-Naming.Rmd
+^\.pbattributes$
+^manifest\.json$
+inst/testdata/*.zip, inst/testdata/*.he5
