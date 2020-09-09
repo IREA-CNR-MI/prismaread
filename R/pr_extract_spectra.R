@@ -147,10 +147,10 @@ pr_extract_spectra <- function(in_file,
                                   "_",
                                   fixed = TRUE)[[1]], 1)
 
-  if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLNT",
+  if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLINT",
                       "ANGLES", "LATLON")) {
-    stop("Input file does not seem to be a PRISMA file obtained from ",
-         "PRISMAREAD. Aborting!")
+    stop("Input file does not seem to be a hyperspectral PRISMA file obtained from ",
+         "pr_convert. Aborting!")
   }
 
   if (in_type %in% c("VNIR", "SWIR", "FULL")) {
@@ -188,9 +188,6 @@ pr_extract_spectra <- function(in_file,
                 "function, re-extract it to be able to retrieve wavelengths!")
       }
     }
-
-
-
   }
 
   if (!all(selstats %in% c("mean", "stdev", "variance", "min", "max",

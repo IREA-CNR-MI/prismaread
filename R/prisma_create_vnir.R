@@ -32,7 +32,7 @@ prisma_create_vnir <- function(f,
 
     geo <- prisma_get_geoloc(f, proc_lev, source, wvl = "VNIR", in_L2_file)
 
-    # Get the datacube and required attributes frim hdr ----
+    # Get the datacube and required attributes from hdr ----
     if(proc_lev == 1) {
         vnir_cube <- f[[paste0("HDFEOS/SWATHS/PRS_L1_", source,
                                "/Data Fields/VNIR_Cube")]][,,]
@@ -74,7 +74,8 @@ prisma_create_vnir <- function(f,
                 band <- raster::raster((vnir_cube[,order_vnir[band_vnir],]),
                                        crs = "+proj=longlat +datum=WGS84")
                 if (base_georef) {
-                    message("Importing Band: ", band_vnir, " of: 66 and
+                    message("Importing Band: ", band_vnir,
+                            " (",wl_vnir[band_vnir], ") of: 66 and
                             applying bowtie georeferencing")
                     lat  <- geo$lat
                     lon  <- geo$lon
@@ -93,7 +94,8 @@ prisma_create_vnir <- function(f,
                     }
 
                 } else {
-                    message("Importing Band: ", band_vnir, " of: 66")
+                    message("Importing Band: ", band_vnir,
+                            " (",wl_vnir[band_vnir], ") of: 66")
                     if (proc_lev == "1") {
                         band <- (band / vnir_scale) - vnir_offset
                     }
@@ -114,43 +116,25 @@ prisma_create_vnir <- function(f,
             } else {
                 if (proc_lev == "2D") {
                     # on L2, retreive and apply georeferencing ----
-                    message("Importing Band: ", band_vnir, " of: 66")
-
+                    message("Importing Band: ", band_vnir,
+                            " (",wl_vnir[band_vnir], ") of: 66")
+                    outcrs = paste0(
+                        "+proj=utm +zone=", geo$proj_code,
+                        ifelse(substring(
+                            geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                        " +datum=WGS84 +units=m +no_defs")
                     band <- raster::raster(
                         (vnir_cube[,order_vnir[band_vnir], ]),
-                        crs = paste0(
-                            "+proj=utm +zone=", geo$proj_code,
-                            ifelse(substring(
-                                geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                            " +datum=WGS84 +units=m +no_defs"))
+                        crs = outcrs)
+                    # traspose the band to get it correctly oriented and set extent
                     band <- raster::t(band)
-                    ex   <- matrix(c(geo$xmin - 15,
-                                     geo$xmin - 15 + dim(band)[2]*30,
-                                     geo$ymin - 15,
-                                     geo$ymin - 15 + dim(band)[1]*30),
-                                   nrow = 2, ncol = 2, byrow = T)
-                    ex   <- raster::extent(ex)
-                    band <- raster::setExtent(band, ex, keepres = FALSE)
-                    # traspose the band to get it right
-
+                    band <- pr_setext_L2D(geo, band)
                     if (apply_errmatrix | ERR_MATRIX) {
                         satband <- raster::raster(
                             err_cube[,order_vnir[band_vnir], ],
-                            crs = paste0(
-                                "+proj=utm +zone=", geo$proj_code,
-                                ifelse(substring(
-                                    geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                " +datum=WGS84 +units=m +no_defs"))
+                            crs = outcrs)
                         satband <- raster::t(satband)
-                        ex <- matrix(c(geo$xmin - 15,
-                                       geo$xmin - 15 + dim(satband)[2]*30,
-                                       geo$ymin - 15,
-                                       geo$ymin - 15 + dim(satband)[1]*30),
-                                     nrow = 2, ncol = 2, byrow = T)
-                        ex <- raster::extent(ex)
-                        satband <- raster::setExtent(satband, ex,
-                                                     keepres = FALSE)
-
+                        satband <- pr_setext_L2D(geo, satband)
                     }
                     if (apply_errmatrix) {
                         band[satband > 0] <- NA
@@ -205,6 +189,7 @@ prisma_create_vnir <- function(f,
                     scale_min = vnir_min,
                     scale_max = vnir_max)
 
+
     if (ERR_MATRIX) {
         message("- Writing ERR raster -")
         out_file_vnir_err <- gsub("VNIR", "VNIR_ERR", out_file_vnir)
@@ -215,6 +200,7 @@ prisma_create_vnir <- function(f,
                         scale_min = NULL,
                         scale_max = NULL)
     }
+    rm(rast_err)
 
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
@@ -230,7 +216,7 @@ prisma_create_vnir <- function(f,
         write("sensor type = PRISMA")
 
     }
-
+    rm(rast_vnir)
     # write textfile of wavelengths ----
     out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), ".wvl")
     utils::write.table(data.frame(band = 1:length(wl_sub),

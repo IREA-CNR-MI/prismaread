@@ -68,7 +68,8 @@ prisma_create_swir <- function(f,
         if (wl_swir[band_swir] != 0) {
             if (proc_lev %in% c("1", "2B", "2C")) {
                 if (base_georef) {
-                    message("Importing Band: ", band_swir, " of: 173 and
+                    message("Importing Band: ", band_swir,
+                            " (", wl_swir[band_swir], ") of: 173 and
                             applying bowtie georeferencing")
                     band <- raster::raster(
                         (swir_cube[,order_swir[band_swir], ]),
@@ -89,7 +90,8 @@ prisma_create_swir <- function(f,
                         band[satband > 0] <- NA
                     }
                 } else {
-                    message("Importing Band: ", band_swir, " of: 173")
+                    message("Importing Band: ", band_swir, " (",
+                            wl_swir[band_swir], ") of: of: 173")
                     band <- raster::raster(swir_cube[,order_swir[band_swir], ],
                                            crs = "+proj=longlat +datum=WGS84")
                     if (proc_lev == "1") {
@@ -112,40 +114,25 @@ prisma_create_swir <- function(f,
 
             } else {
                 if (proc_lev == "2D") {
-                    message("Importing Band: ", band_swir, " of: 173")
+                    message("Importing Band: ", band_swir,
+                            " (", wl_swir[band_swir], ") of: of: 173")
+                    outcrs <- paste0(
+                        "+proj=utm +zone=", geo$proj_code,
+                        ifelse(substring(
+                            geo$proj_epsg, 3, 3) == 7, " +south", ""),
+                        " +datum=WGS84 +units=m +no_defs")
                     band <- raster::raster(
                         (swir_cube[,order_swir[band_swir], ]),
-                        crs = paste0(
-                            "+proj=utm +zone=", geo$proj_code,
-                            ifelse(substring(
-                                geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                            " +datum=WGS84 +units=m +no_defs"))
+                        crs = outcrs)
                     band <- raster::t(band)
-                    ex <- matrix(
-                        c(geo$xmin - 15, geo$xmin - 15 + dim(band)[2]*30,
-                          geo$ymin - 15, geo$ymin - 15 + dim(band)[1]*30),
-                        nrow = 2, ncol = 2, byrow = T)
-                    ex <- raster::extent(ex)
-                    band <- raster::setExtent(band, ex, keepres = FALSE)
+                    band <- pr_setext_L2D(geo, band)
                     if (ERR_MATRIX | apply_errmatrix) {
                         satband <- raster::raster(
                             (err_cube[,order_swir[band_swir], ]),
-                            crs = paste0(
-                                "+proj=utm +zone=", geo$proj_code,
-                                ifelse(substring(
-                                    geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                                " +datum=WGS84 +units=m +no_defs"))
+                            crs = outcrs)
                         # satband <- raster::flip(satband, 1)
                         satband <- raster::t(satband)
-                        ex <- matrix(c(geo$xmin - 15,
-                                       geo$xmin - 15 + dim(satband)[2]*30,
-                                       geo$ymin - 15,
-                                       geo$ymin - 15 + dim(satband)[1]*30),
-                                     nrow = 2, ncol = 2, byrow = T)
-                        ex <- raster::extent(ex)
-                        satband <- raster::setExtent(satband, ex,
-                                                     keepres = FALSE)
-
+                        satband <- pr_setext_L2D(geo, satband)
                     }
                     if (apply_errmatrix) {
                         band[satband > 0] <- NA
@@ -190,6 +177,7 @@ prisma_create_swir <- function(f,
                     scale_min = swir_min,
                     scale_max = swir_max)
 
+
     if (ERR_MATRIX) {
         message("- Writing ERR raster -")
         out_file_swir_err <- gsub("SWIR", "SWIR_ERR", out_file_swir)
@@ -200,7 +188,7 @@ prisma_create_swir <- function(f,
                         scale_min = NULL,
                         scale_max = NULL)
     }
-
+    rm(rast_err)
 
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_swir), ".hdr")
@@ -216,6 +204,7 @@ prisma_create_swir <- function(f,
         write("sensor type = PRISMA")
     }
 
+    rm(rast_swir)
     out_file_txt <- paste0(tools::file_path_sans_ext(out_file_swir), ".wvl")
     utils::write.table(data.frame(band = 1:length(wl_sub),
                                   orband = orbands,

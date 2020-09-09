@@ -34,36 +34,31 @@ prisma_create_latlon <- function(f,
             raster::projection(rast_lon) <- NA
         }
     } else {
-        rast_lat  <- raster::raster(
-            geo$lat,
-            crs = paste0(
-                "+proj=utm +zone=", geo$proj_code,
-                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                " +datum=WGS84 +units=m +no_defs"))
-        rast_lon  <- raster::raster(
-            geo$lon,
-            crs = paste0(
-                "+proj=utm +zone=", geo$proj_code,
-                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                " +datum=WGS84 +units=m +no_defs"))
-        # rast_lat  <- raster::t(rast_lat)
-        # rast_lon  <- raster::t(rast_lon)
-        ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(rast_lat)[2]*30,
-                       geo$ymin - 15, geo$ymin - 15 + dim(rast_lat)[1]*30),
-                     nrow = 2, ncol = 2, byrow = T)
-        ex <- raster::extent(ex)
-        rast_lat  <- raster::setExtent(rast_lat, ex, keepres = FALSE)
-        rast_lon  <- raster::setExtent(rast_lon, ex, keepres = FALSE)
+
+        outcrs <- paste0(
+            "+proj=utm +zone=", geo$proj_code,
+            ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+            " +datum=WGS84 +units=m +no_defs")
+        rast_lat  <- raster::raster(geo$lat, crs = outcrs)
+        rast_lon  <- raster::raster(geo$lon, crs = outcrs)
+
+        rast_lat <- pr_setext_L2D(geo, rast_lat)
+        rast_lon <- pr_setext_L2D(geo, rast_lon)
+
     }
-    rastang <- raster::stack(rast_lat,
-                             rast_lon)
-    names(rastang) <- c("lat", "lon")
+
+    rastlatlon <- raster::stack(rast_lat, rast_lon)
+    names(rastlatlon) <- c("lat", "lon")
     gc()
     message(" - Writing LATLON raster - ")
-    rastwrite_lines(rastang, out_file, out_format)
+    rastwrite_lines(rastlatlon, out_file, out_format)
+
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
-        cat("band names = {", paste(names(rastang),collapse=","), "}", "\n",
+        cat("band names = {", paste(names(rastlatlon),collapse=","), "}", "\n",
             file=out_hdr, append=TRUE)
     }
+
+    rm(rastlatlon ,rast_lat, rast_lon)
+    rm(geo)
 }

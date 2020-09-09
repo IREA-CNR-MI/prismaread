@@ -28,8 +28,11 @@ prisma_create_angles <- function(f,
                  Verify your inputs. Aborting!")
         }
     }
-
+    # Process L1/2B/2C data ----
     if (proc_lev != "2D") {
+
+        # Get data from HDF, perform GLT georef if needed and create raster
+        # bands
         rast_viewzen    <- raster::raster(
             f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                       "_HCO/Geometric Fields/Observing_Angle")]][,])
@@ -55,41 +58,39 @@ prisma_create_angles <- function(f,
             raster::projection(rast_solzenang) <- NA
         }
     } else {
+        # Process L2D data ----
+        #
+        # Get data from HDF, create raster bands and set extent ----
+
+        outcrs <- paste0(
+            "+proj=utm +zone=", geo$proj_code,
+            ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
+            " +datum=WGS84 +units=m +no_defs")
+
         rast_viewzen    <- raster::raster(
             f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                       "_HCO/Geometric Fields/Observing_Angle")]][,],
-            crs = paste0(
-                "+proj=utm +zone=", geo$proj_code,
-                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                " +datum=WGS84 +units=m +no_defs"))
+            crs = outcrs)
 
         rast_relazang  <- raster::raster(
             f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                       "_HCO/Geometric Fields/Rel_Azimuth_Angle")]][,],
-            crs = paste0(
-                "+proj=utm +zone=", geo$proj_code,
-                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                " +datum=WGS84 +units=m +no_defs"))
+            crs = outcrs)
 
         rast_solzenang <- raster::raster(
             f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                       "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,],
-            crs = paste0(
-                "+proj=utm +zone=", geo$proj_code,
-                ifelse(substring(geo$proj_epsg, 3, 3) == 7, " +south", ""),
-                " +datum=WGS84 +units=m +no_defs"))
+            crs = outcrs)
+
         rast_viewzen   <- raster::t(rast_viewzen)
         rast_relazang  <- raster::t(rast_relazang)
         rast_solzenang <- raster::t(rast_solzenang)
-        ex <- matrix(c(geo$xmin - 15, geo$xmin - 15 + dim(rast_viewzen)[2]*30,
-                       geo$ymin - 15, geo$ymin - 15 + dim(rast_viewzen)[1]*30),
-                     nrow = 2, ncol = 2, byrow = T)
-        ex <- raster::extent(ex)
-        rast_viewzen    <- raster::setExtent(rast_viewzen, ex, keepres = FALSE)
-        rast_relazang  <- raster::setExtent(rast_relazang, ex, keepres = FALSE)
-        rast_solzenang <- raster::setExtent(rast_solzenang, ex, keepres = FALSE)
 
+        rast_viewzen   <- pr_setext_L2D(geo, rast_viewzen)
+        rast_relazang  <- pr_setext_L2D(geo, rast_relazang)
+        rast_solzenang <- pr_setext_L2D(geo, rast_solzenang)
     }
+
     rastang <- raster::stack(rast_viewzen,
                              rast_relazang,
                              rast_solzenang)
@@ -98,9 +99,12 @@ prisma_create_angles <- function(f,
     gc()
     message(" - Writing ANGLES raster - ")
     rastwrite_lines(rastang, out_file, out_format)
+
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
         cat("band names = {", paste(names(rastang),collapse=","), "}", "\n",
             file=out_hdr, append=TRUE)
     }
+    rm(rastang ,rast_viewzen, rast_relazang, rast_solzenang)
+    rm(geo)
 }

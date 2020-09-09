@@ -38,7 +38,9 @@ Suggests: testthat,
     knitr,
     rmarkdown, 
     ggplot2,
-    tibble
+    tibble,
+    piggyback,
+    usethis
 Remotes: 
     isciences/exactextractr
 RoxygenNote: 7.1.1

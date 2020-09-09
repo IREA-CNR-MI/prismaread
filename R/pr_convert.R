@@ -643,7 +643,7 @@ pr_convert <- function(in_file,
       }
       # Save GLINT if requested ----
       out_file_glnt <- paste0(tools::file_path_sans_ext(out_file), "_", source,
-                              "_GLNT")
+                              "_GLINT")
       out_file_glnt <- ifelse(out_format == "GTiff",
                               paste0(out_file_glnt, ".tif"),
                               paste0(out_file_glnt, ".envi"))
@@ -654,7 +654,7 @@ pr_convert <- function(in_file,
       } else {
         if (GLINT) {
           prisma_create_additional(f,
-                                   type = "GLNT",
+                                   type = "GLINT",
                                    out_file_glnt,
                                    out_format,
                                    base_georef,
