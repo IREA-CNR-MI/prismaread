@@ -187,8 +187,8 @@ prisma_create_swir <- function(f,
                         "ERR",
                         scale_min = NULL,
                         scale_max = NULL)
+        rm(rast_err)
     }
-    rm(rast_err)
 
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_swir), ".hdr")

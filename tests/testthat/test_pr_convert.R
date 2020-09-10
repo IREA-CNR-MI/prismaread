@@ -1,6 +1,6 @@
 # Tests on l2d -----
 
-# context("Access L2D data")
+context("Access L2D data")
 test_that(
     "Tests on L2D", {
         skip_on_cran()
@@ -55,8 +55,9 @@ test_that(
                                              0.12456146, 0.14181177, 0.14477050,
                                              0.13954069, 0.10219114, 0.08076247))
 
-        testthat::expect_equal(raster::projection(vnir),
-                               "+proj=longlat +datum=WGS84 +no_defs")
+        testthat::expect_true(raster::projection(vnir) %in% c(
+                               "+proj=longlat +datum=WGS84 +no_defs",
+                               "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"))
 
         # wavelengths in wvl files are correct
         wvls_vnir <- read.table(file.path(out_folder_L2D, "testL2D_1_HCO_VNIR.wvl"),
@@ -211,7 +212,7 @@ test_that(
                    overwrite = TRUE)
 
         flist <- list.files(out_folder_L2C, pattern = "testL2C_2")
-        testthat::expect_equal(length(flist), 9)
+        testthat::expect_equal(length(flist), 7)
 
         vnir  <- raster::brick(file.path(out_folder_L2C, "testL2C_2_HCO_VNIR.tif"))
         means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
@@ -232,14 +233,14 @@ test_that(
 
         # launch pr_convert to creat VNIR (3 bands), SWIR (3 bands), FULL,
         # - save to GTiff - no georef
-        pr_convert(in_file = testfile, out_folder = out_folder_L2C,
+        testthat::expect_warning(pr_convert(in_file = testfile, out_folder = out_folder_L2C,
                    out_filebase = "testL2C_3", out_format = "GTiff",
                    fill_gaps = FALSE, base_georef = FALSE,
                    VNIR = TRUE, selbands_vnir = c(450, 650, 850),
                    selbands_swir = c(1500),
                    SWIR = FALSE, FULL = FALSE, ANGLES = FALSE,
                    LATLON = FALSE, ERR_MATRIX = FALSE, apply_errmatrix = FALSE,
-                   overwrite = TRUE)
+                   overwrite = TRUE))
 
         flist <- list.files(out_folder_L2C, pattern = "testL2C_3")
         testthat::expect_equal(length(flist), 3)
@@ -248,10 +249,10 @@ test_that(
         testthat::expect_equal(dim(vnir), c(1000,1000,3))
 
     })
-# #
-# #
-# # context("Access L1 data")
-# # # Tests on l1 -----
+
+
+ context("Access L1 data")
+# Tests on l1 -----
 test_that(
     "Tests on L1", {
         skip_on_cran()
@@ -290,7 +291,7 @@ test_that(
 
         # All files created
         flist <- list.files(out_folder_L1, pattern = "testL1_1")
-        testthat::expect_equal(length(flist), 15)
+        testthat::expect_equal(length(flist), 14)
 
         vnir  <- raster::brick(file.path(out_folder_L1, "testL1_1_HCO_VNIR.tif"))
         means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))

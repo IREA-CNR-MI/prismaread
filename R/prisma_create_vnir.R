@@ -199,8 +199,9 @@ prisma_create_vnir <- function(f,
                         "ERR",
                         scale_min = NULL,
                         scale_max = NULL)
+        rm(rast_err)
     }
-    rm(rast_err)
+
 
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file_vnir), ".hdr")
