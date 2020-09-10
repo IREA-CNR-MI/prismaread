@@ -6,25 +6,37 @@ test_that(
         skip_on_cran()
         skip_on_travis()
 
-        testfile <- file.path(
-            usethis::proj_get(),
-            "inst/testdata/PRS_L2D_STD_20200524103704_20200524103708_0001.he5")
+        testfile <- file.path(system.file("testdata/", package = "prismaread"),
+                              "PRS_L2D_STD_20200524103704_20200524103708_0001.he5")
 
         # Download and unzip using piggyback if necessary
         if (!file.exists(testfile)){
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download("PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
                                    repo = "lbusett/prismaread",
-                                   dest = file.path(usethis::proj_get(), "inst/testdata"))
+                                   dest = system.file("testdata/", package = "prismaread"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
-            zipfile <- file.path(
-                usethis::proj_get(),
-                "inst/testdata/PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
+            zipfile <- file.path(system.file("testdata/", package = "prismaread"),
+                "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
             unzip(zipfile, exdir = dirname(testfile))
             unlink(zipfile)
         }
         out_folder_L2D <- file.path(tempdir(), "prismaread/L2D")
         dir.create(out_folder_L2D, recursive = TRUE)
+
+        # launch pr_convert to creat VNIR (FULL), SWIR (FULL), FULL,
+        # ANGLES, LATLON, PAN - save to tiff
+        pr_convert(in_file = testfile, out_folder = out_folder_L2D,
+                   out_filebase = "testL2D_1", out_format = "GTiff",
+                   VNIR = TRUE,
+                   SWIR = TRUE, FULL = FALSE, ANGLES = FALSE, PAN = FALSE,
+                   LATLON = FALSE, ERR_MATRIX = FALSE, apply_errmatrix = TRUE,
+                   overwrite = TRUE)
+        vnir  <- raster::brick(file.path(out_folder_L2D, "testL2D_1_HCO_VNIR.tif"))
+        testthat::expect_equal(dim(vnir), c(1236,1290,63))
+        swir  <- raster::brick(file.path(out_folder_L2D, "testL2D_1_HCO_SWIR.tif"))
+        testthat::expect_equal(dim(swir), c(1236,1290,171))
+
 
         # launch pr_convert to creat VNIR (6 bands), SWIR (3 bands), FULL,
         # ANGLES, LATLON, PAN - save to tiff
@@ -56,8 +68,8 @@ test_that(
                                              0.13954069, 0.10219114, 0.08076247))
 
         testthat::expect_true(raster::projection(vnir) %in% c(
-                               "+proj=longlat +datum=WGS84 +no_defs",
-                               "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"))
+            "+proj=longlat +datum=WGS84 +no_defs",
+            "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"))
 
         # wavelengths in wvl files are correct
         wvls_vnir <- read.table(file.path(out_folder_L2D, "testL2D_1_HCO_VNIR.wvl"),
@@ -124,20 +136,18 @@ test_that(
         skip_on_cran()
         skip_on_travis()
 
-        testfile <- file.path(
-            usethis::proj_get(),
-            "inst/testdata/PRS_L2C_STD_20200524103704_20200524103708_0001.he5")
+        testfile <- file.path(system.file("/testdata", package = "prismaread"),
+                              "/PRS_L2C_STD_20200524103704_20200524103708_0001.he5")
 
         # Download and unzip using piggyback if necessary
         if (!file.exists(testfile)){
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download("PRS_L2C_STD_20200524103704_20200524103708_0001.zip",
                                    repo = "lbusett/prismaread",
-                                   dest = file.path(usethis::proj_get(), "inst/testdata"))
+                                   dest = system.file("/testdata", package = "prismaread"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
-            zipfile <- file.path(
-                usethis::proj_get(),
-                "inst/testdata/PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
+            zipfile <- file.path(system.file("/testdata", package = "prismaread"),
+                                             "/PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
             unzip(zipfile, exdir = dirname(testfile))
             unlink(zipfile)
         }
@@ -234,16 +244,16 @@ test_that(
         # launch pr_convert to creat VNIR (3 bands), SWIR (3 bands), FULL,
         # - save to GTiff - no georef
         testthat::expect_warning(pr_convert(in_file = testfile, out_folder = out_folder_L2C,
-                   out_filebase = "testL2C_3", out_format = "GTiff",
-                   fill_gaps = FALSE, base_georef = FALSE,
-                   VNIR = TRUE, selbands_vnir = c(450, 650, 850),
-                   selbands_swir = c(1500),
-                   SWIR = FALSE, FULL = FALSE, ANGLES = FALSE,
-                   LATLON = FALSE, ERR_MATRIX = FALSE, apply_errmatrix = FALSE,
-                   overwrite = TRUE))
+                                            out_filebase = "testL2C_3", out_format = "GTiff",
+                                            fill_gaps = FALSE, base_georef = FALSE,
+                                            VNIR = TRUE, selbands_vnir = c(450, 650, 850),
+                                            selbands_swir = c(1500),
+                                            SWIR = TRUE, FULL = TRUE, ANGLES = TRUE,
+                                            LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
+                                            overwrite = TRUE))
 
         flist <- list.files(out_folder_L2C, pattern = "testL2C_3")
-        testthat::expect_equal(length(flist), 3)
+        testthat::expect_equal(length(flist), 11)
         vnir  <- raster::brick(file.path(out_folder_L2C, "testL2C_3_HCO_VNIR.tif"))
         testthat::expect_error(projection(vnir))
         testthat::expect_equal(dim(vnir), c(1000,1000,3))
@@ -251,27 +261,26 @@ test_that(
     })
 
 
- context("Access L1 data")
+context("Access L1 data")
 # Tests on l1 -----
 test_that(
     "Tests on L1", {
         skip_on_cran()
         skip_on_travis()
 
-        testfile <- file.path(
-            usethis::proj_get(),
-            "inst/testdata/PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5")
+        testfile <- file.path(system.file("testdata/", package = "prismaread"),
+            "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5")
 
         # Download and unzip using piggyback if necessary
         if (!file.exists(testfile)){
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download("PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip",
                                    repo = "lbusett/prismaread",
-                                   dest = file.path(usethis::proj_get(), "inst/testdata"))
+                                   dest = system.file("testdata/", package = "prismaread"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
             zipfile <- file.path(
-                usethis::proj_get(),
-                "inst/testdata/PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip")
+                system.file("testdata/", package = "prismaread"),
+                "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip")
             unzip(zipfile, exdir = dirname(testfile))
             unlink(zipfile)
         }
@@ -283,7 +292,7 @@ test_that(
         pr_convert(in_file = testfile, out_folder = out_folder_L1,
                    out_filebase = "testL1_1", out_format = "GTiff",
                    VNIR = TRUE, selbands_vnir = c(450, 650, 850),
-                   selbands_swir = c(1500),
+                   selbands_swir = c(1500), ATCOR = TRUE,
                    SWIR = TRUE, FULL = TRUE, ANGLES = TRUE, PAN = TRUE,
                    CLOUD = TRUE, GLINT = TRUE, LC = TRUE,
                    LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
@@ -309,8 +318,8 @@ test_that(
 
         # Use L2file to georeference ----
         in_L2_file <- file.path(
-            usethis::proj_get(),
-            "inst/testdata/PRS_L2C_STD_20200524103704_20200524103708_0001.he5")
+            system.file("testdata/", package = "prismaread"),
+            "PRS_L2C_STD_20200524103704_20200524103708_0001.he5")
         pr_convert(in_file = testfile, out_folder = out_folder_L1,
                    out_filebase = "testL1_2", out_format = "GTiff",
                    in_L2_file = in_L2_file,
@@ -325,5 +334,21 @@ test_that(
         means_angs <- as.numeric(raster::cellStats(angs, mean, na.rm = TRUE))
         # angles retrieved by overwriting with L2 are equal to those of L2
         testthat::expect_equal(means_angs, c(11.73522, 129.13642, 26.24126),
+                               tolerance = 0.001)
+
+        # do not georeference ----
+        pr_convert(in_file = testfile, out_folder = out_folder_L1,
+                   out_filebase = "testL1_3", out_format = "GTiff",
+                   base_georef = FALSE,
+                   VNIR = TRUE, selbands_vnir = c(450, 650, 850),
+                   selbands_swir = c(1500),
+                   SWIR = TRUE, FULL = FALSE, ANGLES = TRUE, PAN = TRUE,
+                   CLOUD = TRUE, GLINT = TRUE, LC = TRUE,
+                   LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
+                   overwrite = TRUE)
+
+        vnir  <- raster::brick(file.path(out_folder_L1, "testL1_3_HCO_VNIR.tif"))
+        # angles retrieved by overwriting with L2 are equal to those of L2
+        testthat::expect_equal(dim(vnir), c(1000, 1000, 3),
                                tolerance = 0.001)
     })
