@@ -64,10 +64,7 @@ See the __Articles__ section of the website for detailed info on usage.
 
 # Future Work
 
-- Test possibility to more properly georeference L1/L2B/L2C data using the curvilinear
-grids functionality in package `stars`
-
-- Implement possibility to apply masks based on the ERR_MATRIX cubes
+- Improve speed of writing FULL hyperspectral cubes
 
 - Clean up code
 
