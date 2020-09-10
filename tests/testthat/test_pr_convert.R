@@ -14,7 +14,7 @@ test_that(
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download("PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
                                    repo = "lbusett/prismaread",
-                                   dest = system.file("testdata/", package = "prismaread"))
+                                   dest = file.path(system.file("", package = "prismaread"), "/testdata"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
             zipfile <- file.path(system.file("testdata/", package = "prismaread"),
                                  "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
@@ -144,7 +144,7 @@ test_that(
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download("PRS_L2C_STD_20200524103704_20200524103708_0001.zip",
                                    repo = "lbusett/prismaread",
-                                   dest = system.file("/testdata", package = "prismaread"))
+                                   dest = file.path(system.file("", package = "prismaread"), "/testdata"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
             zipfile <- file.path(system.file("/testdata", package = "prismaread"),
                                  "/PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
@@ -276,7 +276,7 @@ test_that(
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download("PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip",
                                    repo = "lbusett/prismaread",
-                                   dest = system.file("testdata/", package = "prismaread"))
+                                   dest = file.path(system.file("", package = "prismaread"), "/testdata"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
             zipfile <- file.path(
                 system.file("testdata/", package = "prismaread"),
