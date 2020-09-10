@@ -136,7 +136,7 @@ the VNIR data cube. If not NULL, only the bands with wavelengths closest to thes
 the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
 
 \item{indexes}{`character` array of names of indexes to be computed. You can
-see a list of available indexes using command `prisma_listindexes()`, or see
+see a list of available indexes using command `pr_listindexes()`, or see
 the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html}
 
 \item{cust_indexes}{`character` named list containing names and formulas of custom

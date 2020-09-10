@@ -1,4 +1,4 @@
-#' @title prisma_create_pan
+#' @title pr_create_pan
 #' @description helper function used to process and save the PAN data cube
 #' @param f input data he5 from caller
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
@@ -8,7 +8,7 @@
 #' @importFrom hdf5r h5attr
 #' @importFrom raster raster extent flip setExtent t
 #'
-prisma_create_pan <- function(f,
+pr_create_pan <- function(f,
                               proc_lev,
                               source,
                               out_file_pan,
@@ -18,7 +18,7 @@ prisma_create_pan <- function(f,
                               in_L2_file = NULL){
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, proc_lev, source, wvl = "PAN", in_L2_file)
+    geo <- pr_get_geoloc(f, proc_lev, source, wvl = "PAN", in_L2_file)
 
     message(" - Accessing PAN dataset - ")
     if (proc_lev %in% c("1")) {
@@ -94,7 +94,7 @@ prisma_create_pan <- function(f,
             if (proc_lev == "1") {
                 rast_pan <- (rast_pan / pan_scale) - pan_offset
             }
-            rast_pan <- prisma_basegeo(rast_pan, geo$lon, geo$lat, fill_gaps)
+            rast_pan <- pr_basegeo(rast_pan, geo$lon, geo$lat, fill_gaps)
         } else {
             rast_pan <- raster::raster(pan_cube)
             rast_pan <- raster::flip(rast_pan, 1)
@@ -122,7 +122,7 @@ prisma_create_pan <- function(f,
 
     message("- Writing PAN raster -")
 
-    rastwrite_lines(rast_pan, out_file_pan, out_format, proc_lev,
+    pr_rastwrite_lines(rast_pan, out_file_pan, out_format, proc_lev,
                     scale_min = panscale_min,
                     scale_max = panscale_max)
     rm(rast_pan)

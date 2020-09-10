@@ -1,4 +1,4 @@
-#' @title prisma_create_additional
+#' @title pr_create_additional
 #' @description helper function used to process and save additional data sets such as CLOUD, LC and GLINT
 #' @param f input data he5 from caller
 #' @param type `character` type of dataset to be created ("CLD", "LC" or "GLINT")
@@ -7,7 +7,7 @@
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
 #'
-prisma_create_additional <- function(f,
+pr_create_additional <- function(f,
                                      type,
                                      out_file,
                                      out_format,
@@ -18,7 +18,7 @@ prisma_create_additional <- function(f,
     message(" - Accessing ", type, " dataset - ")
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, "1", "HCO", "VNIR", in_L2_file)
+    geo <- pr_get_geoloc(f, "1", "HCO", "VNIR", in_L2_file)
 
     cube <- switch(
         type,
@@ -30,7 +30,7 @@ prisma_create_additional <- function(f,
     rast <- raster::raster(cube)
     if (base_georef) {
         message("Applying bowtie georeferencing")
-        rast <- prisma_basegeo(rast, geo$lon, geo$lat, fill_gaps)
+        rast <- pr_basegeo(rast, geo$lon, geo$lat, fill_gaps)
     } else {
         rast <- raster::flip(rast, 1)
         raster::projection(rast) <- NA
@@ -42,5 +42,5 @@ prisma_create_additional <- function(f,
     rm(cube)
     gc()
     message(" - Writing  ", type, " raster - ")
-    rastwrite_lines(rast, out_file, out_format)
+    pr_rastwrite_lines(rast, out_file, out_format)
 }

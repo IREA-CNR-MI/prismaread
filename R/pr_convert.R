@@ -76,7 +76,7 @@
 #' @param selbands_swir `numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
 #'  the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL
 #' @param indexes `character` array of names of indexes to be computed. You can
-#'  see a list of available indexes using command `prisma_listindexes()`, or see
+#'  see a list of available indexes using command `pr_listindexes()`, or see
 #'  the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html
 #' @param cust_indexes `character` named list containing names and formulas of custom
 #'  indexes to be computed. The indexes formulas must be computable R formulas, where
@@ -271,7 +271,7 @@ pr_convert <- function(in_file,
 
     # write ATCOR files if needed ----
     if (ATCOR == TRUE && proc_lev == "1") {
-      prisma_make_atcor(f,
+      pr_make_atcor(f,
                         out_file,
                         ATCOR_wls,
                         wls,
@@ -318,7 +318,7 @@ pr_convert <- function(in_file,
         rast_vnir <- raster::stack(out_file_vnir)
       } else {
 
-        prisma_create_vnir(f,
+        pr_create_vnir(f,
                            proc_lev,
                            source,
                            out_file_vnir,
@@ -370,7 +370,7 @@ pr_convert <- function(in_file,
       } else {
 
         message("- Importing SWIR Cube - ")
-        prisma_create_swir(f,
+        pr_create_swir(f,
                            proc_lev,
                            source,
                            out_file_swir,
@@ -455,7 +455,7 @@ pr_convert <- function(in_file,
           }
           message("- Writing FULL raster -")
 
-          rastwrite_lines(rast_tot, out_file_full, out_format, proc_lev,
+          pr_rastwrite_lines(rast_tot, out_file_full, out_format, proc_lev,
                           join = TRUE)
           rm(rast_vnir)
           rm(rast_swir)
@@ -555,7 +555,7 @@ pr_convert <- function(in_file,
               file name to reprocess")
     } else {
       if (PAN) {
-        prisma_create_pan(f,
+        pr_create_pan(f,
                           proc_lev,
                           source,
                           out_file_pan,
@@ -579,7 +579,7 @@ pr_convert <- function(in_file,
               "output file name to reprocess")
     } else {
       if (LATLON) {
-        prisma_create_latlon(f,
+        pr_create_latlon(f,
                              proc_lev,
                              out_file_latlon,
                              out_format,
@@ -604,7 +604,7 @@ pr_convert <- function(in_file,
                 "output file name to reprocess")
       } else {
         if (ANGLES) {
-          prisma_create_angles(f,
+          pr_create_angles(f,
                                proc_lev,
                                out_file_ang,
                                out_format,
@@ -631,7 +631,7 @@ pr_convert <- function(in_file,
                 "output file name to reprocess")
       } else {
         if (CLOUD) {
-          prisma_create_additional(f,
+          pr_create_additional(f,
                                    type = "CLD",
                                    out_file_cld,
                                    out_format,
@@ -653,7 +653,7 @@ pr_convert <- function(in_file,
                 "output file name to reprocess")
       } else {
         if (GLINT) {
-          prisma_create_additional(f,
+          pr_create_additional(f,
                                    type = "GLINT",
                                    out_file_glnt,
                                    out_format,
@@ -674,7 +674,7 @@ pr_convert <- function(in_file,
           message("LC file already exists - use overwrite = TRUE or change ",
                   "output file name to reprocess")
         } else {
-          prisma_create_additional(f,
+          pr_create_additional(f,
                                    type = "LC",
                                    out_file_lc,
                                    out_format,

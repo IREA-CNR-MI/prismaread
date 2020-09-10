@@ -1,4 +1,4 @@
-#' @title prisma_make_atcor
+#' @title pr_make_atcor
 #' @description helper function used to create accessory files needed for ATCOR
 #'  atmospheric correction
 #' @param wls passed by caller - array of PRISMA wavelengths
@@ -14,7 +14,7 @@
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table
 #' @importFrom hdf5r existsGroup h5attr
-prisma_make_atcor <- function(f,
+pr_make_atcor <- function(f,
                               out_file,
                               ATCOR_wls,
                               wls,

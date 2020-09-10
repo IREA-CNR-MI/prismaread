@@ -1,4 +1,4 @@
-#' @title prisma_create_angles
+#' @title pr_create_angles
 #' @description helper function used to process and save the ANGLES datasets
 #' @param f input data he5 from caller
 #' @param out_file output file name for glint
@@ -7,7 +7,7 @@
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
 #'
-prisma_create_angles <- function(f,
+pr_create_angles <- function(f,
                                  proc_lev,
                                  out_file,
                                  out_format,
@@ -19,7 +19,7 @@ prisma_create_angles <- function(f,
     message(" - Accessing ANGLES dataset - ")
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, proc_lev, "HCO", "VNIR", in_L2_file)
+    geo <- pr_get_geoloc(f, proc_lev, "HCO", "VNIR", in_L2_file)
     if (!is.null(in_L2_file)) {
         f <- try(hdf5r::H5File$new(in_L2_file, mode="r+"))
         proc_lev <- hdf5r::h5attr(f, "Processing_Level")
@@ -43,11 +43,11 @@ prisma_create_angles <- function(f,
             f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
                       "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,])
         if (base_georef) {
-            rast_viewzen   <- prisma_basegeo(rast_viewzen, geo$lon, geo$lat,
+            rast_viewzen   <- pr_basegeo(rast_viewzen, geo$lon, geo$lat,
                                              fill_gaps)
-            rast_relazang  <- prisma_basegeo(rast_relazang, geo$lon, geo$lat,
+            rast_relazang  <- pr_basegeo(rast_relazang, geo$lon, geo$lat,
                                              fill_gaps)
-            rast_solzenang <- prisma_basegeo(rast_solzenang, geo$lon, geo$lat,
+            rast_solzenang <- pr_basegeo(rast_solzenang, geo$lon, geo$lat,
             )
         } else {
             rast_viewzen   <- raster::flip(rast_viewzen, 1)
@@ -98,7 +98,7 @@ prisma_create_angles <- function(f,
     names(rastang) <- c("view_zenang", "relaz_ang", "solzen_ang")
     gc()
     message(" - Writing ANGLES raster - ")
-    rastwrite_lines(rastang, out_file, out_format)
+    pr_rastwrite_lines(rastang, out_file, out_format)
 
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")

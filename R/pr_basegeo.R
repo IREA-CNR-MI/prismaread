@@ -1,4 +1,4 @@
-#' @title prisma_basegeo
+#' @title pr_basegeo
 #' @description Function used to create a georeferenced raster from L1/L2B/L2C datasets,
 #'  based on the Latitude and Longitude data, and exploiting the procedure described in
 #'  https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html
@@ -16,10 +16,10 @@
 #' implemented, as well as the nearest neighbour interpolation.
 #' @seealso
 #'  \code{\link[raster]{getValues}}
-#' @rdname prisma_basegeo
+#' @rdname pr_basegeo
 #' @importFrom raster values raster focal
 #' @importFrom stats median
-prisma_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
+pr_basegeo <- function(band, lon, lat, fill_gaps = TRUE) {
 
     # https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html
     #

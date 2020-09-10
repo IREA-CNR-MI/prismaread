@@ -13,7 +13,6 @@
 #'                       myindex2 = "(R800 - R680) / (R800 + R680)"))
 #' }
 #' @rdname pr_check_formulas
-#' @export
 #' @importFrom stringr str_extract_all
 #' @importFrom stats runif
 pr_check_formulas <- function(indexes){

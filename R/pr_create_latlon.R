@@ -1,4 +1,4 @@
-#' @title prisma_create_additional
+#' @title pr_create_additional
 #' @description helper function used to process and save LAT LON datasets
 #' @param f input data he5 from caller
 #' @param out_file output file name for the dataset
@@ -7,7 +7,7 @@
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent
 #'
-prisma_create_latlon <- function(f,
+pr_create_latlon <- function(f,
                                  proc_lev,
                                  out_file,
                                  out_format,
@@ -18,14 +18,14 @@ prisma_create_latlon <- function(f,
     message(" - Accessing LatLon dataset - ")
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, proc_lev, "HCO", "VNIR", in_L2_file)
+    geo <- pr_get_geoloc(f, proc_lev, "HCO", "VNIR", in_L2_file)
 
     if (proc_lev != "2D") {
         rast_lat  <- raster::t(raster::raster(geo$lat))
         rast_lon  <- raster::t(raster::raster(geo$lon))
         if (base_georef) {
-            rast_lat  <- prisma_basegeo(rast_lat, geo$lon, geo$lat, fill_gaps)
-            rast_lon  <- prisma_basegeo(rast_lon, geo$lon, geo$lat, fill_gaps)
+            rast_lat  <- pr_basegeo(rast_lat, geo$lon, geo$lat, fill_gaps)
+            rast_lon  <- pr_basegeo(rast_lon, geo$lon, geo$lat, fill_gaps)
 
         } else {
             rast_lat  <- raster::flip(rast_lat, 1)
@@ -51,7 +51,7 @@ prisma_create_latlon <- function(f,
     names(rastlatlon) <- c("lat", "lon")
     gc()
     message(" - Writing LATLON raster - ")
-    rastwrite_lines(rastlatlon, out_file, out_format)
+    pr_rastwrite_lines(rastlatlon, out_file, out_format)
 
     if (out_format == "ENVI") {
         out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")

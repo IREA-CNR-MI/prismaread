@@ -1,4 +1,4 @@
-#' @title rastwrite_lines
+#' @title pr_rastwrite_lines
 #' @description Write a raster object by blocks of lines
 #' @param rast_in `Raster* object` to be written to disk
 #' @param out_file `character` full path of output image
@@ -9,11 +9,11 @@
 #' @param join `logical` flag used to indicate if we are saving the "joined" VNIR+SWIR cube
 #' @return the function is called for its side effects
 #' @details DETAILS
-#' @rdname rastwrite_lines
+#' @rdname pr_rastwrite_lines
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom raster nlayers brick raster blockSize writeStart getValues writeValues writeStop
 
-rastwrite_lines <- function(rast_in,
+pr_rastwrite_lines <- function(rast_in,
                             out_file,
                             out_format = "tif",
                             proc_lev = "1",

@@ -1,4 +1,4 @@
-#' @title prisma_get_geoloc
+#' @title pr_get_geoloc
 #' @description helper function used to get geolocation info
 #'  from PRISMA data on VNIR and SWIR cubes
 #' @return `list` containing required info according to `proc_lev`
@@ -8,7 +8,7 @@
 #' @inheritParams pr_convert
 #' @importFrom hdf5r h5attr
 #'
-prisma_get_geoloc <- function(f,
+pr_get_geoloc <- function(f,
                               proc_lev,
                               source,
                               wvl        = NULL,

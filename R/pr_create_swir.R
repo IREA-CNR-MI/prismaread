@@ -1,4 +1,4 @@
-#' @title prisma_create_swir
+#' @title pr_create_swir
 #' @description helper function used to process and save the SWIR data cube
 #' @param f input data he5 from caller
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
@@ -13,7 +13,7 @@
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table
 #'
-prisma_create_swir <- function(f,
+pr_create_swir <- function(f,
                                proc_lev,
                                source,
                                out_file_swir,
@@ -29,7 +29,7 @@ prisma_create_swir <- function(f,
                                in_L2_file = NULL){
 
     # Get geo info ----
-    geo <- prisma_get_geoloc(f, proc_lev, source, wvl = "SWIR", in_L2_file)
+    geo <- pr_get_geoloc(f, proc_lev, source, wvl = "SWIR", in_L2_file)
 
     # Get the datacube and required attributes frim hdr ----
     if (proc_lev == "1") {
@@ -79,12 +79,12 @@ prisma_create_swir <- function(f,
                     if (proc_lev == "1") {
                         band <- (band / swir_scale) - swir_offset
                     }
-                    band <- prisma_basegeo(band, lon, lat, fill_gaps)
+                    band <- pr_basegeo(band, lon, lat, fill_gaps)
                     if (ERR_MATRIX | apply_errmatrix) {
                         satband <- raster::raster(
                             (err_cube[,order_swir[band_swir], ]),
                             crs = "+proj=longlat +datum=WGS84")
-                        satband <- prisma_basegeo(satband, lon, lat, fill_gaps)
+                        satband <- pr_basegeo(satband, lon, lat, fill_gaps)
                     }
                     if (apply_errmatrix) {
                         band[satband > 0] <- NA
@@ -170,7 +170,7 @@ prisma_create_swir <- function(f,
     gc()
     message("- Writing SWIR raster -")
 
-    rastwrite_lines(rast_swir,
+    pr_rastwrite_lines(rast_swir,
                     out_file_swir,
                     out_format,
                     proc_lev,
@@ -181,7 +181,7 @@ prisma_create_swir <- function(f,
     if (ERR_MATRIX) {
         message("- Writing ERR raster -")
         out_file_swir_err <- gsub("SWIR", "SWIR_ERR", out_file_swir)
-        rastwrite_lines(rast_err,
+        pr_rastwrite_lines(rast_err,
                         out_file_swir_err,
                         out_format,
                         "ERR",

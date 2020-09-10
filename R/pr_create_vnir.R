@@ -1,4 +1,4 @@
-#' @title prisma_create_vnir
+#' @title pr_create_vnir
 #' @description helper function used to process and save the VNIR data cube
 #' @param f input data he5 from caller
 #' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
@@ -13,7 +13,7 @@
 #' @importFrom tools file_path_sans_ext
 #' @importFrom utils write.table
 #'
-prisma_create_vnir <- function(f,
+pr_create_vnir <- function(f,
                                proc_lev,
                                source,
                                out_file_vnir,
@@ -30,7 +30,7 @@ prisma_create_vnir <- function(f,
 
     # Get geo info ----
 
-    geo <- prisma_get_geoloc(f, proc_lev, source, wvl = "VNIR", in_L2_file)
+    geo <- pr_get_geoloc(f, proc_lev, source, wvl = "VNIR", in_L2_file)
 
     # Get the datacube and required attributes from hdr ----
     if(proc_lev == 1) {
@@ -82,12 +82,12 @@ prisma_create_vnir <- function(f,
                     if (proc_lev == "1") {
                         band <- (band / vnir_scale) - vnir_offset
                     }
-                    band <- prisma_basegeo(band, lon, lat, fill_gaps)
+                    band <- pr_basegeo(band, lon, lat, fill_gaps)
                     if (apply_errmatrix | ERR_MATRIX) {
                         satband <- raster::raster(
                             (err_cube[,order_vnir[band_vnir], ]),
                             crs = "+proj=longlat +datum=WGS84")
-                        satband <- prisma_basegeo(satband, lon, lat, fill_gaps)
+                        satband <- pr_basegeo(satband, lon, lat, fill_gaps)
                     }
                     if (apply_errmatrix) {
                         band[satband > 0] <- NA
@@ -182,7 +182,7 @@ prisma_create_vnir <- function(f,
 
     message("- Writing VNIR raster -")
 
-    rastwrite_lines(rast_vnir,
+    pr_rastwrite_lines(rast_vnir,
                     out_file_vnir,
                     out_format,
                     proc_lev,
@@ -193,7 +193,7 @@ prisma_create_vnir <- function(f,
     if (ERR_MATRIX) {
         message("- Writing ERR raster -")
         out_file_vnir_err <- gsub("VNIR", "VNIR_ERR", out_file_vnir)
-        rastwrite_lines(rast_err,
+        pr_rastwrite_lines(rast_err,
                         out_file_vnir_err,
                         out_format,
                         "ERR",
