@@ -17,7 +17,7 @@ test_that(
                                    dest = system.file("testdata/", package = "prismaread"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
             zipfile <- file.path(system.file("testdata/", package = "prismaread"),
-                "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
+                                 "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
             unzip(zipfile, exdir = dirname(testfile))
             unlink(zipfile)
         }
@@ -147,7 +147,7 @@ test_that(
                                    dest = system.file("/testdata", package = "prismaread"))
             piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
             zipfile <- file.path(system.file("/testdata", package = "prismaread"),
-                                             "/PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
+                                 "/PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
             unzip(zipfile, exdir = dirname(testfile))
             unlink(zipfile)
         }
@@ -269,7 +269,7 @@ test_that(
         skip_on_travis()
 
         testfile <- file.path(system.file("testdata/", package = "prismaread"),
-            "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5")
+                              "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5")
 
         # Download and unzip using piggyback if necessary
         if (!file.exists(testfile)){
@@ -337,15 +337,16 @@ test_that(
                                tolerance = 0.001)
 
         # do not georeference ----
-        pr_convert(in_file = testfile, out_folder = out_folder_L1,
-                   out_filebase = "testL1_3", out_format = "GTiff",
-                   base_georef = FALSE,
-                   VNIR = TRUE, selbands_vnir = c(450, 650, 850),
-                   selbands_swir = c(1500),
-                   SWIR = TRUE, FULL = FALSE, ANGLES = TRUE, PAN = TRUE,
-                   CLOUD = TRUE, GLINT = TRUE, LC = TRUE,
-                   LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
-                   overwrite = TRUE)
+        testthat::expect_warning(
+            pr_convert(in_file = testfile, out_folder = out_folder_L1,
+                       out_filebase = "testL1_3", out_format = "GTiff",
+                       base_georef = FALSE,
+                       VNIR = TRUE, selbands_vnir = c(450, 650, 850),
+                       selbands_swir = c(1500),
+                       SWIR = TRUE, FULL = FALSE, ANGLES = TRUE, PAN = TRUE,
+                       CLOUD = TRUE, GLINT = TRUE, LC = TRUE,
+                       LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
+                       overwrite = TRUE))
 
         vnir  <- raster::brick(file.path(out_folder_L1, "testL1_3_HCO_VNIR.tif"))
         # angles retrieved by overwriting with L2 are equal to those of L2

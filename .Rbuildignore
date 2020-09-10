@@ -19,3 +19,7 @@ vignettes/Output-Format-and-Naming.Rmd
 ^\.pbattributes$
 ^manifest\.json$
 inst/testdata/*.zip, inst/testdata/*.he5
+inst/testdata/
+^inst/testdata$
+inst/testdata/[.]he5$
+inst/testdata/[.]zip$
