@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -144,7 +147,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>pr_compute_indexes</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_compute_indexes.R'><code>R/prisma_compute_indexes.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_compute_indexes.R'><code>R/pr_compute_indexes.R</code></a></small>
     <div class="hidden name"><code>pr_compute_indexes.Rd</code></div>
     </div>
 
@@ -153,12 +156,12 @@
     </div>
 
     <pre class="usage"><span class='fu'>pr_compute_indexes</span>(
-  <span class='no'>in_file</span>,
-  <span class='no'>out_file</span>,
-  <span class='no'>out_format</span>,
-  <span class='no'>indexes</span>,
-  <span class='kw'>cust_indexes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>in_file</span>,
+  <span class='kw'>out_file</span>,
+  out_format = <span class='st'>"GTiff"</span>,
+  <span class='kw'>indexes</span>,
+  cust_indexes = <span class='kw'>NULL</span>,
+  overwrite = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -174,6 +177,10 @@
 the basename of this file (e.g., S:/mypath/myoutfile_NDVI.tif)</p></td>
     </tr>
     <tr>
+      <th>out_format</th>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
+    </tr>
+    <tr>
       <th>indexes</th>
       <td><p>`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
@@ -186,6 +193,10 @@ indexes to be computed. The indexes formulas must be computable R formulas, wher
 bands are referred to by the prefix "b", followed by the wavelength (e.g.,
 `cust_indexes = list(myindex1 = "R500 / R600",
                      myindex2 = "(R800 - R680) / (R800 + R680)")`</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>`logical` if TRUE, existing files are overwritten, default: FALSE</p></td>
     </tr>
     </table>
 
@@ -200,6 +211,10 @@ bands are referred to by the prefix "b", followed by the wavelength (e.g.,
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>License: GPL 3.0</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a></p>
+<p>Luigi Ranghetti, phD (2017) <a href='mailto:ranghetti.l@irea.cnr.it'>ranghetti.l@irea.cnr.it</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -216,7 +231,7 @@ bands are referred to by the prefix "b", followed by the wavelength (e.g.,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

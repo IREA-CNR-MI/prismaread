@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>prisma_create_swir — prisma_create_swir • prismaread</title>
+<title>pr_create_angles — pr_create_angles • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="prisma_create_swir — prisma_create_swir" />
-<meta property="og:description" content="helper function used to process and save the SWIR data cube" />
+<meta property="og:title" content="pr_create_angles — pr_create_angles" />
+<meta property="og:description" content="helper function used to process and save the ANGLES datasets" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -143,30 +146,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>prisma_create_swir</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_create_swir.R'><code>R/prisma_create_swir.R</code></a></small>
-    <div class="hidden name"><code>prisma_create_swir.Rd</code></div>
+    <h1>pr_create_angles</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_create_angles.R'><code>R/pr_create_angles.R</code></a></small>
+    <div class="hidden name"><code>pr_create_angles.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>helper function used to process and save the SWIR data cube</p>
+    <p>helper function used to process and save the ANGLES datasets</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prisma_create_swir</span>(
-  <span class='no'>f</span>,
-  <span class='no'>proc_lev</span>,
-  <span class='no'>source</span>,
-  <span class='no'>out_file_swir</span>,
-  <span class='no'>out_format</span>,
-  <span class='no'>base_georef</span>,
-  <span class='no'>fill_gaps</span>,
-  <span class='no'>wl_swir</span>,
-  <span class='no'>order_swir</span>,
-  <span class='no'>fwhm_swir</span>,
-  <span class='no'>apply_errmatrix</span>,
-  <span class='no'>ERR_MATRIX</span>,
-  <span class='kw'>selbands_swir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>in_L2_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+    <pre class="usage"><span class='fu'>pr_create_angles</span>(
+  <span class='kw'>f</span>,
+  <span class='kw'>proc_lev</span>,
+  <span class='kw'>out_file</span>,
+  <span class='kw'>out_format</span>,
+  <span class='kw'>base_georef</span>,
+  <span class='kw'>fill_gaps</span>,
+  in_L2_file = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -181,16 +177,12 @@
       <td><p>`character` Processing level (e.g., "1", "2B") - passed by caller</p></td>
     </tr>
     <tr>
-      <th>source</th>
-      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
-    </tr>
-    <tr>
-      <th>out_file_swir</th>
-      <td><p>output file name for SWIR</p></td>
+      <th>out_file</th>
+      <td><p>output file name for glint</p></td>
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'</p></td>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
     </tr>
     <tr>
       <th>base_georef</th>
@@ -206,37 +198,6 @@ substitute missing values with results of a 3x3 focal filter on the georeference
 data, Default: TRUE</p></td>
     </tr>
     <tr>
-      <th>wl_swir</th>
-      <td><p>passed by caller - array of PRISMA SWIR wavelengths</p></td>
-    </tr>
-    <tr>
-      <th>order_swir</th>
-      <td><p>passed by caller - ordering of array of PRISMA SWIR wavelengths</p></td>
-    </tr>
-    <tr>
-      <th>fwhm_swir</th>
-      <td><p>passed by caller - array of PRISMA SWIR fwhms</p></td>
-    </tr>
-    <tr>
-      <th>apply_errmatrix</th>
-      <td><p>Not yet implemented!</p></td>
-    </tr>
-    <tr>
-      <th>ERR_MATRIX</th>
-      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
-SATURATION ERROR MATRIX is coded as:
- 0=pixel ok;
- 1=DEFECTIVE PIXEL from KDP
- 2= Pixel in saturation.
- 3= Pixel with lower radiometric accuracy, due to coregistration effects.
- 4= Pixel becomes NaN or Inf during processing.</p></td>
-    </tr>
-    <tr>
-      <th>selbands_swir</th>
-      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
-    </tr>
-    <tr>
       <th>in_L2_file</th>
       <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
 info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
@@ -247,7 +208,7 @@ data are also retrieved from the L2 file.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>the function is called for its side effects</p>
+    <p>The function is called for its side effects</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -264,7 +225,7 @@ data are also retrieved from the L2 file.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

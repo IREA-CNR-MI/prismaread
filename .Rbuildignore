@@ -23,3 +23,4 @@ inst/testdata/
 ^inst/testdata$
 inst/testdata/[.]he5$
 inst/testdata/[.]zip$
+^index\.md$

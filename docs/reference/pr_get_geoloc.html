@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>prisma_make_atcor — prisma_make_atcor • prismaread</title>
+<title>pr_get_geoloc — pr_get_geoloc • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="prisma_make_atcor — prisma_make_atcor" />
-<meta property="og:description" content="helper function used to create accessory files needed for ATCOR
- atmospheric correction" />
+<meta property="og:title" content="pr_get_geoloc — pr_get_geoloc" />
+<meta property="og:description" content="helper function used to get geolocation info
+ from PRISMA data on VNIR and SWIR cubes" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -92,6 +92,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -144,27 +147,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>prisma_make_atcor</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_make_atcor.R'><code>R/prisma_make_atcor.R</code></a></small>
-    <div class="hidden name"><code>prisma_make_atcor.Rd</code></div>
+    <h1>pr_get_geoloc</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_get_geoloc.R'><code>R/pr_get_geoloc.R</code></a></small>
+    <div class="hidden name"><code>pr_get_geoloc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>helper function used to create accessory files needed for ATCOR
- atmospheric correction</p>
+    <p>helper function used to get geolocation info
+ from PRISMA data on VNIR and SWIR cubes</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prisma_make_atcor</span>(
-  <span class='no'>f</span>,
-  <span class='no'>out_file</span>,
-  <span class='no'>ATCOR_wls</span>,
-  <span class='no'>wls</span>,
-  <span class='no'>fwhms</span>,
-  <span class='no'>order_vnir</span>,
-  <span class='no'>order_swir</span>,
-  <span class='no'>join_priority</span>,
-  <span class='no'>source</span>
-)</pre>
+    <pre class="usage"><span class='fu'>pr_get_geoloc</span>(<span class='kw'>f</span>, <span class='kw'>proc_lev</span>, <span class='kw'>source</span>, wvl = <span class='kw'>NULL</span>, in_L2_file = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,42 +167,23 @@
       <td><p>input data he5 from caller</p></td>
     </tr>
     <tr>
-      <th>out_file</th>
-      <td><p>main prismaread output file name - passed by caller</p></td>
-    </tr>
-    <tr>
-      <th>ATCOR_wls</th>
-      <td><p>NULL, or `numeric` If NULL the only ATCOR wvl file
-created is the one containing Nominal wavelengths. If a numeric vector is provided,
-then one different wvl file is created for each selected COLUMN selected (e.g., if
-providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
-columns 200 and 800 are saved.)</p></td>
-    </tr>
-    <tr>
-      <th>wls</th>
-      <td><p>passed by caller - array of PRISMA wavelengths</p></td>
-    </tr>
-    <tr>
-      <th>fwhms</th>
-      <td><p>passed by caller - array of PRISMA fwhms</p></td>
-    </tr>
-    <tr>
-      <th>order_vnir</th>
-      <td><p>passed by caller - ordering of array of PRISMA VNIR wavelengths</p></td>
-    </tr>
-    <tr>
-      <th>order_swir</th>
-      <td><p>passed by caller - ordering of array of PRISMA SWIR wavelengths</p></td>
-    </tr>
-    <tr>
-      <th>join_priority</th>
-      <td><p>`character` ["VNIR" | "SWIR"], spectrometer to consider in
-the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
-Default: "SWIR"</p></td>
+      <th>proc_lev</th>
+      <td><p>`character` Processing level (e.g., "1", "2B") - passed by caller</p></td>
     </tr>
     <tr>
       <th>source</th>
       <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
+    </tr>
+    <tr>
+      <th>wvl</th>
+      <td><p>`character` "VNIR" or "SWIR" - passed by caller</p></td>
+    </tr>
+    <tr>
+      <th>in_L2_file</th>
+      <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.</p></td>
     </tr>
     </table>
 
@@ -232,7 +206,7 @@ Default: "SWIR"</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

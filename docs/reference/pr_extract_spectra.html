@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -93,6 +93,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -146,7 +149,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>pr_extract_spectra</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_extract_spectra.R'><code>R/prisma_extract_spectra.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_extract_spectra.R'><code>R/pr_extract_spectra.R</code></a></small>
     <div class="hidden name"><code>pr_extract_spectra.Rd</code></div>
     </div>
 
@@ -157,17 +160,17 @@
     </div>
 
     <pre class="usage"><span class='fu'>pr_extract_spectra</span>(
-  <span class='no'>in_file</span>,
-  <span class='no'>in_vect</span>,
-  <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>dissolve</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>stats</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>),
-  <span class='kw'>stats_format</span> <span class='kw'>=</span> <span class='st'>"long"</span>,
-  <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>percs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.05</span>, <span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span>, <span class='fl'>0.95</span>),
-  <span class='kw'>allpix</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>in_file</span>,
+  <span class='kw'>in_vect</span>,
+  id_field = <span class='kw'>NULL</span>,
+  dissolve = <span class='fl'>FALSE</span>,
+  stats = <span class='fl'>TRUE</span>,
+  selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>),
+  stats_format = <span class='st'>"long"</span>,
+  quantiles = <span class='fl'>FALSE</span>,
+  percs = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.05</span>, <span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span>, <span class='fl'>0.95</span>),
+  allpix = <span class='fl'>FALSE</span>,
+  out_file = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -248,52 +251,53 @@ is not saved, Default: NULL</p></td>
     <p>DETAILS</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
- <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='st'>"D:/prismareaetd/L2D/testL2D_HCO_VNIR.envi"</span>
- <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='st'>"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+ <span class='kw'>in_file</span> <span class='op'>&lt;-</span> <span class='st'>"D:/prismareaetd/L2D/testL2D_HCO_VNIR.envi"</span>
+ <span class='kw'>in_vect</span> <span class='op'>&lt;-</span> <span class='st'>"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
  <span class='co'># extract base statistics</span>
- <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='st'>"D:/Temp/test1.xlsx"</span>)
- <span class='no'>test</span>
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, out_file = <span class='st'>"D:/Temp/test1.xlsx"</span>)
+ <span class='kw'>test</span>
  <span class='co'># plot results using ggplot</span>
- <span class='fu'>ggplot</span>(<span class='no'>test</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>wvl</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span>)) +
-   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>ID</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>)) +
-   <span class='fu'>facet_wrap</span>(~<span class='no'>ID</span>) +
+ <span class='fu'>ggplot</span>(<span class='kw'>test</span>, <span class='fu'>aes</span>(x = <span class='kw'>wvl</span>, y = <span class='kw'>mean</span>)) <span class='op'>+</span>
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(color = <span class='kw'>ID</span>, group = <span class='kw'>ID</span>)) <span class='op'>+</span>
+   <span class='fu'>facet_wrap</span>(<span class='op'>~</span><span class='kw'>ID</span>) <span class='op'>+</span>
    <span class='fu'>theme_light</span>()
 
  <span class='co'># extract base statistics ands save results as excel file, in "wide" format</span>
- <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='st'>"D:/Temp/test1.xlsx"</span>,
-                                <span class='kw'>stats_format</span> <span class='kw'>=</span> <span class='st'>"wide"</span>)
- <span class='no'>test</span>
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, out_file = <span class='st'>"D:/Temp/test1.xlsx"</span>,
+                                stats_format = <span class='st'>"wide"</span>)
+ <span class='kw'>test</span>
 
  <span class='co'># extract custom statistics</span>
- <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>,
-                                <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"coeffvar"</span>, <span class='st'>"stdev"</span>, <span class='st'>"min"</span>, <span class='st'>"max"</span>))
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>,
+                                selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"coeffvar"</span>, <span class='st'>"stdev"</span>, <span class='st'>"min"</span>, <span class='st'>"max"</span>))
  <span class='co'># plot results using ggplot</span>
- <span class='fu'>ggplot</span>(<span class='no'>test</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>wvl</span>)) +
-   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>ID</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>)) +
-   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span> + <span class='no'>stdev</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"grey75"</span>) +
-   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mean</span> - <span class='no'>stdev</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>ID</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"grey75"</span>) +
-   <span class='fu'>facet_wrap</span>(~<span class='no'>ID</span>) +
+ <span class='fu'>ggplot</span>(<span class='kw'>test</span>, <span class='fu'>aes</span>(x = <span class='kw'>wvl</span>)) <span class='op'>+</span>
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(y = <span class='kw'>mean</span>, color = <span class='kw'>ID</span>, group = <span class='kw'>ID</span>)) <span class='op'>+</span>
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(y = <span class='kw'>mean</span> <span class='op'>+</span> <span class='kw'>stdev</span>, group = <span class='kw'>ID</span>), color = <span class='st'>"grey75"</span>) <span class='op'>+</span>
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(y = <span class='kw'>mean</span> <span class='op'>-</span> <span class='kw'>stdev</span>, group = <span class='kw'>ID</span>), color = <span class='st'>"grey75"</span>) <span class='op'>+</span>
+   <span class='fu'>facet_wrap</span>(<span class='op'>~</span><span class='kw'>ID</span>) <span class='op'>+</span>
    <span class='fu'>theme_light</span>()
 
  <span class='co'># extract custom statistics and quantiles</span>
- <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                                <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
- <span class='no'>test</span>
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, quantiles = <span class='fl'>TRUE</span>,
+                                selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
+ <span class='kw'>test</span>
 
  <span class='co'># extract also all pixels</span>
- <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='no'>in_file</span>, <span class='no'>in_vect</span>, <span class='kw'>allpix</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                                <span class='kw'>selstats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
- <span class='no'>test</span>$<span class='no'>allpix</span>
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, allpix = <span class='fl'>TRUE</span>, quantiles = <span class='fl'>TRUE</span>,
+                                selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
+ <span class='kw'>test</span><span class='op'>$</span><span class='kw'>allpix</span>
 
- <span class='fu'>ggplot</span>(<span class='no'>test</span>$<span class='no'>allpix</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>wvl</span>)) +
-   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>value</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>pixel</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>ID</span>), <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)  +
-   <span class='fu'>facet_wrap</span>(~<span class='no'>ID</span>) +
+ <span class='fu'>ggplot</span>(<span class='kw'>test</span><span class='op'>$</span><span class='kw'>allpix</span>, <span class='fu'>aes</span>(x = <span class='kw'>wvl</span>)) <span class='op'>+</span>
+   <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(y = <span class='kw'>value</span>, group = <span class='kw'>pixel</span>, color = <span class='kw'>ID</span>), lwd = <span class='fl'>0.01</span>)  <span class='op'>+</span>
+   <span class='fu'>facet_wrap</span>(<span class='op'>~</span><span class='kw'>ID</span>) <span class='op'>+</span>
    <span class='fu'>theme_light</span>()
 
  }
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -309,7 +313,7 @@ is not saved, Default: NULL</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

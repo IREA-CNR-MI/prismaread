@@ -7,37 +7,16 @@
     <loc>https://github.com/lbusett/prismaread//reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_basegeo.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_create_additional.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_create_angles.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_create_latlon.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_create_pan.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_create_swir.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_create_vnir.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_get_geoloc.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/lbusett/prismaread//reference/prisma_make_atcor.html</loc>
-  </url>
-  <url>
     <loc>https://github.com/lbusett/prismaread//reference/pr_addindex.html</loc>
   </url>
   <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_basegeo.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/lbusett/prismaread//reference/pr_check_formulas.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_check_inputs.html</loc>
   </url>
   <url>
     <loc>https://github.com/lbusett/prismaread//reference/pr_compute_indexes.html</loc>
@@ -46,13 +25,37 @@
     <loc>https://github.com/lbusett/prismaread//reference/pr_convert.html</loc>
   </url>
   <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_create_additional.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_create_angles.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_create_latlon.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_create_pan.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_create_swir.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_create_vnir.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/lbusett/prismaread//reference/pr_extract_spectra.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_get_geoloc.html</loc>
   </url>
   <url>
     <loc>https://github.com/lbusett/prismaread//reference/pr_listindexes.html</loc>
   </url>
   <url>
-    <loc>https://github.com/lbusett/prismaread//reference/rastwrite_lines.html</loc>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_make_atcor.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//reference/pr_rastwrite_lines.html</loc>
   </url>
   <url>
     <loc>https://github.com/lbusett/prismaread//articles/Computing-Spectral-Indexes.html</loc>
@@ -68,5 +71,8 @@
   </url>
   <url>
     <loc>https://github.com/lbusett/prismaread//articles/Output-Format-and-Naming.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/lbusett/prismaread//articles/prismaread.html</loc>
   </url>
 </urlset>
