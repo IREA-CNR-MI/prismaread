@@ -10,6 +10,7 @@ status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://tra
 [![Lifecycle:
 beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4019081.svg)](https://doi.org/10.5281/zenodo.4019081)
+[![codecov](https://codecov.io/gh/lbusett/prismaread/branch/master/graph/badge.svg)](https://codecov.io/gh/lbusett/prismaread)
 <!-- badges: end -->
 
 `prismaread` allows easily importing PRISMA hyperspectral data

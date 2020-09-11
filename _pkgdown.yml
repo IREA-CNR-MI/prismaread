@@ -1,13 +1,17 @@
 destination: docs
 home:
-  title: An R package for imporing PRISMA L1/L2 hyperspectral data and convert them to a more user friendly format
+  title: prismaread - A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery
   description:
-    The goal of prismaread is allowing to easily import PRISMA (http://www.prisma-i.it/index.php/it/) hyperspectral data and convert them to a easier to use format ENVI or GeoTiff while also extracting other metadata information of interest
+    prismaread allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/)  from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.
 url:
   https://github.com/lbusett/prismaread/
 template:
   params:
     bootswatch: united
+navbar:
+  structure:
+    left:  [home]
+    right: [github, reference, articles, news]
 articles:
 - title: Articles
   navbar: ~

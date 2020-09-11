@@ -2,7 +2,7 @@
 % Please edit documentation in R/pr_extract_spectra.R
 \name{pr_extract_spectra}
 \alias{pr_extract_spectra}
-\title{pr_extract_spectra}
+\title{Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert}
 \usage{
 pr_extract_spectra(
   in_file,

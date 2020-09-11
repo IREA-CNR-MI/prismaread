@@ -1,4 +1,4 @@
-#' @title pr_extract_spectra
+#' @title Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert
 #' @description function to extract values of a PRISMA image converted
 #'  with prismaread on points/polygons saved on a vector file or on
 #'  a `sf` object

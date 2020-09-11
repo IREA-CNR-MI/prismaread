@@ -9,7 +9,8 @@
 status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
 [![Lifecycle:
 beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
-[![DOI](https://zenodo.org/badge/211091818.svg)](https://zenodo.org/badge/latestdoi/211091818)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4019081.svg)](https://doi.org/10.5281/zenodo.4019081)
+[![codecov](https://codecov.io/gh/lbusett/prismaread/branch/master/graph/badge.svg)](https://codecov.io/gh/lbusett/prismaread)
 <!-- badges: end -->
 
 `prismaread` allows easily importing PRISMA hyperspectral data
@@ -36,7 +37,7 @@ You can install the last stable version of `prismaread` from
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("lbusett/prismaread", ref = "v0.2.0")
+remotes::install_github("lbusett/prismaread", ref = "v1.0.0")
 library(prismaread)
 ```
 
@@ -55,7 +56,7 @@ further instructions and info on output formats.
 
 # Future Work
 
-  - Implement possibility to apply masks based on the ERR\_MATRIX cubes
+  - Improve speed of writing FULL hyperspectral cubes
 
   - Clean up code
 
@@ -66,7 +67,7 @@ To cite `prismaread` please use:
 Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating
 access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL:
 <https://lbusett.github.io/prismaread/>, doi:
-<https://doi.org/10.5281/zenodo.3727671>
+<https://doi.org/10.5281/zenodo.4019081>
 
 ## Website
 

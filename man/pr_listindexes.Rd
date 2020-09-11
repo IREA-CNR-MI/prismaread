@@ -2,7 +2,7 @@
 % Please edit documentation in R/pr_listindexes.R
 \name{pr_listindexes}
 \alias{pr_listindexes}
-\title{pr_listindexes}
+\title{Print a list of available spectral indexes}
 \usage{
 pr_listindexes()
 }

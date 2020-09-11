@@ -2,7 +2,7 @@
 % Please edit documentation in R/pr_addindex.R
 \name{pr_addindex}
 \alias{pr_addindex}
-\title{pr_addindex}
+\title{add a spectral index to the list of available ones}
 \usage{
 pr_addindex(Name, Formula, Description = NA, Sensitivity = NA, Reference = NA)
 }
@@ -27,7 +27,7 @@ NULL - The function is called for its side effects
 }
 \description{
 Function used to add a spectral index to the list of available
-o ones
+ones
 }
 \details{
 DETAILS

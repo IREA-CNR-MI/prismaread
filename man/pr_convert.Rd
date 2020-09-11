@@ -2,7 +2,7 @@
 % Please edit documentation in R/pr_convert.R
 \name{pr_convert}
 \alias{pr_convert}
-\title{pr_convert}
+\title{Extract data from a PRISMA he5 file and convert to GTiff or ENVI}
 \usage{
 pr_convert(
   in_file,
@@ -155,7 +155,7 @@ takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
 The function is called for its side effects
 }
 \description{
-Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
+Access a PRISMA HDF5 file and convert it to ENVI or GeoTiff
  format
 }
 \examples{

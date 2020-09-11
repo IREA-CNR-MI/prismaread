@@ -1,4 +1,4 @@
-#' @title pr_compute_indexes
+#' @title Compute spectral indexes from a PRISMA he5 file (or a file converted with pr_convert)
 #' @description function used to compute spectral indexes, given the indexes formula
 #' @details the function parses the index formula to identify the required bands. On the basis
 #'   of identified bands, it retrieves the reflectance bands required, gets the data into R raster

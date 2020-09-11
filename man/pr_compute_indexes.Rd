@@ -2,7 +2,7 @@
 % Please edit documentation in R/pr_compute_indexes.R
 \name{pr_compute_indexes}
 \alias{pr_compute_indexes}
-\title{pr_compute_indexes}
+\title{Compute spectral indexes from a PRISMA he5 file (or a file converted with pr_convert)}
 \usage{
 pr_compute_indexes(
   in_file,

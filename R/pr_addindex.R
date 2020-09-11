@@ -1,7 +1,6 @@
-
-#' @title pr_addindex
+#' @title add a spectral index to the list of available ones
 #' @description Function used to add a spectral index to the list of available
-#' o ones
+#' ones
 #' @param Name `character` Name of the new index (e.g., "myindex")
 #' @param Formula `character` Formula of the index. In the formula, bands
 #'  are to be referred to the prefix "R", followed by the required wavelength

@@ -1,5 +1,5 @@
-#' @title pr_convert
-#' @description Access a PRISMA L1 HDF5 file and convert it to ENVI or GeoTiff
+#' @title Extract data from a PRISMA he5 file and convert to GTiff or ENVI
+#' @description Access a PRISMA HDF5 file and convert it to ENVI or GeoTiff
 #'  format
 #' @param in_file `character` full path of input HDF5 file
 #' @param out_folder `character` full path to output folder
