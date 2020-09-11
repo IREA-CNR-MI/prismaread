@@ -15,14 +15,14 @@
 #' @importFrom utils write.table
 #' @importFrom hdf5r existsGroup h5attr
 pr_make_atcor <- function(f,
-                              out_file,
-                              ATCOR_wls,
-                              wls,
-                              fwhms,
-                              order_vnir,
-                              order_swir,
-                              join_priority,
-                              source) {
+                          out_file,
+                          ATCOR_wls,
+                          wls,
+                          fwhms,
+                          order_vnir,
+                          order_swir,
+                          join_priority,
+                          source) {
 
     ATCOR_fold <- file.path(dirname(out_file), "ATCOR")
     out_file_wvl <- file.path(ATCOR_fold,
@@ -156,7 +156,7 @@ pr_make_atcor <- function(f,
             }
         } else {
             message("Creation of ATCOR files related to specific columns is ",
-                    "only useful for HCR datasets - creation of additional ",
+                    "only useful for HRC datasets - creation of additional ",
                     "ATCOR files skipped ")
         }
     }

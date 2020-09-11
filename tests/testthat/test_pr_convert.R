@@ -53,16 +53,16 @@ test_that(
         testthat::expect_equal(length(flist), 12)
 
         vnir  <- raster::brick(file.path(out_folder_L2D, "testL2D_1_HCO_VNIR.tif"))
-        means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
+        means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_vnir, c(0.022935, 0.05126269, 0.05515500,
                                              0.12456146, 0.14181177, 0.14477050))
 
         swir  <- raster::brick(file.path(out_folder_L2D, "testL2D_1_HCO_SWIR.tif"))
-        means_swir <- as.numeric(raster::cellStats(swir, mean, na.rm = TRUE))
+        means_swir <- as.numeric(raster::cellStats(swir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_swir, c(0.13954069, 0.10219114, 0.08076247))
 
         full <- raster::brick(file.path(out_folder_L2D, "testL2D_1_HCO_FULL.tif"))
-        means_full <- as.numeric(raster::cellStats(full, mean, na.rm = TRUE))
+        means_full <- as.numeric(raster::cellStats(full, "mean", na.rm = TRUE))
         testthat::expect_equal(means_full, c(0.022935, 0.05126269, 0.05515500,
                                              0.12456146, 0.14181177, 0.14477050,
                                              0.13954069, 0.10219114, 0.08076247))
@@ -100,11 +100,11 @@ test_that(
         flist <- list.files(out_folder_L2D, pattern = "testL2D_2")
         testthat::expect_equal(length(flist), 19)
         vnir  <- raster::brick(file.path(out_folder_L2D, "testL2D_2_HCO_VNIR.envi"))
-        means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
+        means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_vnir, c(0.022935, 0.05515500, 0.14181177))
 
         swir  <- raster::brick(file.path(out_folder_L2D, "testL2D_2_HCO_SWIR.envi"))
-        means_swir <- as.numeric(raster::cellStats(swir, mean, na.rm = TRUE))
+        means_swir <- as.numeric(raster::cellStats(swir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_swir, c(0.10219114))
 
         # see that apply_errmatrix does something
@@ -115,7 +115,7 @@ test_that(
                    LATLON = FALSE, ERR_MATRIX = FALSE, apply_errmatrix = TRUE,
                    overwrite = TRUE)
         vnir <- raster::brick(file.path(out_folder_L2D, "testL2D_3_HCO_VNIR.tif"))
-        means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
+        means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_vnir, c(0.02349694, 0.05520516))
 
         # wavelengths in wvl files are correct
@@ -169,30 +169,30 @@ test_that(
         testthat::expect_equal(length(flist), 12)
 
         vnir  <- raster::brick(file.path(out_folder_L2C, "testL2C_1_HCO_VNIR.tif"))
-        means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
+        means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_vnir, c(0.03527613  , 0.07889447 , 0.08488756  ,
                                              0.19185325  , 0.21844948  , 0.22302736),
                                tolerance = 0.001)
 
         swir  <- raster::brick(file.path(out_folder_L2C, "testL2C_1_HCO_SWIR.tif"))
-        means_swir <- as.numeric(raster::cellStats(swir, mean, na.rm = TRUE))
+        means_swir <- as.numeric(raster::cellStats(swir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_swir, c(0.2149935  , 0.1573347  , 0.1243109),
                                tolerance = 0.001)
 
         full <- raster::brick(file.path(out_folder_L2C, "testL2C_1_HCO_FULL.tif"))
-        means_full <- as.numeric(raster::cellStats(full, mean, na.rm = TRUE))
+        means_full <- as.numeric(raster::cellStats(full, "mean", na.rm = TRUE))
         testthat::expect_equal(means_full, c(0.03527613, 0.07889447, 0.08488756,
                                              0.19185325, 0.21844948, 0.22302736,
                                              0.2149935,  0.1573347, 0.1243109),
                                tolerance = 0.001)
 
         angs  <- raster::brick(file.path(out_folder_L2C, "testL2C_1_HCO_ANG.tif"))
-        means_angs <- as.numeric(raster::cellStats(angs, mean, na.rm = TRUE))
+        means_angs <- as.numeric(raster::cellStats(angs, "mean", na.rm = TRUE))
         testthat::expect_equal(means_angs, c(11.73522, 129.13642, 26.24126),
                                tolerance = 0.001)
 
         llon  <- raster::brick(file.path(out_folder_L2C, "testL2C_1_HCO_LATLON.tif"))
-        means_latlon <- as.numeric(raster::cellStats(llon, mean, na.rm = TRUE))
+        means_latlon <- as.numeric(raster::cellStats(llon, "mean", na.rm = TRUE))
         testthat::expect_equal(means_latlon, c(45.379759, 8.529825),
                                tolerance = 0.001)
 
@@ -225,16 +225,16 @@ test_that(
         testthat::expect_equal(length(flist), 7)
 
         vnir  <- raster::brick(file.path(out_folder_L2C, "testL2C_2_HCO_VNIR.tif"))
-        means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
+        means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_vnir, c(0.03529589   , 0.08492260  , 0.21841796),
                                tolerance = 0.001)
 
         swir  <- raster::brick(file.path(out_folder_L2C, "testL2C_2_HCO_SWIR.tif"))
-        means_swir <- as.numeric(raster::cellStats(swir, mean, na.rm = TRUE))
+        means_swir <- as.numeric(raster::cellStats(swir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_swir, c(0.1573508), tolerance = 0.001)
 
         full <- raster::brick(file.path(out_folder_L2C, "testL2C_2_HCO_FULL.tif"))
-        means_full <- as.numeric(raster::cellStats(full, mean, na.rm = TRUE))
+        means_full <- as.numeric(raster::cellStats(full, "mean", na.rm = TRUE))
         testthat::expect_equal(means_full, c(0.03529589, 0.08492260, 0.21841796,
                                              0.1573508), tolerance = 0.001)
 
@@ -303,16 +303,16 @@ test_that(
         testthat::expect_equal(length(flist), 14)
 
         vnir  <- raster::brick(file.path(out_folder_L1, "testL1_1_HCO_VNIR.tif"))
-        means_vnir <- as.numeric(raster::cellStats(vnir, mean, na.rm = TRUE))
+        means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_vnir, c(71.72868  , 45.73275  , 58.20885),
                                tolerance = 0.0001)
 
         swir  <- raster::brick(file.path(out_folder_L1, "testL1_1_HCO_SWIR.tif"))
-        means_swir <- as.numeric(raster::cellStats(swir, mean, na.rm = TRUE))
+        means_swir <- as.numeric(raster::cellStats(swir, "mean", na.rm = TRUE))
         testthat::expect_equal(means_swir, c(8.921804), tolerance = 0.0001)
 
         full <- raster::brick(file.path(out_folder_L1, "testL1_1_HCO_FULL.tif"))
-        means_full <- as.numeric(raster::cellStats(full, mean, na.rm = TRUE))
+        means_full <- as.numeric(raster::cellStats(full, "mean", na.rm = TRUE))
         testthat::expect_equal(means_full, c(71.72868, 45.73275, 58.20885,
                                              8.921804), tolerance = 0.0001)
 
@@ -331,7 +331,7 @@ test_that(
                    overwrite = TRUE)
 
         angs  <- raster::brick(file.path(out_folder_L1, "testL1_2_HCO_ANG.tif"))
-        means_angs <- as.numeric(raster::cellStats(angs, mean, na.rm = TRUE))
+        means_angs <- as.numeric(raster::cellStats(angs, "mean", na.rm = TRUE))
         # angles retrieved by overwriting with L2 are equal to those of L2
         testthat::expect_equal(means_angs, c(11.73522, 129.13642, 26.24126),
                                tolerance = 0.001)
@@ -342,14 +342,29 @@ test_that(
                        out_filebase = "testL1_3", out_format = "GTiff",
                        base_georef = FALSE,
                        VNIR = TRUE, selbands_vnir = c(450, 650, 850),
-                       selbands_swir = c(1500),
-                       SWIR = TRUE, FULL = FALSE, ANGLES = TRUE, PAN = TRUE,
-                       CLOUD = TRUE, GLINT = TRUE, LC = TRUE,
-                       LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
-                       overwrite = TRUE))
+                       SWIR = FALSE, FULL = FALSE, ANGLES = FALSE, PAN = FALSE,
+                       CLOUD = FALSE, GLINT = FALSE, LC = FALSE,
+                       LATLON = FALSE, ERR_MATRIX = FALSE, apply_errmatrix = FALSE,
+                       overwrite = FALSE))
 
         vnir  <- raster::brick(file.path(out_folder_L1, "testL1_3_HCO_VNIR.tif"))
         # angles retrieved by overwriting with L2 are equal to those of L2
         testthat::expect_equal(dim(vnir), c(1000, 1000, 3),
                                tolerance = 0.001)
+
+        # get HRC and complex ATCOR
+        # launch pr_convert to creat VNIR (3 bands), SWIR (1 bands), FULL,
+        # ANGLES, LATLON, PAN - save to tiff
+        pr_convert(in_file = testfile, out_folder = out_folder_L1,
+                   out_filebase = "testL1_1", out_format = "GTiff",
+                   VNIR = TRUE, selbands_vnir = c(450),
+                   selbands_swir = c(1500), ATCOR = TRUE, ATCOR_wls = c(200,800),
+                   SWIR = TRUE, FULL = TRUE, ANGLES = TRUE, PAN = TRUE,
+                   CLOUD = TRUE, GLINT = TRUE, LC = TRUE,
+                   LATLON = TRUE, ERR_MATRIX = TRUE, apply_errmatrix = FALSE,
+                   overwrite = TRUE, source = "HRC")
+
+
+
+
     })

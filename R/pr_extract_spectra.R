@@ -14,7 +14,7 @@
 #' @param stats `logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
 #'  on the vector features, Default: TRUE
 #' @param selstats `character` containing the statistics to be computed. Possible values are:
-#'   "mean", "stdev","variance","coefficient_of_variation",
+#'   "mean", "stdev","variance","coeffvar",
 #'   "min","max"
 #' @param stats_format `character` ["long" | "wide"] defines the format used for statistics output.
 #'  If "long", the output has one column for the ID of the feature, and one column for each statistic.
@@ -22,7 +22,7 @@
 #' @param quantiles `logical`, if TRUE, also compute quantiles on the vector features. Computed quantiles
 #'  are set using the `percs` argument, Default: FALSE
 #' @param percs `(sorted) numeric array [0,1]` defines which quantiles should be computed if
-#'  `quantiles` is TRUE, Default: c(5,25,50,75,95)
+#'  `quantiles` is TRUE, Default: c(0.05,0.25,0.50,0.75,0.95)
 #' @param allpix `logical` IF TRUE, also save the values for all pixels of the `in_vect`
 #'  features in the `allpix` slot of the output list, Default: FALSE
 #' @param out_file `character` full path of an output file where results should be stored, with

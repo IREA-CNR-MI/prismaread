@@ -142,49 +142,49 @@
 #' @importFrom raster stack
 #'
 pr_convert <- function(in_file,
-                           out_folder,
-                           out_filebase    = "auto",
-                           out_format      = "ENVI",
-                           base_georef     = TRUE,
-                           fill_gaps       = TRUE,
-                           VNIR            = FALSE,
-                           SWIR            = FALSE,
-                           FULL            = FALSE,
-                           source          = "HCO",
-                           join_priority   = "SWIR",
-                           ATCOR           = FALSE,
-                           ATCOR_wls       = NULL,
-                           PAN             = FALSE,
-                           CLOUD           = FALSE,
-                           LC              = FALSE,
-                           GLINT           = FALSE,
-                           ANGLES          = FALSE,
-                           LATLON          = FALSE,
-                           ERR_MATRIX      = FALSE,
-                           apply_errmatrix = FALSE,
-                           overwrite       = FALSE,
-                           in_L2_file      = NULL,
-                           selbands_vnir   = NULL,
-                           selbands_swir   = NULL,
-                           indexes         = NULL,
-                           cust_indexes    = NULL,
-                           keep_index_cube = FALSE) {
+                       out_folder,
+                       out_filebase    = "auto",
+                       out_format      = "ENVI",
+                       base_georef     = TRUE,
+                       fill_gaps       = TRUE,
+                       VNIR            = FALSE,
+                       SWIR            = FALSE,
+                       FULL            = FALSE,
+                       source          = "HCO",
+                       join_priority   = "SWIR",
+                       ATCOR           = FALSE,
+                       ATCOR_wls       = NULL,
+                       PAN             = FALSE,
+                       CLOUD           = FALSE,
+                       LC              = FALSE,
+                       GLINT           = FALSE,
+                       ANGLES          = FALSE,
+                       LATLON          = FALSE,
+                       ERR_MATRIX      = FALSE,
+                       apply_errmatrix = FALSE,
+                       overwrite       = FALSE,
+                       in_L2_file      = NULL,
+                       selbands_vnir   = NULL,
+                       selbands_swir   = NULL,
+                       indexes         = NULL,
+                       cust_indexes    = NULL,
+                       keep_index_cube = FALSE) {
 
   .pr_convert <- function(in_file, out_folder,
-                              out_filebase, out_format, base_georef,
-                              fill_gaps, VNIR,
-                              SWIR, FULL,
-                              source, join_priority,
-                              ATCOR, ATCOR_wls,
-                              PAN, CLOUD,
-                              LC, GLINT,
-                              ANGLES, LATLON,
-                              ERR_MATRIX, apply_errmatrix,
-                              overwrite,in_L2_file,
-                              selbands_vnir, selbands_swir,
-                              indexes,
-                              cust_indexes,
-                              keep_index_cube) {
+                          out_filebase, out_format, base_georef,
+                          fill_gaps, VNIR,
+                          SWIR, FULL,
+                          source, join_priority,
+                          ATCOR, ATCOR_wls,
+                          PAN, CLOUD,
+                          LC, GLINT,
+                          ANGLES, LATLON,
+                          ERR_MATRIX, apply_errmatrix,
+                          overwrite,in_L2_file,
+                          selbands_vnir, selbands_swir,
+                          indexes,
+                          cust_indexes,
+                          keep_index_cube) {
 
     # Perform checks on inputs and return the hdf object
 
@@ -272,14 +272,14 @@ pr_convert <- function(in_file,
     # write ATCOR files if needed ----
     if (ATCOR == TRUE && proc_lev == "1") {
       pr_make_atcor(f,
-                        out_file,
-                        ATCOR_wls,
-                        wls,
-                        fwhms,
-                        order_vnir,
-                        order_swir,
-                        join_priority,
-                        source)
+                    out_file,
+                    ATCOR_wls,
+                    wls,
+                    fwhms,
+                    order_vnir,
+                    order_swir,
+                    join_priority,
+                    source)
     }
 
 
@@ -319,19 +319,19 @@ pr_convert <- function(in_file,
       } else {
 
         pr_create_vnir(f,
-                           proc_lev,
-                           source,
-                           out_file_vnir,
-                           out_format,
-                           base_georef,
-                           fill_gaps,
-                           wl_vnir,
-                           order_vnir,
-                           fwhm_vnir,
-                           apply_errmatrix,
-                           ERR_MATRIX,
-                           selbands_vnir = selbands_vnir,
-                           in_L2_file = in_L2_file)
+                       proc_lev,
+                       source,
+                       out_file_vnir,
+                       out_format,
+                       base_georef,
+                       fill_gaps,
+                       wl_vnir,
+                       order_vnir,
+                       fwhm_vnir,
+                       apply_errmatrix,
+                       ERR_MATRIX,
+                       selbands_vnir = selbands_vnir,
+                       in_L2_file = in_L2_file)
       }
     }
 
@@ -371,19 +371,19 @@ pr_convert <- function(in_file,
 
         message("- Importing SWIR Cube - ")
         pr_create_swir(f,
-                           proc_lev,
-                           source,
-                           out_file_swir,
-                           out_format,
-                           base_georef,
-                           fill_gaps,
-                           wl_swir,
-                           order_swir,
-                           fwhm_swir,
-                           apply_errmatrix,
-                           ERR_MATRIX,
-                           selbands_swir = selbands_swir,
-                           in_L2_file = in_L2_file)
+                       proc_lev,
+                       source,
+                       out_file_swir,
+                       out_format,
+                       base_georef,
+                       fill_gaps,
+                       wl_swir,
+                       order_swir,
+                       fwhm_swir,
+                       apply_errmatrix,
+                       ERR_MATRIX,
+                       selbands_swir = selbands_swir,
+                       in_L2_file = in_L2_file)
       }
 
       if (!is.null(selbands_swir)){
@@ -456,7 +456,7 @@ pr_convert <- function(in_file,
           message("- Writing FULL raster -")
 
           pr_rastwrite_lines(rast_tot, out_file_full, out_format, proc_lev,
-                          join = TRUE)
+                             join = TRUE)
           rm(rast_vnir)
           rm(rast_swir)
           gc()
@@ -529,11 +529,11 @@ pr_convert <- function(in_file,
       if (!is.null(indexes) | !is.null(cust_indexes)) {
 
         pr_compute_indexes(in_file  = out_file_full,
-                               out_file= out_file,
-                               out_format = out_format,
-                               indexes  = indexes,
-                               cust_indexes = cust_indexes,
-                               overwrite = overwrite)
+                           out_file= out_file,
+                           out_format = out_format,
+                           indexes  = indexes,
+                           cust_indexes = cust_indexes,
+                           overwrite = overwrite)
       }
 
       # if (CONTREM) {
@@ -556,13 +556,13 @@ pr_convert <- function(in_file,
     } else {
       if (PAN) {
         pr_create_pan(f,
-                          proc_lev,
-                          source,
-                          out_file_pan,
-                          out_format,
-                          base_georef,
-                          fill_gaps,
-                          in_L2_file = in_L2_file)
+                      proc_lev,
+                      source,
+                      out_file_pan,
+                      out_format,
+                      base_georef,
+                      fill_gaps,
+                      in_L2_file = in_L2_file)
 
       }
     }
@@ -580,12 +580,12 @@ pr_convert <- function(in_file,
     } else {
       if (LATLON) {
         pr_create_latlon(f,
-                             proc_lev,
-                             out_file_latlon,
-                             out_format,
-                             base_georef,
-                             fill_gaps,
-                             in_L2_file = in_L2_file)
+                         proc_lev,
+                         out_file_latlon,
+                         out_format,
+                         base_georef,
+                         fill_gaps,
+                         in_L2_file = in_L2_file)
 
       }
     }
@@ -605,12 +605,12 @@ pr_convert <- function(in_file,
       } else {
         if (ANGLES) {
           pr_create_angles(f,
-                               proc_lev,
-                               out_file_ang,
-                               out_format,
-                               base_georef,
-                               fill_gaps,
-                               in_L2_file = in_L2_file)
+                           proc_lev,
+                           out_file_ang,
+                           out_format,
+                           base_georef,
+                           fill_gaps,
+                           in_L2_file = in_L2_file)
 
         }
       }
@@ -632,12 +632,12 @@ pr_convert <- function(in_file,
       } else {
         if (CLOUD) {
           pr_create_additional(f,
-                                   type = "CLD",
-                                   out_file_cld,
-                                   out_format,
-                                   base_georef,
-                                   fill_gaps,
-                                   in_L2_file = in_L2_file)
+                               type = "CLD",
+                               out_file_cld,
+                               out_format,
+                               base_georef,
+                               fill_gaps,
+                               in_L2_file = in_L2_file)
 
         }
       }
@@ -654,12 +654,12 @@ pr_convert <- function(in_file,
       } else {
         if (GLINT) {
           pr_create_additional(f,
-                                   type = "GLINT",
-                                   out_file_glnt,
-                                   out_format,
-                                   base_georef,
-                                   fill_gaps,
-                                   in_L2_file = in_L2_file)
+                               type = "GLINT",
+                               out_file_glnt,
+                               out_format,
+                               base_georef,
+                               fill_gaps,
+                               in_L2_file = in_L2_file)
         }
       }
       # Save LC if requested ----
@@ -675,12 +675,12 @@ pr_convert <- function(in_file,
                   "output file name to reprocess")
         } else {
           pr_create_additional(f,
-                                   type = "LC",
-                                   out_file_lc,
-                                   out_format,
-                                   base_georef,
-                                   fill_gaps,
-                                   in_L2_file = in_L2_file)
+                               type = "LC",
+                               out_file_lc,
+                               out_format,
+                               base_georef,
+                               fill_gaps,
+                               in_L2_file = in_L2_file)
         }
       }
     }
@@ -689,33 +689,33 @@ pr_convert <- function(in_file,
   # first run: ignore indexes ----
 
   .pr_convert(in_file,
-                  out_folder,
-                  out_filebase,
-                  out_format,
-                  base_georef,
-                  fill_gaps,
-                  VNIR,
-                  SWIR,
-                  FULL,
-                  source,
-                  join_priority,
-                  ATCOR,
-                  ATCOR_wls,
-                  PAN,
-                  CLOUD,
-                  LC,
-                  GLINT,
-                  ANGLES,
-                  LATLON,
-                  ERR_MATRIX,
-                  apply_errmatrix,
-                  overwrite,
-                  in_L2_file,
-                  selbands_vnir,
-                  selbands_swir,
-                  indexes       = NULL,
-                  cust_indexes  = NULL,
-                  keep_index_cube = FALSE)
+              out_folder,
+              out_filebase,
+              out_format,
+              base_georef,
+              fill_gaps,
+              VNIR,
+              SWIR,
+              FULL,
+              source,
+              join_priority,
+              ATCOR,
+              ATCOR_wls,
+              PAN,
+              CLOUD,
+              LC,
+              GLINT,
+              ANGLES,
+              LATLON,
+              ERR_MATRIX,
+              apply_errmatrix,
+              overwrite,
+              in_L2_file,
+              selbands_vnir,
+              selbands_swir,
+              indexes       = NULL,
+              cust_indexes  = NULL,
+              keep_index_cube = FALSE)
 
   # second run: create indexes -----
   # in this way we can use the same function,
@@ -725,33 +725,33 @@ pr_convert <- function(in_file,
   if (!is.null(indexes)) {
 
     .pr_convert(in_file,
-                    out_folder,
-                    out_filebase,
-                    out_format,
-                    base_georef,
-                    fill_gaps,
-                    VNIR = FALSE,
-                    SWIR = FALSE,
-                    FULL = FALSE,
-                    source,
-                    join_priority,
-                    ATCOR = FALSE,
-                    ATCOR_wls,
-                    PAN = FALSE,
-                    CLOUD = FALSE,
-                    LC = FALSE,
-                    GLINT = FALSE,
-                    ANGLES = FALSE,
-                    LATLON = FALSE,
-                    ERR_MATRIX = FALSE,
-                    apply_errmatrix,
-                    overwrite,
-                    in_L2_file,
-                    selbands_vnir = NULL,
-                    selbands_swir = NULL,
-                    indexes       = indexes,
-                    cust_indexes  = cust_indexes,
-                    keep_index_cube = keep_index_cube)
+                out_folder,
+                out_filebase,
+                out_format,
+                base_georef,
+                fill_gaps,
+                VNIR = FALSE,
+                SWIR = FALSE,
+                FULL = FALSE,
+                source,
+                join_priority,
+                ATCOR = FALSE,
+                ATCOR_wls,
+                PAN = FALSE,
+                CLOUD = FALSE,
+                LC = FALSE,
+                GLINT = FALSE,
+                ANGLES = FALSE,
+                LATLON = FALSE,
+                ERR_MATRIX = FALSE,
+                apply_errmatrix,
+                overwrite,
+                in_L2_file,
+                selbands_vnir = NULL,
+                selbands_swir = NULL,
+                indexes       = indexes,
+                cust_indexes  = cust_indexes,
+                keep_index_cube = keep_index_cube)
   }
 
 

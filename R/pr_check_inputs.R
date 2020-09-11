@@ -59,7 +59,7 @@ pr_check_inputs <- function(in_file, out_folder,
     # check if cust_indexes is a list. If so, check the names
     assertthat::see_if(is.null(cust_indexes) || is.list(cust_indexes))
     if (!is.null(cust_indexes)){
-        assertthat::see_if(pr_check_formulas)
+        assertthat::see_if(is.null(pr_check_formulas(cust_indexes)) == TRUE)
     }
 
     f <- try(hdf5r::H5File$new(in_file, mode="r+"))
@@ -71,7 +71,7 @@ pr_check_inputs <- function(in_file, out_folder,
     proc_lev <- hdf5r::h5attr(f, "Processing_Level")
 
     if (proc_lev != "1") {
-        if (source %in% c("HRC", "HC0")) {
+        if (source %in% c("HRC")) {
             message("Processing Level = 2 - Source modified to \"HCO\" by ",
                     "default")
             source = "HCO"
