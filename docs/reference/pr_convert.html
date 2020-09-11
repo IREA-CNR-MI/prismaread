@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -92,6 +92,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -145,7 +148,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>pr_convert</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/convert_prisma.R'><code>R/convert_prisma.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_convert.R'><code>R/pr_convert.R</code></a></small>
     <div class="hidden name"><code>pr_convert.Rd</code></div>
     </div>
 
@@ -155,34 +158,34 @@
     </div>
 
     <pre class="usage"><span class='fu'>pr_convert</span>(
-  <span class='no'>in_file</span>,
-  <span class='no'>out_folder</span>,
-  <span class='kw'>out_filebase</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"ENVI"</span>,
-  <span class='kw'>base_georef</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>fill_gaps</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>VNIR</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>SWIR</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>FULL</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>source</span> <span class='kw'>=</span> <span class='st'>"HCO"</span>,
-  <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"SWIR"</span>,
-  <span class='kw'>ATCOR</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ATCOR_wls</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>PAN</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>CLOUD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>LC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>GLINT</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ANGLES</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>LATLON</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ERR_MATRIX</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>apply_errmatrix</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>in_L2_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>selbands_vnir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>selbands_swir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>indexes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cust_indexes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>keep_index_cube</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>in_file</span>,
+  <span class='kw'>out_folder</span>,
+  out_filebase = <span class='st'>"auto"</span>,
+  out_format = <span class='st'>"ENVI"</span>,
+  base_georef = <span class='fl'>TRUE</span>,
+  fill_gaps = <span class='fl'>TRUE</span>,
+  VNIR = <span class='fl'>FALSE</span>,
+  SWIR = <span class='fl'>FALSE</span>,
+  FULL = <span class='fl'>FALSE</span>,
+  source = <span class='st'>"HCO"</span>,
+  join_priority = <span class='st'>"SWIR"</span>,
+  ATCOR = <span class='fl'>FALSE</span>,
+  ATCOR_wls = <span class='kw'>NULL</span>,
+  PAN = <span class='fl'>FALSE</span>,
+  CLOUD = <span class='fl'>FALSE</span>,
+  LC = <span class='fl'>FALSE</span>,
+  GLINT = <span class='fl'>FALSE</span>,
+  ANGLES = <span class='fl'>FALSE</span>,
+  LATLON = <span class='fl'>FALSE</span>,
+  ERR_MATRIX = <span class='fl'>FALSE</span>,
+  apply_errmatrix = <span class='fl'>FALSE</span>,
+  overwrite = <span class='fl'>FALSE</span>,
+  in_L2_file = <span class='kw'>NULL</span>,
+  selbands_vnir = <span class='kw'>NULL</span>,
+  selbands_swir = <span class='kw'>NULL</span>,
+  indexes = <span class='kw'>NULL</span>,
+  cust_indexes = <span class='kw'>NULL</span>,
+  keep_index_cube = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -205,7 +208,7 @@ Default: "auto"</p></td>
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'</p></td>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
     </tr>
     <tr>
       <th>base_georef</th>
@@ -340,7 +343,7 @@ the SWIR data cube. If not NULL, only the bands with wavelengths closest to thes
     <tr>
       <th>indexes</th>
       <td><p>`character` array of names of indexes to be computed. You can
-see a list of available indexes using command `prisma_listindexes()`, or see
+see a list of available indexes using command `pr_listindexes()`, or see
 the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html</p></td>
     </tr>
     <tr>
@@ -366,50 +369,51 @@ takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
     <p>The function is called for its side effects</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
- <span class='no'>in_file</span>    <span class='kw'>&lt;-</span> <span class='st'>"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
- <span class='no'>out_folder</span> <span class='kw'>&lt;-</span> <span class='st'>"/home/lb/tmp/test/"</span>
- <span class='no'>out_format</span> <span class='kw'>&lt;-</span> <span class='st'>"ENVI"</span>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+ <span class='kw'>in_file</span>    <span class='op'>&lt;-</span> <span class='st'>"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
+ <span class='kw'>out_folder</span> <span class='op'>&lt;-</span> <span class='st'>"/home/lb/tmp/test/"</span>
+ <span class='kw'>out_format</span> <span class='op'>&lt;-</span> <span class='st'>"ENVI"</span>
 
  <span class='co'># Save VNIR Cube image</span>
- <span class='fu'>pr_convert</span>(<span class='kw'>in_file</span>       <span class='kw'>=</span> <span class='no'>in_file</span>,
-                <span class='kw'>out_folder</span>    <span class='kw'>=</span> <span class='no'>out_folder</span>,
-                <span class='kw'>out_format</span>    <span class='kw'>=</span> <span class='no'>out_format</span>,
-                <span class='kw'>VNIR</span>          <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>SWIR</span>          <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>FULL</span>          <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                <span class='kw'>overwrite</span>     <span class='kw'>=</span> <span class='fl'>TRUE</span>
+ <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
+                out_folder    = <span class='kw'>out_folder</span>,
+                out_format    = <span class='kw'>out_format</span>,
+                VNIR          = <span class='fl'>TRUE</span>,
+                SWIR          = <span class='fl'>TRUE</span>,
+                FULL          = <span class='fl'>FALSE</span>,
+                overwrite     = <span class='fl'>TRUE</span>
                 )
 
  <span class='co'># Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format</span>
  <span class='co'># Also save Cloud and LC data. Also, use a custom prefix for output files</span>
- <span class='fu'>pr_convert</span>(<span class='kw'>in_file</span>       <span class='kw'>=</span> <span class='no'>in_file</span>,
-                <span class='kw'>out_folder</span>    <span class='kw'>=</span> <span class='no'>out_folder</span>,
-                <span class='kw'>out_filebase</span>  <span class='kw'>=</span> <span class='st'>"prismaout_2020_05-14"</span>,
-                <span class='kw'>out_format</span>    <span class='kw'>=</span> <span class='no'>out_format</span>,
-                <span class='kw'>FULL</span>          <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"VNIR"</span>,
-                <span class='kw'>LC</span>            <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>CLOUD</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>overwrite</span>     <span class='kw'>=</span> <span class='fl'>TRUE</span>
+ <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
+                out_folder    = <span class='kw'>out_folder</span>,
+                out_filebase  = <span class='st'>"prismaout_2020_05-14"</span>,
+                out_format    = <span class='kw'>out_format</span>,
+                FULL          = <span class='fl'>TRUE</span>,
+                join_priority = <span class='st'>"VNIR"</span>,
+                LC            = <span class='fl'>TRUE</span>,
+                CLOUD         = <span class='fl'>TRUE</span>,
+                overwrite     = <span class='fl'>TRUE</span>
                 )
 
  <span class='co'># Save a full image, prioritizing the SWIR spectrometer and save in TIF format,</span>
  <span class='co'># Also create ATCOR files, with Nominal wavelengths</span>
 
- <span class='fu'>pr_convert</span>(<span class='kw'>in_file</span>       <span class='kw'>=</span> <span class='no'>in_file</span>,
-                <span class='kw'>out_folder</span>    <span class='kw'>=</span> <span class='no'>out_folder</span>,
-                <span class='kw'>out_format</span>    <span class='kw'>=</span> <span class='st'>"TIF"</span>,
-                <span class='kw'>FULL</span>          <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>join_priority</span> <span class='kw'>=</span> <span class='st'>"VNIR"</span>,
-                <span class='kw'>ATCOR</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>LC</span>            <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>CLOUD</span>         <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                <span class='kw'>overwrite</span>     <span class='kw'>=</span> <span class='fl'>TRUE</span>
+ <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
+                out_folder    = <span class='kw'>out_folder</span>,
+                out_format    = <span class='st'>"TIF"</span>,
+                FULL          = <span class='fl'>TRUE</span>,
+                join_priority = <span class='st'>"VNIR"</span>,
+                ATCOR         = <span class='fl'>TRUE</span>,
+                LC            = <span class='fl'>TRUE</span>,
+                CLOUD         = <span class='fl'>TRUE</span>,
+                overwrite     = <span class='fl'>TRUE</span>
                 )
 
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -425,7 +429,7 @@ takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

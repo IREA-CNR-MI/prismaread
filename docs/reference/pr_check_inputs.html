@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>prisma_create_vnir — prisma_create_vnir • prismaread</title>
+<title>pr_check_inputs — pr_check_inputs • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="prisma_create_vnir — prisma_create_vnir" />
-<meta property="og:description" content="helper function used to process and save the VNIR data cube" />
+<meta property="og:title" content="pr_check_inputs — pr_check_inputs" />
+<meta property="og:description" content="helper function used to check consistency of pr_convert arguments" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -143,54 +146,67 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>prisma_create_vnir</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_create_vnir.R'><code>R/prisma_create_vnir.R</code></a></small>
-    <div class="hidden name"><code>prisma_create_vnir.Rd</code></div>
+    <h1>pr_check_inputs</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_check_inputs.R'><code>R/pr_check_inputs.R</code></a></small>
+    <div class="hidden name"><code>pr_check_inputs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>helper function used to process and save the VNIR data cube</p>
+    <p>helper function used to check consistency of pr_convert arguments</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prisma_create_vnir</span>(
-  <span class='no'>f</span>,
-  <span class='no'>proc_lev</span>,
-  <span class='no'>source</span>,
-  <span class='no'>out_file_vnir</span>,
-  <span class='no'>out_format</span>,
-  <span class='no'>base_georef</span>,
-  <span class='no'>fill_gaps</span>,
-  <span class='no'>wl_vnir</span>,
-  <span class='no'>order_vnir</span>,
-  <span class='no'>fwhm_vnir</span>,
-  <span class='no'>apply_errmatrix</span>,
-  <span class='no'>ERR_MATRIX</span>,
-  <span class='kw'>selbands_vnir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>in_L2_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+    <pre class="usage"><span class='fu'>pr_check_inputs</span>(
+  <span class='kw'>in_file</span>,
+  <span class='kw'>out_folder</span>,
+  <span class='kw'>out_filebase</span>,
+  <span class='kw'>out_format</span>,
+  <span class='kw'>base_georef</span>,
+  <span class='kw'>fill_gaps</span>,
+  <span class='kw'>VNIR</span>,
+  <span class='kw'>SWIR</span>,
+  <span class='kw'>FULL</span>,
+  <span class='kw'>source</span>,
+  <span class='kw'>join_priority</span>,
+  <span class='kw'>ATCOR</span>,
+  <span class='kw'>ATCOR_wls</span>,
+  <span class='kw'>PAN</span>,
+  <span class='kw'>CLOUD</span>,
+  <span class='kw'>LC</span>,
+  <span class='kw'>GLINT</span>,
+  <span class='kw'>ANGLES</span>,
+  <span class='kw'>LATLON</span>,
+  <span class='kw'>ERR_MATRIX</span>,
+  <span class='kw'>apply_errmatrix</span>,
+  <span class='kw'>overwrite</span>,
+  <span class='kw'>in_L2_file</span>,
+  <span class='kw'>selbands_vnir</span>,
+  <span class='kw'>selbands_swir</span>,
+  <span class='kw'>indexes</span>,
+  <span class='kw'>cust_indexes</span>,
+  <span class='kw'>keep_index_cube</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>f</th>
-      <td><p>input data he5 from caller</p></td>
+      <th>in_file</th>
+      <td><p>`character` full path of input HDF5 file</p></td>
     </tr>
     <tr>
-      <th>proc_lev</th>
-      <td><p>`character` Processing level (e.g., "1", "2B") - passed by caller</p></td>
+      <th>out_folder</th>
+      <td><p>`character` full path to output folder</p></td>
     </tr>
     <tr>
-      <th>source</th>
-      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
-    </tr>
-    <tr>
-      <th>out_file_vnir</th>
-      <td><p>output file name for VNIR</p></td>
+      <th>out_filebase</th>
+      <td><p>`character` if "auto", output file names are based on
+filename of the input prisma file, with appropriate suffixes. If a different
+string is provided, it is used as prefix instead of the input file name,
+Default: "auto"</p></td>
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>`character`` ["TIF" | "ENVI"], Output format, Default: 'tif'</p></td>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
     </tr>
     <tr>
       <th>base_georef</th>
@@ -206,20 +222,86 @@ substitute missing values with results of a 3x3 focal filter on the georeference
 data, Default: TRUE</p></td>
     </tr>
     <tr>
-      <th>wl_vnir</th>
-      <td><p>passed by caller - array of PRISMA VNIR wavelengths</p></td>
+      <th>VNIR</th>
+      <td><p>`logical` if TRUE, create the VNIR image, Default: FALSE</p></td>
     </tr>
     <tr>
-      <th>order_vnir</th>
-      <td><p>passed by caller - ordering of array of PRISMA VNIR wavelengths</p></td>
+      <th>SWIR</th>
+      <td><p>`logical` if TRUE, create the SWIR image, Default: FALSE</p></td>
     </tr>
     <tr>
-      <th>fwhm_vnir</th>
-      <td><p>passed by caller - array of PRISMA VNIR fwhms</p></td>
+      <th>FULL</th>
+      <td><p>`logical` if TRUE, create a single multispectral image from
+VNIR and SWIR, Default: FALSE</p></td>
     </tr>
     <tr>
-      <th>apply_errmatrix</th>
-      <td><p>Not yet implemented!</p></td>
+      <th>source</th>
+      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
+    </tr>
+    <tr>
+      <th>join_priority</th>
+      <td><p>`character` ["VNIR" | "SWIR"], spectrometer to consider in
+the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+Default: "SWIR"</p></td>
+    </tr>
+    <tr>
+      <th>ATCOR</th>
+      <td><p>logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;</p></td>
+    </tr>
+    <tr>
+      <th>ATCOR_wls</th>
+      <td><p>NULL, or `numeric` If NULL the only ATCOR wvl file
+created is the one containing Nominal wavelengths. If a numeric vector is provided,
+then one different wvl file is created for each selected COLUMN selected (e.g., if
+providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
+columns 200 and 800 are saved.)</p></td>
+    </tr>
+    <tr>
+      <th>PAN</th>
+      <td><p>`logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)</p></td>
+    </tr>
+    <tr>
+      <th>CLOUD</th>
+      <td><p>`logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data).
+It is coded as:
+  0 for not cloudy pixel
+  1 for cloudy pixel
+  10 = for not of all previous classification
+  255 = error</p></td>
+    </tr>
+    <tr>
+      <th>LC</th>
+      <td><p>`logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
+It is coded as:
+ 0 for water pixel
+ 1 for snow pixel (and ice)
+ 2 for not-vegetated land pixel :bare soil)
+ 3 for crop and rangeland pixel
+ 4 for forest pixel
+ 5 for wetland pixel
+ 6 for not-vegetated land pixel :urban component
+10 for not of all previous classification
+255 for error</p></td>
+    </tr>
+    <tr>
+      <th>GLINT</th>
+      <td><p>`logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
+It is coded as:
+0 for not sun glint
+1 for sun glint
+10 for not of all previous classification
+255 = error</p></td>
+    </tr>
+    <tr>
+      <th>ANGLES</th>
+      <td><p>if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
+a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains "relaz_ang" and
+Band 3 contains "solzen_ang"), default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>LATLON</th>
+      <td><p>if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
+a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE</p></td>
     </tr>
     <tr>
       <th>ERR_MATRIX</th>
@@ -232,9 +314,12 @@ SATURATION ERROR MATRIX is coded as:
  4= Pixel becomes NaN or Inf during processing.</p></td>
     </tr>
     <tr>
-      <th>selbands_vnir</th>
-      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+      <th>apply_errmatrix</th>
+      <td><p>Not yet implemented!</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>`logical` if TRUE, existing files are overwritten, default: FALSE</p></td>
     </tr>
     <tr>
       <th>in_L2_file</th>
@@ -243,11 +328,44 @@ info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 
 fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
 data are also retrieved from the L2 file.</p></td>
     </tr>
+    <tr>
+      <th>selbands_vnir</th>
+      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>selbands_swir</th>
+      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>indexes</th>
+      <td><p>`character` array of names of indexes to be computed. You can
+see a list of available indexes using command `pr_listindexes()`, or see
+the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html</p></td>
+    </tr>
+    <tr>
+      <th>cust_indexes</th>
+      <td><p>`character` named list containing names and formulas of custom
+indexes to be computed. The indexes formulas must be computable R formulas, where
+bands are referred to by the prefix "b", followed by the wavelength (e.g.,
+`cust_indexes = list(myindex1 = "R500 / R600",
+                     myindex2 = "(R800 - R680) / (R800 + R680)")`</p></td>
+    </tr>
+    <tr>
+      <th>keep_index_cube</th>
+      <td><p>`logical`, if TRUE, and spectral indexes were computed,
+keep in the output folder the hyperspectral cube used to compute the indexes (
+containing only wavelengths required to compute the desired indexes). The file
+takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
+ deleted automatically afterwards. Default: FALSE</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>the function is called for its side effects</p>
+    <p>Upon success of all checks, the input hdf file, opened using
+ `hdf5r::H5File`</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -264,7 +382,7 @@ data are also retrieved from the L2 file.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

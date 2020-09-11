@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MODIStsp helper for computing spectral indexes — prisma_compute_indexes • prismaread</title>
+<title>pr_create_pan — pr_create_pan • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="MODIStsp helper for computing spectral indexes — prisma_compute_indexes" />
-<meta property="og:description" content="function used to compute spectral indexes, given the index formula" />
+<meta property="og:title" content="pr_create_pan — pr_create_pan" />
+<meta property="og:description" content="helper function used to process and save the PAN data cube" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -143,63 +146,74 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MODIStsp helper for computing spectral indexes</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_compute_indexes.R'><code>R/prisma_compute_indexes.R</code></a></small>
-    <div class="hidden name"><code>prisma_compute_indexes.Rd</code></div>
+    <h1>pr_create_pan</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_create_pan.R'><code>R/pr_create_pan.R</code></a></small>
+    <div class="hidden name"><code>pr_create_pan.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>function used to compute spectral indexes, given the index formula</p>
+    <p>helper function used to process and save the PAN data cube</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prisma_compute_indexes</span>(
-  <span class='no'>in_file</span>,
-  <span class='no'>out_file</span>,
-  <span class='no'>out_format</span>,
-  <span class='no'>indexes</span>,
-  <span class='kw'>cust_indexes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+    <pre class="usage"><span class='fu'>pr_create_pan</span>(
+  <span class='kw'>f</span>,
+  <span class='kw'>proc_lev</span>,
+  <span class='kw'>source</span>,
+  <span class='kw'>out_file_pan</span>,
+  <span class='kw'>out_format</span>,
+  <span class='kw'>base_georef</span>,
+  <span class='kw'>fill_gaps</span>,
+  in_L2_file = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_file</th>
-      <td><p>`character` path of the file to be used for computing indexes</p></td>
+      <th>f</th>
+      <td><p>input data he5 from caller</p></td>
     </tr>
     <tr>
-      <th>out_file</th>
-      <td><p>`character` output path - filenames are created adding a suffix to
-the basename of this file (e.g., S:/mypath/myoutfile_NDVI.tif)</p></td>
+      <th>proc_lev</th>
+      <td><p>`character` Processing level (e.g., "1", "2B") - passed by caller</p></td>
     </tr>
     <tr>
-      <th>indexes</th>
-      <td><p>`character` array of names of indexes to be computed. You can
-see a list of available indexes using command `pr_listindexes()`, or see
-the corresponding table at: ZZZZZZZZZZZZZZZZZZZ</p></td>
+      <th>source</th>
+      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
     </tr>
     <tr>
-      <th>cust_indexes</th>
-      <td><p>`character` named list containing names and formulas of custom
-indexes to be computed. The indexes formulas must be computable R formulas, where
-bands are referred to by the prefix "b", followed by the wavelength (e.g.,
-`cust_indexes = list(myindex1 = "R500 / R600",
-                     myindex2 = "(R800 - R680) / (R800 + R680)")`</p></td>
+      <th>out_file_pan</th>
+      <td><p>output file name for PAN</p></td>
+    </tr>
+    <tr>
+      <th>out_format</th>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
+    </tr>
+    <tr>
+      <th>base_georef</th>
+      <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+using the "Georeference from input GLT" procedure explained here:
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>fill_gaps</th>
+      <td><p>`logical` if TRUE, when georeferencing on L1, L2B/C data,
+substitute missing values with results of a 3x3 focal filter on the georeferenced
+data, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>in_L2_file</th>
+      <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>NULL - new raster file saved in out_filename</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>the function parses the index formula to identify the required bands. On the basis
-  of identified bands, it retrieves the reflectance bands required, gets the data into R raster
-  objects, performs the computation and stores results in a GeoTiff or ENVI raster file</p>
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>License: GPL 3.0</p>
+    <p>The function is called for its side effects</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -216,7 +230,7 @@ bands are referred to by the prefix "b", followed by the wavelength (e.g.,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

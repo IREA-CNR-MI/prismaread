@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -49,6 +49,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -113,15 +116,16 @@
     
 <p><code>prismaread</code> provides a very efficient function based on package <code>exactextractr</code>(<a href="https://github.com/isciences/exactextractr" class="uri">https://github.com/isciences/exactextractr</a>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (<strong>See <a href="reference/pr_extract_spectra.html">documentation</a> of the prisma_extract_spectra() function for info on available arguments</strong>).</p>
 <p>For example, starting from a VNIR Cube obtained with <code>pr_convert</code> and a vector polygon file:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">prismaread</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tmap</span>)
-  <span class="no">in_file</span> <span class="kw">&lt;-</span> <span class="st">"D:/prismaread/L2D/testL2D_HCO_VNIR.envi"</span>
-  <span class="no">in_vect</span> <span class="kw">&lt;-</span> <span class="st">"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/mtennekes/tmap">tmap</a></span>)
+  <span class="kw">in_file</span> <span class="op">&lt;-</span> <span class="st">"D:/prismaread/L2D/testL2D_HCO_VNIR.envi"</span>
+  <span class="kw">in_vect</span> <span class="op">&lt;-</span> <span class="st">"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
 
   <span class="co"># extract base statistics, in "long" format</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"ID"</span>)
-  <span class="no">test</span>
+  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, id_field = <span class="st">"ID"</span>)
+  <span class="kw">test</span>
 <span class="co">#&gt; # A tibble: 396 x 4</span>
 <span class="co">#&gt;      wvl ID       mean  stdev</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
@@ -137,16 +141,18 @@
 <span class="co">#&gt; 10  471. poly_1 0.0966 0.0363</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
   <span class="co"># plot results using ggplot</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">wvl</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">mean</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">color</span> <span class="kw">=</span> <span class="no">ID</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">ID</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">ID</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()</pre></body></html></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>, y = <span class="kw">mean</span>)) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(color = <span class="kw">ID</span>, group = <span class="kw">ID</span>)) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+</pre></div>
 <p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">
+<div class="sourceCode" id="cb2"><pre class="downlit">
+
   <span class="co"># extract base statistics ands save results as excel file, in "wide" format</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">out_file</span> <span class="kw">=</span> <span class="st">"D:/Temp/test1.xlsx"</span>,
-                                 <span class="kw">stats_format</span> <span class="kw">=</span> <span class="st">"wide"</span>, <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
-  <span class="no">test</span>
+  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, out_file = <span class="st">"D:/Temp/test1.xlsx"</span>,
+                                 stats_format = <span class="st">"wide"</span>, id_field = <span class="st">"id"</span>)
+  <span class="kw">test</span>
 <span class="co">#&gt; # A tibble: 66 x 13</span>
 <span class="co">#&gt;      wvl mean_X1 stdev_X1 mean_X2 stdev_X2 mean_X3 stdev_X3 mean_X4 stdev_X4</span>
 <span class="co">#&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -164,11 +170,11 @@
 <span class="co">#&gt; #   mean_X6 &lt;dbl&gt;, stdev_X6 &lt;dbl&gt;</span>
 
   <span class="co"># extract custom statistics</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>,
-                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>),
-                                 <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
-
-  <span class="no">test</span>
+  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>,
+                                 selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>),
+                                 id_field = <span class="st">"id"</span>)
+  
+  <span class="kw">test</span>
 <span class="co">#&gt; # A tibble: 396 x 7</span>
 <span class="co">#&gt;      wvl ID      mean coeffvar  stdev     min   max</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span>
@@ -183,22 +189,24 @@
 <span class="co">#&gt;  9  464. X1    0.0908    0.388 0.0353 0.0220  0.251</span>
 <span class="co">#&gt; 10  471. X1    0.0966    0.376 0.0363 0.0259  0.262</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
-
+  
   <span class="co"># plot results using ggplot</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">wvl</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">mean</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">ID</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">ID</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">mean</span> + <span class="no">stdev</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">ID</span>), <span class="kw">color</span> <span class="kw">=</span> <span class="st">"grey75"</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">mean</span> - <span class="no">stdev</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">ID</span>), <span class="kw">color</span> <span class="kw">=</span> <span class="st">"grey75"</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">ID</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()</pre></body></html></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>)) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span>, color = <span class="kw">ID</span>, group = <span class="kw">ID</span>)) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span> <span class="op">+</span> <span class="kw">stdev</span>, group = <span class="kw">ID</span>), color = <span class="st">"grey75"</span>) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span> <span class="op">-</span> <span class="kw">stdev</span>, group = <span class="kw">ID</span>), color = <span class="st">"grey75"</span>) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+</pre></div>
 <p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-2.png" width="700"></p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 
+  
   <span class="co"># extract custom statistics and quantiles</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">quantiles</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
-                                 <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
-  <span class="no">test</span>
+  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, quantiles = <span class="fl">TRUE</span>,
+                                 selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
+                                 id_field = <span class="st">"id"</span>)
+  <span class="kw">test</span>
 <span class="co">#&gt; # A tibble: 396 x 9</span>
 <span class="co">#&gt;      wvl ID      mean  stdev quant_5 quant_25 quant_50 quant_75 quant_95</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
@@ -214,15 +222,15 @@
 <span class="co">#&gt; 10  471. X1    0.0966 0.0363      NA       NA       NA       NA       NA</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
 
-
+  
   <span class="co"># extract also all pixels</span>
-  <span class="no">test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="no">in_file</span>, <span class="no">in_vect</span>, <span class="kw">allpix</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-                                 <span class="kw">selstats</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
-                                 <span class="kw">id_field</span> <span class="kw">=</span> <span class="st">"id"</span>)
-
-
+  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, allpix = <span class="fl">TRUE</span>,
+                                 selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
+                                 id_field = <span class="st">"id"</span>)
+  
+  
   <span class="co"># stats are saved in the "stats" slot of the output</span>
-  <span class="no">test</span>$<span class="no">stats</span>
+  <span class="kw">test</span><span class="op">$</span><span class="kw">stats</span>
 <span class="co">#&gt; # A tibble: 396 x 4</span>
 <span class="co">#&gt;      wvl ID      mean  stdev</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
@@ -237,9 +245,9 @@
 <span class="co">#&gt;  9  464. X1    0.0908 0.0353</span>
 <span class="co">#&gt; 10  471. X1    0.0966 0.0363</span>
 <span class="co">#&gt; # ... with 386 more rows</span>
-
+  
   <span class="co"># pixel values are saved in the "allpix" slot of the output</span>
-  <span class="no">test</span>$<span class="no">allpix</span>
+  <span class="kw">test</span><span class="op">$</span><span class="kw">allpix</span>
 <span class="co">#&gt; # A tibble: 66,528 x 4</span>
 <span class="co">#&gt;    ID      wvl pixel    value</span>
 <span class="co">#&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;</span>
@@ -255,10 +263,11 @@
 <span class="co">#&gt; 10 id_1   471. pix_001 0.0997</span>
 <span class="co">#&gt; # ... with 66,518 more rows</span>
 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">test</span>$<span class="no">allpix</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">wvl</span>)) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">group</span> <span class="kw">=</span> <span class="no">pixel</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">ID</span>), <span class="kw">lwd</span> <span class="kw">=</span> <span class="fl">0.01</span>)  +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">ID</span>) +
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()</pre></body></html></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span><span class="op">$</span><span class="kw">allpix</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>)) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">value</span>, group = <span class="kw">pixel</span>, color = <span class="kw">ID</span>), lwd = <span class="fl">0.01</span>)  <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+</pre></div>
 <p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-3.png" width="700"></p>
   </div>
 
@@ -275,7 +284,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

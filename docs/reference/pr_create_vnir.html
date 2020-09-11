@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>prisma_basegeo — prisma_basegeo • prismaread</title>
+<title>pr_create_vnir — pr_create_vnir • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="prisma_basegeo — prisma_basegeo" />
-<meta property="og:description" content="Function used to create a georeferenced raster from L1/L2B/L2C datasets,
- based on the Latitude and Longitude data, and exploiting the procedure described in
- https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html" />
+<meta property="og:title" content="pr_create_vnir — pr_create_vnir" />
+<meta property="og:description" content="helper function used to process and save the VNIR data cube" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -82,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prismaread</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -93,6 +91,9 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
+</li>
+<li>
+  <a href="../articles/prismaread.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -145,55 +146,111 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>prisma_basegeo</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/prisma_basegeo.R'><code>R/prisma_basegeo.R</code></a></small>
-    <div class="hidden name"><code>prisma_basegeo.Rd</code></div>
+    <h1>pr_create_vnir</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_create_vnir.R'><code>R/pr_create_vnir.R</code></a></small>
+    <div class="hidden name"><code>pr_create_vnir.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function used to create a georeferenced raster from L1/L2B/L2C datasets,
- based on the Latitude and Longitude data, and exploiting the procedure described in
- https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html</p>
+    <p>helper function used to process and save the VNIR data cube</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prisma_basegeo</span>(<span class='no'>band</span>, <span class='no'>lon</span>, <span class='no'>lat</span>, <span class='kw'>fill_gaps</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>pr_create_vnir</span>(
+  <span class='kw'>f</span>,
+  <span class='kw'>proc_lev</span>,
+  <span class='kw'>source</span>,
+  <span class='kw'>out_file_vnir</span>,
+  <span class='kw'>out_format</span>,
+  <span class='kw'>base_georef</span>,
+  <span class='kw'>fill_gaps</span>,
+  <span class='kw'>wl_vnir</span>,
+  <span class='kw'>order_vnir</span>,
+  <span class='kw'>fwhm_vnir</span>,
+  <span class='kw'>apply_errmatrix</span>,
+  <span class='kw'>ERR_MATRIX</span>,
+  selbands_vnir = <span class='kw'>NULL</span>,
+  in_L2_file = <span class='kw'>NULL</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>band</th>
-      <td><p>`Raster` layer to be georeferenced</p></td>
+      <th>f</th>
+      <td><p>input data he5 from caller</p></td>
     </tr>
     <tr>
-      <th>lon</th>
-      <td><p>`Matrix` containing the longitudes of each pixel (as derived from the
-geolocation fields datasets of the hdf5)</p></td>
+      <th>proc_lev</th>
+      <td><p>`character` Processing level (e.g., "1", "2B") - passed by caller</p></td>
     </tr>
     <tr>
-      <th>lat</th>
-      <td><p>`Matrix` containing the latitudes of each pixel (as derived from the
-geolocation fields datasets of the hdf5)</p></td>
+      <th>source</th>
+      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
+    </tr>
+    <tr>
+      <th>out_file_vnir</th>
+      <td><p>output file name for VNIR</p></td>
+    </tr>
+    <tr>
+      <th>out_format</th>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
+    </tr>
+    <tr>
+      <th>base_georef</th>
+      <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
+using the "Georeference from input GLT" procedure explained here:
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
+Default: TRUE</p></td>
     </tr>
     <tr>
       <th>fill_gaps</th>
-      <td><p>`logical` If TRUE, pixels with no values in the georeferenced image are
-filled based on a 3x3 average focal filter of the neighbouring valid pixels, Default: TRUE</p></td>
+      <td><p>`logical` if TRUE, when georeferencing on L1, L2B/C data,
+substitute missing values with results of a 3x3 focal filter on the georeferenced
+data, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>wl_vnir</th>
+      <td><p>passed by caller - array of PRISMA VNIR wavelengths</p></td>
+    </tr>
+    <tr>
+      <th>order_vnir</th>
+      <td><p>passed by caller - ordering of array of PRISMA VNIR wavelengths</p></td>
+    </tr>
+    <tr>
+      <th>fwhm_vnir</th>
+      <td><p>passed by caller - array of PRISMA VNIR fwhms</p></td>
+    </tr>
+    <tr>
+      <th>apply_errmatrix</th>
+      <td><p>Not yet implemented!</p></td>
+    </tr>
+    <tr>
+      <th>ERR_MATRIX</th>
+      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
+SATURATION ERROR MATRIX is coded as:
+ 0=pixel ok;
+ 1=DEFECTIVE PIXEL from KDP
+ 2= Pixel in saturation.
+ 3= Pixel with lower radiometric accuracy, due to coregistration effects.
+ 4= Pixel becomes NaN or Inf during processing.</p></td>
+    </tr>
+    <tr>
+      <th>selbands_vnir</th>
+      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
+the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>in_L2_file</th>
+      <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
+info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
+fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
+data are also retrieved from the L2 file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>`Raster` georeferenced dataset</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The function is based on the "GLT and Bowtie Correction" technique used in ENVI, and
-described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
-Note that the 7x7 interpolation step for pixels still missing after the 3x3 interpolation is not (yet)
-implemented, as well as the nearest neighbour interpolation.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/raster/man/getValues.html'>getValues</a></code></p></div>
+    <p>the function is called for its side effects</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -210,7 +267,7 @@ implemented, as well as the nearest neighbour interpolation.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
