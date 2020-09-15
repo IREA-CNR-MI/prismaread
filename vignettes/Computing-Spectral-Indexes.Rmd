@@ -16,26 +16,58 @@ library(prismaread)
 
 Spectral Indexes to be computed can be selected from a list of predefined ones. To do so, either specify a vector of desired indexes as the `indexes` argument of `pr_convert` to compute them directly from the hdf prisma data:
 
-```{r index_1, eval=FALSE, message=FALSE, warning=FALSE}
-in_file <- "D:/prismaread/L2D/PRS_L2D_STD_20190616102249_20190616102253_0001.he5"
-pr_convert(in_file,
-               out_format = "ENVI",
-               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
-               indexes = c("GI", "MTCI"))
+```{r index_1, echo=TRUE, message=FALSE, warning=FALSE}
+testfile_l2D <- file.path(system.file("testdata/", package = "prismaread"),
+                          "PRS_L2D_STD_20200524103704_20200524103708_0001.he5")
+
+# Download and unzip using piggyback if necessary
+if (!file.exists(testfile_l2D)){
+  message("Downloading test data - This may need a long time!")
+  piggyback::pb_download("PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
+                         repo = "lbusett/prismaread",
+                         dest = file.path(system.file("", package = "prismaread"), "/testdata"))
+  piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
+  zipfile <- file.path(system.file("testdata/", package = "prismaread"),
+                       "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
+  unzip(zipfile, exdir = dirname(testfile_l2D))
+  unlink(zipfile)
+}
+out_folder_ind <- file.path(tempdir(), "prismaread/indexes")
+dir.create(out_folder_ind, recursive = TRUE)
+pr_convert(in_file    = testfile_l2D,
+           out_format = "ENVI",
+           out_folder = out_folder_ind, 
+           indexes    = c("GI", "MSAVI"))
 ```
 
-, or use function `pr_compute_indexes` to compute them starting from an hyperspectral cube already processed:
+, or use function `pr_compute_indexes` to compute them starting from an
+hyperspectral cube already processed (Note that this is a bit slower and you
+need to be sure that bands required to compute the index are available in the
+file you are using as input!):
 
-```{r index_2, eval=FALSE}
-in_file  <- "PRS_L2D_STD_20190616102249_20190616102253_0001_HCO_FULL.envi"
-out_file <- "D:/prismaread/L2D/testL2D/ENVI/outfile_indexes"
-pr_compute_indexes(in_file,
-                       out_file = out_file,
-                       out_format = "ENVI",
-                       indexes = c("GI", "MTCI"))
+```{r index_2, echo=TRUE, message=FALSE, warning=FALSE}
+in_file  <- system.file("testdata/prismaread_test_HCO_FULL.tif",
+                        package = "prismaread")
+out_folder_ind <- file.path(tempdir(), "prismaread/indexes2")
+dir.create(out_folder_ind, recursive = TRUE)
+out_file <- tempfile(fileext = ".tif", tmpdir = out_folder_ind)
+pr_compute_indexes(in_file    = in_file,
+                   out_file   = out_file,
+                   indexes    = c("GI", "MSAVI"))
 ```
 
 Output file names are created by adding a suffix corresponding to the indexes names to the base output filename. In addition, an ancillary file containing the formulas used to compute each index is saved (extension = *.formulas*) for reference. the file shows the formulas used, giving reference to the true wavelengths of the PRISMA bands used in the computation.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+list.files(dirname(out_file), full.names = T)
+
+MSAVI <- raster::raster(gsub(".tif", "_MSAVI.tif", out_file))
+# Remove NA areas to visualize better
+MSAVI[MSAVI == -0.5 ] <- NA
+
+mapview::mapview(MSAVI)
+```
+
 
 The list of available indexes, shown below, was derived from the list of spectral indexes available in package [`hsdar`](https://cran.r-project.org/web/packages/hsdar/hsdar.pdf), as well as from the list reported [HERE](https://cubert-gmbh.com/applications/vegetation-indices/).
 
@@ -52,13 +84,12 @@ pr_listindexes()
 Computation of spectral indexes can be done alongside extraction of spectral cubes/ancillary info. For example, this commands: 
 
 ```{r index2, eval=FALSE}
-in_file  <- "PRS_L2D_STD_20190616102249_20190616102253_0001_HCO_FULL.envi"
-out_file <- "D:/prismaread/L2D/testL2D/ENVI/outfile_indexes"
-pr_compute_indexes(in_file,
-                       out_file = out_file,
-                       VNIR = TRUE, LATLON = TRUE, ANGLES = TRUE,
-                       out_format = "ENVI",
-                       indexes = c("GI", "MTCI"))
+out_folder <- tempdir()
+pr_compute_indexes(in_file    = testfile_l2D,
+                   out_folder = out_folder,
+                   VNIR       = TRUE, LATLON = TRUE, ANGLES = TRUE,
+                   out_format = "ENVI",
+                   indexes    = c("GI", "MTCI"))
 ```
 
 will save in output the VNIR cube, LATLON and ANGLES datasets and compute and save
@@ -79,11 +110,12 @@ pr_addindex(Name = "myindex", Formula = "R600 / R700",
 Custom spectral indexes can also be computed on the fly by specifying the `cust_indexes`
 argument, as a __named list__, such as in:
 
-```{r l1example2, eval=FALSE}
-pr_convert(in_file,
-               out_format = "ENVI",
-               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
-               indexes = c("GI", "MTCI"), 
-               cust_indexes = list(myindex1 = "R500 / R600",
-                                   myindex2 = "(R800 - R680) / (R800 + R680)"))
+```{r l1example2, eval=FALSE, message=FALSE, warning=FALSE}
+out_folder <- file.path()
+pr_convert(testfile_l2D,
+           out_format = "ENVI",
+           out_folder = out_folder_ind, 
+           indexes = c("GI", "MTCI"), 
+           cust_indexes = list(myindex1 = "R500 / R600",
+                               myindex2 = "(R800 - R680) / (R800 + R680)"))
 ```

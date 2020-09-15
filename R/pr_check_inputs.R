@@ -1,5 +1,6 @@
 #' @title pr_check_inputs
-#' @description helper function used to check consistency of pr_convert arguments
+#' @description helper function used to check consistency of pr_convert
+#'  arguments
 #' @inheritParams pr_convert
 #' @return Upon success of all checks, the input hdf file, opened using
 #'  `hdf5r::H5File`
@@ -74,7 +75,7 @@ pr_check_inputs <- function(in_file, out_folder,
         if (source %in% c("HRC")) {
             message("Processing Level = 2 - Source modified to \"HCO\" by ",
                     "default")
-            source = "HCO"
+            source <- "HCO"
         }
     }
 

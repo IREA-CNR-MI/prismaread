@@ -8,6 +8,6 @@
 pr_listindexes <- function(){
     list <- read.table(system.file("extdata/indexes_list.txt",
                                    package = "prismaread"), sep = "\t",
-                       header = T)
+                       header = TRUE)
     DT::datatable(list)
 }

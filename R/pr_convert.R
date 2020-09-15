@@ -7,42 +7,48 @@
 #'  filename of the input prisma file, with appropriate suffixes. If a different
 #'  string is provided, it is used as prefix instead of the input file name,
 #'  Default: "auto"
-#' @param out_format `character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'
-#' @param base_georef `logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-#'  using the "Georeference from input GLT" procedure explained here:
+#' @param out_format `character`` ["GTiff" | "ENVI"], Output format, Default:
+#' 'GTiff'
+#' @param base_georef `logical` if TRUE, apply base georeferencing on L1, L2B/C
+#'  data, using the "Georeference from input GLT" procedure explained here:
 #'  https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
 #'  Default: TRUE
 #' @param fill_gaps `logical` if TRUE, when georeferencing on L1, L2B/C data,
-#'  substitute missing values with results of a 3x3 focal filter on the georeferenced
-#'  data, Default: TRUE
-#' @param source `character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'
+#'  substitute missing values with results of a 3x3 focal filter on the
+#'  georeferenced data, Default: FALSE
+#' @param source `character` ["HC0" | "HRC"], Considered Data Cub,
+#'  Default: 'HCO'
 #' @param VNIR `logical` if TRUE, create the VNIR image, Default: FALSE
 #' @param SWIR `logical` if TRUE, create the SWIR image, Default: FALSE
 #' @param FULL `logical` if TRUE, create a single multispectral image from
 #'  VNIR and SWIR, Default: FALSE
-#' @param join_priority `character` ["VNIR" | "SWIR"], spectrometer to consider in
-#'  the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+#' @param join_priority `character` ["VNIR" | "SWIR"], spectrometer to consider
+#'  when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
 #'  Default: "SWIR"
-#' @param ATCOR  logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;
+#' @param ATCOR  logical` if TRUE, create the text files required to run ATCOR,
+#'  Default: FALSE;
 #' @param ATCOR_wls  NULL, or `numeric` If NULL the only ATCOR wvl file
-#'  created is the one containing Nominal wavelengths. If a numeric vector is provided,
-#'  then one different wvl file is created for each selected COLUMN selected (e.g., if
-#'  providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
-#'  columns 200 and 800 are saved.)
-#' @param PAN   `logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)
-#' @param CLOUD `logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data).
+#'  created is the one containing Nominal wavelengths. If a numeric vector is
+#'  provided, then one different wvl file is created for each selected COLUMN
+#'  selected (e.g., if providing `ATCOR_wls = c(200, 800)`, then the wavelengths
+#'  and FWHMs related to columns 200 and 800 are saved.)
+#' @param PAN   `logical` if TRUE, also save PAN data, default: FALSE
+#' @param CLOUD `logical` if TRUE, also save CLOUD MASK mask data,
+#'  Default: FALSE (Ignored for L2 data).
 #'  It is coded as:
 #'    0 for not cloudy pixel
 #'    1 for cloudy pixel
 #'    10 = for not of all previous classification
 #'    255 = error
-#' @param GLINT `logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
+#' @param GLINT `logical` if TRUE, also save GLINT mask data, default: FALSE
+#' (Ignored for L2 data)
 #'   It is coded as:
 #'   0 for not sun glint
 #'   1 for sun glint
 #'   10 for not of all previous classification
 #'   255 = error
-#' @param LC `logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
+#' @param LC `logical` if TRUE, also save the LAND COVER data, default: FALSE
+#'  (Ignored for L2 data)
 #'  It is coded as:
 #'   0 for water pixel
 #'   1 for snow pixel (and ice)
@@ -53,86 +59,150 @@
 #'   6 for not-vegetated land pixel :urban component
 #'  10 for not of all previous classification
 #'  255 for error
-#' @param ANGLES if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
-#'  a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains "relaz_ang" and
-#'  Band 3 contains "solzen_ang"), default: FALSE
-#' @param LATLON if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
-#'  a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE
-#' @param ERR_MATRIX `logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
+#' @param ANGLES if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are
+#'  saved as a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains
+#'  "relaz_ang" and Band 3 contains "solzen_ang"), default: FALSE
+#' @param LATLON if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data
+#'  are saved as a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon",
+#'  Default: FALSE
+#' @param ERR_MATRIX `logical` if TRUE, also save the SATURATION ERROR MATRIX
+#' Data, Default: FALSE
 #'  SATURATION ERROR MATRIX is coded as:
 #'   0=pixel ok;
 #'   1=DEFECTIVE PIXEL from KDP
 #'   2= Pixel in saturation.
 #'   3= Pixel with lower radiometric accuracy, due to coregistration effects.
 #'   4= Pixel becomes NaN or Inf during processing.
-#' @param overwrite `logical` if TRUE, existing files are overwritten, default: FALSE
-#' @param apply_errmatrix Not yet implemented!
-#' @param in_L2_file `character` full path of an L2B/C file to be used to extract georeferencing
-#'  info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-#'  fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
-#'  data are also retrieved from the L2 file.
-#' @param selbands_vnir `numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-#'  the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL
-#' @param selbands_swir `numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-#'  the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL
+#' @param overwrite `logical` if TRUE, existing files are overwritten,
+#' Default: FALSE
+#' @param apply_errmatrix  `logical` if TRUE, set pixels with values above 0 in
+#'  the SATERR_MATRIX data cube (for L1) or ERRMATRIX cube (for L2) to NA,
+#'  Default: FALSE
+#' @param in_L2_file `character` full path of an L2B/C file to be used to
+#'  extract georeferencing info and angles for a corresponding L1 file. If not
+#'  NULL, and `in_file` is a L1 file, the LAT and LON fields used for bowtie
+#'  georeferencing are taken from the L2 file instead than from the L1 file.
+#'  The ANGLES data are also retrieved from the L2 file if requested.
+#' @param selbands_vnir `numeric array` containing wavelengths (in nanometers)
+#'  of bands that should be extracted from the VNIR data cube. If not NULL, only
+#'  the bands with wavelengths closest to these values are extracted,
+#'  Default: NULL
+#' @param selbands_swir `numeric array` containing wavelengths (in nanometers)
+#'  of bands that should be extracted from the SWIR data cube. If not NULL, only
+#'  the bands with wavelengths closest to these values are extracted,
+#'  Default: NULL
 #' @param indexes `character` array of names of indexes to be computed. You can
 #'  see a list of available indexes using command `pr_listindexes()`, or see
-#'  the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html
-#' @param cust_indexes `character` named list containing names and formulas of custom
-#'  indexes to be computed. The indexes formulas must be computable R formulas, where
-#'  bands are referred to by the prefix "b", followed by the wavelength (e.g.,
-#'  `cust_indexes = list(myindex1 = "R500 / R600",
-#'                       myindex2 = "(R800 - R680) / (R800 + R680)")`
-#' @param keep_index_cube `logical`, if TRUE, and spectral indexes were computed,
-#'  keep in the output folder the hyperspectral cube used to compute the indexes (
-#'  containing only wavelengths required to compute the desired indexes). The file
-#'  takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
-#'   deleted automatically afterwards. Default: FALSE
+#'  the corresponding table at:
+#'  https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
+#'  Default:NULL
+#' @param cust_indexes `character` named list containing names and formulas of
+#'  custom indexes to be computed. The indexes formulas must be computable R
+#'  formulas, where bands are referred to by the prefix "b", followed by the
+#'  wavelength (e.g.,`cust_indexes = list(myindex1 = "R500 / R600",
+#'                                myindex2 = "(R800 - R680) / (R800 + R680)")`,
+#'  Default:NULL
+#' @param keep_index_cube `logical`, if TRUE, and spectral indexes were
+#'  computed, keep in the output folder the hyperspectral cube used to compute
+#'  the indexes (containing only wavelengths required to compute the desired
+#'  indexes). The file takes a "_INDEXES" suffix. If FALSE, put the file in
+#'  tempdir so that it is deleted automatically afterwards. Default: FALSE
 #' @return The function is called for its side effects
 #' @examples
 #' \dontrun{
-#'  in_file    <- "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-#'  out_folder <- "/home/lb/tmp/test/"
-#'  out_format <- "ENVI"
 #'
-#'  # Save VNIR Cube image
+#' # Here we download the example file from github using `piggyback` if not already
+#' #  downloaded.
+#' # WARNING ! This may need a long time (1GB file)
+#
+#'testfile_l1 <- file.path(
+#' system.file("testdata/", package = "prismaread"),
+#'             "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5")
+#'
+#'if (!file.exists(testfile_l1)) {
+#'   message("Downloading test data - This may need a long time!")
+#'   piggyback::pb_download(
+#'            "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip",
+#'            repo = "lbusett/prismaread",
+#'            dest = file.path(
+#'            system.file("", package = "prismaread"), "/testdata"))
+#'   zipfile <- file.path(
+#'                     system.file("testdata/", package = "prismaread"),
+#'                     "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip")
+#'   unzip(zipfile, exdir = dirname(testfile_l1))
+#'   unlink(zipfile)
+#' }
+#' out_folder = file.path(tempdir(), "prismaread_l1")
+#'
+#' # Save separately the VNIR and SWIR spetral cubes, in Tiff format. Also save
+#' # LATLON, CLOUD and PAN
+#'
+#'  pr_convert(in_file    = testfile_l1,
+#'             out_folder = out_folder,
+#'             out_format = "GTiff",
+#'             VNIR       = TRUE,
+#'             SWIR       = TRUE,
+#'             LATLON     = TRUE,
+#'             PAN        = TRUE,
+#'             CLOUD      = TRUE)
+#'
+#'  # Save the full cube, prioritizing the SWIR spectrometer and save in ENVI
+#'  # format. Also save Cloud and LC data. Also, use a custom prefix for output
+#'  # files
+#'
+#'  pr_convert(in_file       = testfile_l1,
+#'             out_folder    = out_folder,
+#'             out_filebase  = "prismaout_2020_05-14",
+#'             out_format    = "ENVI",
+#'             FULL          = TRUE,
+#'             join_priority = "SWIR",
+#'             LC            = TRUE,
+#'             CLOUD         = TRUE,
+#'             overwrite     = TRUE
+#'             )
+#'
+#'  # Save a full image, prioritizing the VNIR spectrometer and save in TIF
+#'  # format. Also create ATCOR files, with Nominal wavelengths
+#'
 #'  pr_convert(in_file       = in_file,
-#'                 out_folder    = out_folder,
-#'                 out_format    = out_format,
-#'                 VNIR          = TRUE,
-#'                 SWIR          = TRUE,
-#'                 FULL          = FALSE,
-#'                 overwrite     = TRUE
-#'                 )
+#'             out_folder    = out_folder,
+#'             out_format    = "GTiff",
+#'             FULL          = TRUE,
+#'             join_priority = "VNIR",
+#'             ATCOR         = TRUE
+#'            )
 #'
-#'  # Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format
-#'  # Also save Cloud and LC data. Also, use a custom prefix for output files
-#'  pr_convert(in_file       = in_file,
-#'                 out_folder    = out_folder,
-#'                 out_filebase  = "prismaout_2020_05-14",
-#'                 out_format    = out_format,
-#'                 FULL          = TRUE,
-#'                 join_priority = "VNIR",
-#'                 LC            = TRUE,
-#'                 CLOUD         = TRUE,
-#'                 overwrite     = TRUE
-#'                 )
+#' # Save the VNIR cube only, asociating a L2 file to be able to retrieve
+#' # ANGLES data
+#' testfile_l1 <- file.path(system.file("testdata/", package = "prismaread"),
+#'                        "PRS_L2D_STD_20200524103704_20200524103708_0001.he5")
+#' testfile_l2 <- file.path(system.file("testdata/", package = "prismaread"),
+#'                         "PRS_L2C_STD_20200524103704_20200524103708_0001.he5")
 #'
-#'  # Save a full image, prioritizing the SWIR spectrometer and save in TIF format,
-#'  # Also create ATCOR files, with Nominal wavelengths
+#'# Here we download the example file from github if not already downloaded.
+#'# WARNING ! This may need a long time (1GB file)
 #'
-#'  pr_convert(in_file       = in_file,
-#'                 out_folder    = out_folder,
-#'                 out_format    = "TIF",
-#'                 FULL          = TRUE,
-#'                 join_priority = "VNIR",
-#'                 ATCOR         = TRUE,
-#'                 LC            = TRUE,
-#'                 CLOUD         = TRUE,
-#'                 overwrite     = TRUE
-#'                 )
+#'if (!file.exists(testfile_l2)){
+#'  message("Downloading test data - This may need a long time!")
+#'  piggyback::pb_download(
+#'                  "PRS_L2C_STD_20200524103704_20200524103708_0001.zip",
+#'                  repo = "lbusett/prismaread",
+#'                  dest = file.path(
+#'                        system.file("", package = "prismaread"), "/testdata"))
+#'  zipfile <- file.path(system.file("testdata/", package = "prismaread"),
+#'                       "PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
+#'  unzip(zipfile, exdir = dirname(testfile_l1))
+#'  unlink(zipfile)
+#'}
 #'
+#'out_folder = file.path(tempdir(), "prismaread_l2")
 #'
+#'pr_convert(in_file    = in_file,
+#'           in_L2_file = in_L2_file,
+#'           out_folder = out_folder,
+#'           out_format = "ENVI",
+#'           VNIR       = TRUE,
+#'           ANGLES     = TRUE)
 #' }
 #' @rdname pr_convert
 #' @export
@@ -146,7 +216,7 @@ pr_convert <- function(in_file,
                        out_filebase    = "auto",
                        out_format      = "ENVI",
                        base_georef     = TRUE,
-                       fill_gaps       = TRUE,
+                       fill_gaps       = FALSE,
                        VNIR            = FALSE,
                        SWIR            = FALSE,
                        FULL            = FALSE,
@@ -239,7 +309,7 @@ pr_convert <- function(in_file,
 
       index_list <- read.table(system.file("extdata/indexes_list.txt",
                                            package = "prismaread"), sep = "\t",
-                               header = T)
+                               header = TRUE)
       av_indexes <- as.list(index_list$Formula)
       names(av_indexes) <- index_list$Name
 
@@ -266,7 +336,7 @@ pr_convert <- function(in_file,
         }
       }
 
-      FULL = TRUE
+      FULL <- TRUE
     }
 
     # write ATCOR files if needed ----
@@ -401,14 +471,14 @@ pr_convert <- function(in_file,
     # wl_swir   <- wl_swir[wl_swir != 0]
 
     # create FULL data cube and convert to raster ----
-    if (FULL & is.null(indexes)){
+    if (FULL & is.null(indexes)) {
       out_file_full <- paste0(tools::file_path_sans_ext(out_file), "_", source,
                               "_FULL")
       out_file_full <- ifelse(out_format == "GTiff",
                               paste0(out_file_full, ".tif"),
                               paste0(out_file_full, ".envi"))
     } else {
-      if(keep_index_cube) {
+      if (keep_index_cube) {
         out_file_full <- paste0(tools::file_path_sans_ext(out_file), "_",
                                 source,
                                 "_INDEXES")
@@ -502,7 +572,7 @@ pr_convert <- function(in_file,
         }
 
         out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), ".wvl")
-        utils::write.table(data.frame(band   = 1:length(wl_tot),
+        utils::write.table(data.frame(band   = seq_along(wl_tot),
                                       orband = substring(names(rast_tot) , 2),
                                       wl   = wl_tot,
                                       fwhm = fwhm_tot,

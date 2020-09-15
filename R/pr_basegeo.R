@@ -1,19 +1,23 @@
 #' @title pr_basegeo
-#' @description Function used to create a georeferenced raster from L1/L2B/L2C datasets,
-#'  based on the Latitude and Longitude data, and exploiting the procedure described in
-#'  https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html
+#' @description Function used to create a georeferenced raster from L1/L2B/L2C
+#'  datasets, based on the Latitude and Longitude data, and exploiting the
+#'  procedure described in
+#'   https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html
 #' @param band `Raster` layer to be georeferenced
-#' @param lon `Matrix` containing the longitudes of each pixel (as derived from the
-#'  geolocation fields datasets of the hdf5)
-#' @param lat `Matrix` containing the latitudes of each pixel (as derived from the
-#'  geolocation fields datasets of the hdf5)
-#' @param fill_gaps `logical` If TRUE, pixels with no values in the georeferenced image are
-#'  filled based on a 3x3 average focal filter of the neighbouring valid pixels, Default: TRUE
+#' @param lon `Matrix` containing the longitudes of each pixel (as derived from
+#'  the geolocation fields datasets of the hdf5)
+#' @param lat `Matrix` containing the latitudes of each pixel (as derived from
+#'  the  geolocation fields datasets of the hdf5)
+#' @param fill_gaps `logical` If TRUE, pixels with no values in the
+#'  georeferenced image are filled based on a 3x3 average focal filter of the
+#'  neighbouring valid pixels, Default: TRUE
 #' @return `Raster` georeferenced dataset
-#' @details The function is based on the "GLT and Bowtie Correction" technique used in ENVI, and
-#' described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
-#' Note that the 7x7 interpolation step for pixels still missing after the 3x3 interpolation is not (yet)
-#' implemented, as well as the nearest neighbour interpolation.
+#' @details The function is based on the "GLT and Bowtie Correction" technique
+#' used in ENVI, and described in
+#' https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
+#' Note that the 7x7 interpolation step for pixels still missing after the 3x3
+#' interpolation is not (yet) implemented, as well as the nearest neighbour
+#' interpolation.
 #' @seealso
 #'  \code{\link[raster]{getValues}}
 #' @rdname pr_basegeo

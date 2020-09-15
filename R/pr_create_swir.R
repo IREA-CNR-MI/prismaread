@@ -1,10 +1,12 @@
 #' @title pr_create_swir
 #' @description helper function used to process and save the SWIR data cube
 #' @param f input data he5 from caller
-#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by
+#'  caller
 #' @param out_file_swir output file name for SWIR
 #' @param wl_swir passed by caller - array of PRISMA SWIR wavelengths
-#' @param order_swir passed by caller - ordering of array of PRISMA SWIR wavelengths
+#' @param order_swir passed by caller - ordering of array of PRISMA SWIR
+#'  wavelengths
 #' @param fwhm_swir passed by caller - array of PRISMA SWIR fwhms
 #' @inheritParams pr_convert
 #' @return the function is called for its side effects
@@ -206,7 +208,7 @@ pr_create_swir <- function(f,
 
     rm(rast_swir)
     out_file_txt <- paste0(tools::file_path_sans_ext(out_file_swir), ".wvl")
-    utils::write.table(data.frame(band = 1:length(wl_sub),
+    utils::write.table(data.frame(band = seq_along(wl_sub),
                                   orband = orbands,
                                   wl   = wl_sub,
                                   fwhm = fwhm_sub,

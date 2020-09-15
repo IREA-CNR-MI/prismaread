@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute spectral indexes from a PRISMA he5 file (or a file converted with pr_convert) — pr_compute_indexes • prismaread</title>
+<title>Compute spectral indexes from a PRISMA he5 file (or a file converted
+ with pr_convert) — pr_compute_indexes • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +47,10 @@
 
 
 
-<meta property="og:title" content="Compute spectral indexes from a PRISMA he5 file (or a file converted with pr_convert) — pr_compute_indexes" />
-<meta property="og:description" content="function used to compute spectral indexes, given the indexes formula" />
+<meta property="og:title" content="Compute spectral indexes from a PRISMA he5 file (or a file converted
+ with pr_convert) — pr_compute_indexes" />
+<meta property="og:description" content="function used to compute spectral indexes, given the indexes
+ formula" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -146,13 +149,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute spectral indexes from a PRISMA he5 file (or a file converted with pr_convert)</h1>
+    <h1>Compute spectral indexes from a PRISMA he5 file (or a file converted
+ with pr_convert)</h1>
     <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_compute_indexes.R'><code>R/pr_compute_indexes.R</code></a></small>
     <div class="hidden name"><code>pr_compute_indexes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>function used to compute spectral indexes, given the indexes formula</p>
+    <p>function used to compute spectral indexes, given the indexes
+ formula</p>
     </div>
 
     <pre class="usage"><span class='fu'>pr_compute_indexes</span>(
@@ -173,30 +178,33 @@
     </tr>
     <tr>
       <th>out_file</th>
-      <td><p>`character` output path - filenames are created adding a suffix to
-the basename of this file (e.g., S:/mypath/myoutfile_NDVI.tif)</p></td>
+      <td><p>`character` output path - filenames are created adding a
+suffix to the basename of this file (e.g., S:/mypath/myoutfile_NDVI.tif)</p></td>
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default:
+'GTiff'</p></td>
     </tr>
     <tr>
       <th>indexes</th>
       <td><p>`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
-the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html</p></td>
+the corresponding table at:
+https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html #nolint</p></td>
     </tr>
     <tr>
       <th>cust_indexes</th>
-      <td><p>`character` named list containing names and formulas of custom
-indexes to be computed. The indexes formulas must be computable R formulas, where
-bands are referred to by the prefix "b", followed by the wavelength (e.g.,
-`cust_indexes = list(myindex1 = "R500 / R600",
-                     myindex2 = "(R800 - R680) / (R800 + R680)")`</p></td>
+      <td><p>`character` named list containing names and formulas of
+custom indexes to be computed. The indexes formulas must be computable R
+formulas, where bands are referred to by the prefix "b", followed by the
+wavelength (e.g., `cust_indexes = list(myindex1 = "R500 / R600",
+                                myindex2 = "(R800 - R680) / (R800 + R680)")`</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>`logical` if TRUE, existing files are overwritten, default: FALSE</p></td>
+      <td><p>`logical` if TRUE, existing files are overwritten,
+default: FALSE</p></td>
     </tr>
     </table>
 
@@ -205,9 +213,10 @@ bands are referred to by the prefix "b", followed by the wavelength (e.g.,
     <p>NULL - new raster file saved in out_filename</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>the function parses the index formula to identify the required bands. On the basis
-  of identified bands, it retrieves the reflectance bands required, gets the data into R raster
-  objects, performs the computation and stores results in a GeoTiff or ENVI raster file</p>
+    <p>the function parses the index formula to identify the required
+  bands. On the basis of identified bands, it retrieves the reflectance bands
+  required, gets the data into R raster objects, performs the computation and
+  stores results in a GeoTiff or ENVI raster file</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>License: GPL 3.0</p>
@@ -231,7 +240,7 @@ bands are referred to by the prefix "b", followed by the wavelength (e.g.,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

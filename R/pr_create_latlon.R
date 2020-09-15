@@ -2,7 +2,8 @@
 #' @description helper function used to process and save LAT LON datasets
 #' @param f input data he5 from caller
 #' @param out_file output file name for the dataset
-#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by
+#'  caller
 #' @inheritParams pr_convert
 #' @return The function is called for its side effects
 #' @importFrom raster raster flip extent setExtent

@@ -47,9 +47,10 @@
 
 
 <meta property="og:title" content="pr_basegeo — pr_basegeo" />
-<meta property="og:description" content="Function used to create a georeferenced raster from L1/L2B/L2C datasets,
- based on the Latitude and Longitude data, and exploiting the procedure described in
- https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html" />
+<meta property="og:description" content="Function used to create a georeferenced raster from L1/L2B/L2C
+ datasets, based on the Latitude and Longitude data, and exploiting the
+ procedure described in
+  https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html" />
 <meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
 
 
@@ -154,9 +155,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Function used to create a georeferenced raster from L1/L2B/L2C datasets,
- based on the Latitude and Longitude data, and exploiting the procedure described in
- https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html</p>
+    <p>Function used to create a georeferenced raster from L1/L2B/L2C
+ datasets, based on the Latitude and Longitude data, and exploiting the
+ procedure described in
+  https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html</p>
     </div>
 
     <pre class="usage"><span class='fu'>pr_basegeo</span>(<span class='kw'>band</span>, <span class='kw'>lon</span>, <span class='kw'>lat</span>, fill_gaps = <span class='fl'>TRUE</span>)</pre>
@@ -170,18 +172,19 @@
     </tr>
     <tr>
       <th>lon</th>
-      <td><p>`Matrix` containing the longitudes of each pixel (as derived from the
-geolocation fields datasets of the hdf5)</p></td>
+      <td><p>`Matrix` containing the longitudes of each pixel (as derived from
+the geolocation fields datasets of the hdf5)</p></td>
     </tr>
     <tr>
       <th>lat</th>
-      <td><p>`Matrix` containing the latitudes of each pixel (as derived from the
-geolocation fields datasets of the hdf5)</p></td>
+      <td><p>`Matrix` containing the latitudes of each pixel (as derived from
+the  geolocation fields datasets of the hdf5)</p></td>
     </tr>
     <tr>
       <th>fill_gaps</th>
-      <td><p>`logical` If TRUE, pixels with no values in the georeferenced image are
-filled based on a 3x3 average focal filter of the neighbouring valid pixels, Default: TRUE</p></td>
+      <td><p>`logical` If TRUE, pixels with no values in the
+georeferenced image are filled based on a 3x3 average focal filter of the
+neighbouring valid pixels, Default: TRUE</p></td>
     </tr>
     </table>
 
@@ -190,10 +193,12 @@ filled based on a 3x3 average focal filter of the neighbouring valid pixels, Def
     <p>`Raster` georeferenced dataset</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function is based on the "GLT and Bowtie Correction" technique used in ENVI, and
-described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
-Note that the 7x7 interpolation step for pixels still missing after the 3x3 interpolation is not (yet)
-implemented, as well as the nearest neighbour interpolation.</p>
+    <p>The function is based on the "GLT and Bowtie Correction" technique
+used in ENVI, and described in
+https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html.
+Note that the 7x7 interpolation step for pixels still missing after the 3x3
+interpolation is not (yet) implemented, as well as the nearest neighbour
+interpolation.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/raster/man/getValues.html'>getValues</a></code></p></div>
@@ -213,7 +218,7 @@ implemented, as well as the nearest neighbour interpolation.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

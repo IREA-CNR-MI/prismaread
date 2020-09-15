@@ -128,3 +128,4 @@
 "127"	"VOG3"	"Vogelmann Index"	"(R734 - R747)/(R715 + R720)"	"Chlorophyll"	"Vogelmann (1993)"
 "128"	"ZTM"	"Zarco-Tejada & Miller"	"R750 / R710"	"Chlorophyll"	"Zarco-Tejada et al. (2001)"
 "129"	"myindex"	"My custom Index"	"R600 / R700"	NA	"Me (2020)"
+"130"	"009066L"	"My custom Index"	"R600 / R700"	NA	"Me (2020)"

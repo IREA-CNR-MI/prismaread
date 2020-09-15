@@ -2,7 +2,8 @@
 % Please edit documentation in R/pr_compute_indexes.R
 \name{pr_compute_indexes}
 \alias{pr_compute_indexes}
-\title{Compute spectral indexes from a PRISMA he5 file (or a file converted with pr_convert)}
+\title{Compute spectral indexes from a PRISMA he5 file (or a file converted
+ with pr_convert)}
 \usage{
 pr_compute_indexes(
   in_file,
@@ -16,33 +17,38 @@ pr_compute_indexes(
 \arguments{
 \item{in_file}{`character` path of the file to be used for computing indexes}
 
-\item{out_file}{`character` output path - filenames are created adding a suffix to
-the basename of this file (e.g., S:/mypath/myoutfile_NDVI.tif)}
+\item{out_file}{`character` output path - filenames are created adding a
+suffix to the basename of this file (e.g., S:/mypath/myoutfile_NDVI.tif)}
 
-\item{out_format}{`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'}
+\item{out_format}{`character`` ["GTiff" | "ENVI"], Output format, Default:
+'GTiff'}
 
 \item{indexes}{`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
-the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html}
+the corresponding table at:
+https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html #nolint}
 
-\item{cust_indexes}{`character` named list containing names and formulas of custom
-indexes to be computed. The indexes formulas must be computable R formulas, where
-bands are referred to by the prefix "b", followed by the wavelength (e.g.,
-`cust_indexes = list(myindex1 = "R500 / R600",
-                     myindex2 = "(R800 - R680) / (R800 + R680)")`}
+\item{cust_indexes}{`character` named list containing names and formulas of
+custom indexes to be computed. The indexes formulas must be computable R
+formulas, where bands are referred to by the prefix "b", followed by the
+wavelength (e.g., `cust_indexes = list(myindex1 = "R500 / R600",
+                                myindex2 = "(R800 - R680) / (R800 + R680)")`}
 
-\item{overwrite}{`logical` if TRUE, existing files are overwritten, default: FALSE}
+\item{overwrite}{`logical` if TRUE, existing files are overwritten,
+default: FALSE}
 }
 \value{
 NULL - new raster file saved in out_filename
 }
 \description{
-function used to compute spectral indexes, given the indexes formula
+function used to compute spectral indexes, given the indexes
+ formula
 }
 \details{
-the function parses the index formula to identify the required bands. On the basis
-  of identified bands, it retrieves the reflectance bands required, gets the data into R raster
-  objects, performs the computation and stores results in a GeoTiff or ENVI raster file
+the function parses the index formula to identify the required
+  bands. On the basis of identified bands, it retrieves the reflectance bands
+  required, gets the data into R raster objects, performs the computation and
+  stores results in a GeoTiff or ENVI raster file
 }
 \note{
 License: GPL 3.0

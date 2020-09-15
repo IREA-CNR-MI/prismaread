@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert — pr_extract_spectra • prismaread</title>
+<title>Extract values and statistics from a PRISMA hyperspectral cube
+ converted with pr_convert — pr_extract_spectra • prismaread</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +47,8 @@
 
 
 
-<meta property="og:title" content="Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert — pr_extract_spectra" />
+<meta property="og:title" content="Extract values and statistics from a PRISMA hyperspectral cube
+ converted with pr_convert — pr_extract_spectra" />
 <meta property="og:description" content="function to extract values of a PRISMA image converted
  with prismaread on points/polygons saved on a vector file or on
  a `sf` object" />
@@ -148,7 +150,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert</h1>
+    <h1>Extract values and statistics from a PRISMA hyperspectral cube
+ converted with pr_convert</h1>
     <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_extract_spectra.R'><code>R/pr_extract_spectra.R</code></a></small>
     <div class="hidden name"><code>pr_extract_spectra.Rd</code></div>
     </div>
@@ -182,73 +185,78 @@
     </tr>
     <tr>
       <th>in_vect</th>
-      <td><p>either the full path to a vector file, or a `sf` object containing
-the points/polygons on which data should be extracted</p></td>
+      <td><p>either the full path to a vector file, or a `sf` object
+containing the points/polygons on which data should be extracted</p></td>
     </tr>
     <tr>
       <th>id_field</th>
       <td><p>`character` (Optional), name of the column of the vector
-dataset to be used to "name" the outputs, and also "aggregate" them in case `dissolve` is TRUE.
+dataset to be used to "name" the outputs, and also "aggregate" them in case
+`dissolve` is TRUE.
 If NULL, a arbitrary `ID` field is created, and each point/polygon
 is considered separately (see Details),  Default: NULL</p></td>
     </tr>
     <tr>
       <th>dissolve</th>
-      <td><p>`logical` If TRUE and `id_field` was specified, in case multiple features of the input
-vector share a common id, they are dissolved before extracting the data, Default: FALSE</p></td>
+      <td><p>`logical` If TRUE and `id_field` was specified, in case
+multiple features of the input vector share a common id, they are dissolved
+before extracting the data, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>stats</th>
-      <td><p>`logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
-on the vector features, Default: TRUE</p></td>
+      <td><p>`logical` IF TRUE, compute standard statistics (mean, min, max,
+sd, variation coefficient) on the vector features. Statistics to be
+computed are set using the `selstats` argument, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>selstats</th>
-      <td><p>`character` containing the statistics to be computed. Possible values are:
-"mean", "stdev","variance","coefficient_of_variation",
-"min","max"</p></td>
+      <td><p>`character` containing the statistics to be computed.
+Possible values are: "mean", "stdev","variance","coeffvar", "min","max",
+Default: c("mean", "stdev")</p></td>
     </tr>
     <tr>
       <th>stats_format</th>
-      <td><p>`character` ["long" | "wide"] defines the format used for statistics output.
-If "long", the output has one column for the ID of the feature, and one column for each statistic.
-If "wide", the output has one column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2, etcetera)</p></td>
+      <td><p>`character` ["long" | "wide"] defines the format used for
+statistics output. If "long", the output has one column for the ID of the
+feature, and one column for each statistic. If "wide", the output has one
+column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2,
+etcetera)</p></td>
     </tr>
     <tr>
       <th>quantiles</th>
-      <td><p>`logical`, if TRUE, also compute quantiles on the vector features. Computed quantiles
-are set using the `percs` argument, Default: FALSE</p></td>
+      <td><p>`logical`, if TRUE, also compute quantiles on the vector
+features. Computed quantiles are set using the `percs` argument,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>percs</th>
-      <td><p>`(sorted) numeric array [0,1]` defines which quantiles should be computed if
-`quantiles` is TRUE, Default: c(5,25,50,75,95)</p></td>
+      <td><p>`(sorted) numeric array [0,1]` defines which quantiles should be
+computed if `quantiles` is TRUE, Default: c(0.05,0.25,0.50,0.75,0.95)</p></td>
     </tr>
     <tr>
       <th>allpix</th>
-      <td><p>`logical` IF TRUE, also save the values for all pixels of the `in_vect`
-features in the `allpix` slot of the output list, Default: FALSE</p></td>
+      <td><p>`logical` IF TRUE, also save the values for all pixels of the
+`in_vect` features in the `allpix` slot of the output list, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>out_file</th>
-      <td><p>`character` full path of an output file where results should be stored, with
-extension. Valid extensions are ".csv", ".xls", ".xlsx" and ".RData". If NULL, output
-is not saved, Default: NULL</p></td>
+      <td><p>`character` full path of an output file where results should
+be stored, with extension. Valid extensions are ".csv", ".xls", ".xlsx"
+and ".RData". If NULL, output is not saved, Default: NULL</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>format of the output varies based on arguments `allpix` and `stats`
- 1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted statistics,
-    for each feature of the input and each wavelength. Format depends on `stat_sformat`;
- 2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted raster values,
-    for each pixel of each feature of the input and each wavelength;
- 3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot contains
-    statistics, and the `allpix` slot contains pixel values;</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+ 1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted
+    statistics, for each feature of the input and each wavelength.
+    Format depends on `stat_sformat`;
+ 2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted
+    raster values for each pixel of each feature of the input and each
+    wavelength;
+ 3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot
+    contains statistics, and the `allpix` slot contains pixel values;</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
@@ -256,7 +264,8 @@ is not saved, Default: NULL</p></td>
  <span class='kw'>in_file</span> <span class='op'>&lt;-</span> <span class='st'>"D:/prismareaetd/L2D/testL2D_HCO_VNIR.envi"</span>
  <span class='kw'>in_vect</span> <span class='op'>&lt;-</span> <span class='st'>"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
  <span class='co'># extract base statistics</span>
- <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, out_file = <span class='st'>"D:/Temp/test1.xlsx"</span>)
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>,
+                            out_file = <span class='st'>"D:/Temp/test1.xlsx"</span>)
  <span class='kw'>test</span>
  <span class='co'># plot results using ggplot</span>
  <span class='fu'>ggplot</span>(<span class='kw'>test</span>, <span class='fu'>aes</span>(x = <span class='kw'>wvl</span>, y = <span class='kw'>mean</span>)) <span class='op'>+</span>
@@ -265,13 +274,15 @@ is not saved, Default: NULL</p></td>
    <span class='fu'>theme_light</span>()
 
  <span class='co'># extract base statistics ands save results as excel file, in "wide" format</span>
- <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, out_file = <span class='st'>"D:/Temp/test1.xlsx"</span>,
-                                stats_format = <span class='st'>"wide"</span>)
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>,
+                            out_file = <span class='st'>"D:/Temp/test1.xlsx"</span>,
+                            stats_format = <span class='st'>"wide"</span>)
  <span class='kw'>test</span>
 
  <span class='co'># extract custom statistics</span>
  <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>,
-                                selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"coeffvar"</span>, <span class='st'>"stdev"</span>, <span class='st'>"min"</span>, <span class='st'>"max"</span>))
+                            selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"coeffvar"</span>, <span class='st'>"stdev"</span>,
+                                         <span class='st'>"min"</span>, <span class='st'>"max"</span>))
  <span class='co'># plot results using ggplot</span>
  <span class='fu'>ggplot</span>(<span class='kw'>test</span>, <span class='fu'>aes</span>(x = <span class='kw'>wvl</span>)) <span class='op'>+</span>
    <span class='fu'>geom_line</span>(<span class='fu'>aes</span>(y = <span class='kw'>mean</span>, color = <span class='kw'>ID</span>, group = <span class='kw'>ID</span>)) <span class='op'>+</span>
@@ -286,8 +297,9 @@ is not saved, Default: NULL</p></td>
  <span class='kw'>test</span>
 
  <span class='co'># extract also all pixels</span>
- <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, allpix = <span class='fl'>TRUE</span>, quantiles = <span class='fl'>TRUE</span>,
-                                selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
+ <span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>pr_extract_spectra</span>(<span class='kw'>in_file</span>, <span class='kw'>in_vect</span>, allpix = <span class='fl'>TRUE</span>,
+                            quantiles = <span class='fl'>TRUE</span>,
+                            selstats = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mean"</span>, <span class='st'>"stdev"</span>))
  <span class='kw'>test</span><span class='op'>$</span><span class='kw'>allpix</span>
 
  <span class='fu'>ggplot</span>(<span class='kw'>test</span><span class='op'>$</span><span class='kw'>allpix</span>, <span class='fu'>aes</span>(x = <span class='kw'>wvl</span>)) <span class='op'>+</span>
@@ -313,7 +325,7 @@ is not saved, Default: NULL</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

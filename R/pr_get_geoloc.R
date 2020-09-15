@@ -3,16 +3,17 @@
 #'  from PRISMA data on VNIR and SWIR cubes
 #' @return `list` containing required info according to `proc_lev`
 #' @param f input data he5 from caller
-#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by
+#'  caller
 #' @param wvl `character` "VNIR" or "SWIR" - passed by caller
 #' @inheritParams pr_convert
 #' @importFrom hdf5r h5attr
 #'
 pr_get_geoloc <- function(f,
-                              proc_lev,
-                              source,
-                              wvl        = NULL,
-                              in_L2_file = NULL) {
+                          proc_lev,
+                          source,
+                          wvl        = NULL,
+                          in_L2_file = NULL) {
 
     if (proc_lev == "1") {
         if (is.null(in_L2_file)) {
@@ -58,20 +59,24 @@ pr_get_geoloc <- function(f,
                 stop("in_L2_file is not a L2 PRISMA file. Aborting!")
             }
             if (wvl != "PAN") {
-                lat <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L",
-                                            proc_lev_f2, "_", source,
-                                            "/Geolocation Fields/Latitude")]][,])
-                lon <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L",
-                                            proc_lev_f2, "_",
-                                            source,
-                                            "/Geolocation Fields/Longitude")]][,])
+                lat <- raster::t(f2[[paste0(
+                    "/HDFEOS/SWATHS/PRS_L",
+                    proc_lev_f2, "_", source,
+                    "/Geolocation Fields/Latitude")]][,])
+                lon <- raster::t(f2[[paste0(
+                    "/HDFEOS/SWATHS/PRS_L",
+                    proc_lev_f2, "_",
+                    source,
+                    "/Geolocation Fields/Longitude")]][,])
             } else {
-                lat <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2,
-                                            "_", gsub("H", "P", source),
-                                            "/Geolocation Fields/Latitude")]][,])
-                lon <- raster::t(f2[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev_f2,
-                                            "_", gsub("H", "P", source),
-                                            "/Geolocation Fields/Longitude")]][,])
+                lat <- raster::t(f2[[paste0(
+                    "/HDFEOS/SWATHS/PRS_L", proc_lev_f2,
+                    "_", gsub("H", "P", source),
+                    "/Geolocation Fields/Latitude")]][,])
+                lon <- raster::t(f2[[paste0(
+                    "/HDFEOS/SWATHS/PRS_L", proc_lev_f2,
+                    "_", gsub("H", "P", source),
+                    "/Geolocation Fields/Longitude")]][,])
             }
         }
         out <- list(lat = lat, lon = lon)
@@ -94,8 +99,8 @@ pr_get_geoloc <- function(f,
                                        "_", gsub("H", "P", source),
                                        "/Geolocation Fields/Latitude")]][,])
             lon <- raster::t(f[[paste0("/HDFEOS/SWATHS/PRS_L", proc_lev,
-                "_", gsub("H", "P", source),
-                "/Geolocation Fields/Longitude")]][,])
+                                       "_", gsub("H", "P", source),
+                                       "/Geolocation Fields/Longitude")]][,])
         }
         if (proc_lev == "2D") {
             # If plev = L2D, get also the corners and projection ----

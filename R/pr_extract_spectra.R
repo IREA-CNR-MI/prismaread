@@ -1,48 +1,57 @@
-#' @title Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert
+#' @title Extract values and statistics from a PRISMA hyperspectral cube
+#'  converted with pr_convert
 #' @description function to extract values of a PRISMA image converted
 #'  with prismaread on points/polygons saved on a vector file or on
 #'  a `sf` object
 #' @param in_file input PRISMA file obtained with `pr_convert`
-#' @param in_vect either the full path to a vector file, or a `sf` object containing
-#'  the points/polygons on which data should be extracted
+#' @param in_vect either the full path to a vector file, or a `sf` object
+#'  containing the points/polygons on which data should be extracted
 #' @param id_field `character` (Optional), name of the column of the vector
-#'  dataset to be used to "name" the outputs, and also "aggregate" them in case `dissolve` is TRUE.
+#'  dataset to be used to "name" the outputs, and also "aggregate" them in case
+#'  `dissolve` is TRUE.
 #'  If NULL, a arbitrary `ID` field is created, and each point/polygon
 #'  is considered separately (see Details),  Default: NULL
-#' @param dissolve `logical` If TRUE and `id_field` was specified, in case multiple features of the input
-#'  vector share a common id, they are dissolved before extracting the data, Default: FALSE
-#' @param stats `logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
-#'  on the vector features, Default: TRUE
-#' @param selstats `character` containing the statistics to be computed. Possible values are:
-#'   "mean", "stdev","variance","coeffvar",
-#'   "min","max"
-#' @param stats_format `character` ["long" | "wide"] defines the format used for statistics output.
-#'  If "long", the output has one column for the ID of the feature, and one column for each statistic.
-#'  If "wide", the output has one column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2, etcetera)
-#' @param quantiles `logical`, if TRUE, also compute quantiles on the vector features. Computed quantiles
-#'  are set using the `percs` argument, Default: FALSE
-#' @param percs `(sorted) numeric array [0,1]` defines which quantiles should be computed if
-#'  `quantiles` is TRUE, Default: c(0.05,0.25,0.50,0.75,0.95)
-#' @param allpix `logical` IF TRUE, also save the values for all pixels of the `in_vect`
-#'  features in the `allpix` slot of the output list, Default: FALSE
-#' @param out_file `character` full path of an output file where results should be stored, with
-#'  extension. Valid extensions are ".csv", ".xls", ".xlsx" and ".RData". If NULL, output
-#'  is not saved, Default: NULL
+#' @param dissolve `logical` If TRUE and `id_field` was specified, in case
+#'  multiple features of the input vector share a common id, they are dissolved
+#'  before extracting the data, Default: FALSE
+#' @param stats `logical` IF TRUE, compute standard statistics (mean, min, max,
+#'  sd, variation coefficient) on the vector features. Statistics to be
+#'  computed are set using the `selstats` argument, Default: TRUE
+#' @param selstats `character` containing the statistics to be computed.
+#'   Possible values are: "mean", "stdev","variance","coeffvar", "min","max",
+#'   Default: c("mean", "stdev")
+#' @param stats_format `character` ["long" | "wide"] defines the format used for
+#'  statistics output. If "long", the output has one column for the ID of the
+#'  feature, and one column for each statistic. If "wide", the output has one
+#'  column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2,
+#'  etcetera)
+#' @param quantiles `logical`, if TRUE, also compute quantiles on the vector
+#'  features. Computed quantiles are set using the `percs` argument,
+#'  Default: FALSE
+#' @param percs `(sorted) numeric array [0,1]` defines which quantiles should be
+#'  computed if `quantiles` is TRUE, Default: c(0.05,0.25,0.50,0.75,0.95)
+#' @param allpix `logical` IF TRUE, also save the values for all pixels of the
+#'  `in_vect` features in the `allpix` slot of the output list, Default: FALSE
+#' @param out_file `character` full path of an output file where results should
+#'  be stored, with extension. Valid extensions are ".csv", ".xls", ".xlsx"
+#'  and ".RData". If NULL, output is not saved, Default: NULL
 #' @return format of the output varies based on arguments `allpix` and `stats`
-#'  1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted statistics,
-#'     for each feature of the input and each wavelength. Format depends on `stat_sformat`;
-#'  2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted raster values,
-#'     for each pixel of each feature of the input and each wavelength;
-#'  3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot contains
-#'     statistics, and the `allpix` slot contains pixel values;
-#' @details DETAILS
+#'  1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted
+#'     statistics, for each feature of the input and each wavelength.
+#'     Format depends on `stat_sformat`;
+#'  2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted
+#'     raster values for each pixel of each feature of the input and each
+#'     wavelength;
+#'  3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot
+#'     contains statistics, and the `allpix` slot contains pixel values;
 #' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  in_file <- "D:/prismareaetd/L2D/testL2D_HCO_VNIR.envi"
 #'  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
 #'  # extract base statistics
-#'  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx")
+#'  test <- pr_extract_spectra(in_file, in_vect,
+#'                             out_file = "D:/Temp/test1.xlsx")
 #'  test
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl, y = mean)) +
@@ -51,13 +60,15 @@
 #'    theme_light()
 #'
 #'  # extract base statistics ands save results as excel file, in "wide" format
-#'  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
-#'                                 stats_format = "wide")
+#'  test <- pr_extract_spectra(in_file, in_vect,
+#'                             out_file = "D:/Temp/test1.xlsx",
+#'                             stats_format = "wide")
 #'  test
 #'
 #'  # extract custom statistics
 #'  test <- pr_extract_spectra(in_file, in_vect,
-#'                                 selstats = c("mean", "coeffvar", "stdev", "min", "max"))
+#'                             selstats = c("mean", "coeffvar", "stdev",
+#'                                          "min", "max"))
 #'  # plot results using ggplot
 #'  ggplot(test, aes(x = wvl)) +
 #'    geom_line(aes(y = mean, color = ID, group = ID)) +
@@ -72,8 +83,9 @@
 #'  test
 #'
 #'  # extract also all pixels
-#'  test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE, quantiles = TRUE,
-#'                                 selstats = c("mean", "stdev"))
+#'  test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
+#'                             quantiles = TRUE,
+#'                             selstats = c("mean", "stdev"))
 #'  test$allpix
 #'
 #'  ggplot(test$allpix, aes(x = wvl)) +
@@ -119,13 +131,13 @@ pr_extract_spectra <- function(in_file,
   }
 
   if (!is.null(out_file)) {
-    if(!dir.exists(dirname(out_file))) {
+    if (!dir.exists(dirname(out_file))) {
       stop("Folder specified for the output does not exist.
                  Please create it beforehand! Aborting!")
     } else {
       basefilename <- tools::file_path_sans_ext(out_file)
       ext <- tools::file_ext(out_file)
-      if (!(ext %in% c("RData", "csv", "xls", "xlsx"))){
+      if (!(ext %in% c("RData", "csv", "xls", "xlsx"))) {
         stop("Extension for output file must be
                      \"RData\", \"csv\", \"xls\" or \"xlsx\". Aborting!")
       }
@@ -133,7 +145,7 @@ pr_extract_spectra <- function(in_file,
   }
 
   if (!is.null(out_file)) {
-    if(!dir.exists(dirname(out_file))) {
+    if (!dir.exists(dirname(out_file))) {
       stop("Folder specified for the output does not exist.
                  Please create it beforehand! Aborting!")
     } else {
@@ -149,14 +161,14 @@ pr_extract_spectra <- function(in_file,
 
   if (!in_type %in% c("VNIR", "SWIR", "FULL", "PAN", "LC", "CLD", "GLINT",
                       "ANGLES", "LATLON")) {
-    stop("Input file does not seem to be a hyperspectral PRISMA file obtained from ",
-         "pr_convert. Aborting!")
+    stop("Input file does not seem to be a hyperspectral PRISMA file obtained",
+         "from pr_convert. Aborting!")
   }
 
   if (in_type %in% c("VNIR", "SWIR", "FULL")) {
     in_file_wvl <- paste0(tools::file_path_sans_ext(in_file), ".wvl")
     wvl_ok <- FALSE
-    if (tools::file_ext(in_file) == "envi"){
+    if (tools::file_ext(in_file) == "envi") {
       # attempt to retrieve wavelengths from band names (works for ENVI files)
       tmpnames <- names(in_rast)
       tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
@@ -177,8 +189,8 @@ pr_extract_spectra <- function(in_file,
         if (is.numeric(wvls) && all(!is.na(wvls))) {
           wvl_ok <- TRUE
         } else {
-          message("Unable to retrieve wavelengths from .wvl file. Wavelengths set to
-                            band index.")
+          message("Unable to retrieve wavelengths from .wvl file. Wavelengths ",
+                  "set to band index.")
           wvl <- 1:dim(in_rast)[3]
         }
       } else {
@@ -198,10 +210,10 @@ pr_extract_spectra <- function(in_file,
   }
 
   # Get the vector dataset ----
-  if(is.character(in_vect)){
-    if(file.exists(in_vect)) {
+  if (is.character(in_vect)) {
+    if (file.exists(in_vect)) {
       in_sf <- try(sf::st_read(in_vect, quiet = TRUE))
-      if(inherits(in_sf, "try-error")) {
+      if (inherits(in_sf, "try-error")) {
         stop("in_vect does not appear to be a valid vector file. Aborting!")
       }
     } else {
@@ -217,10 +229,10 @@ pr_extract_spectra <- function(in_file,
   }
 
   # dissolve features if needed ----
-  if (dissolve && !is.null(id_field)){
-    if(length(in_sf[[id_field]]) != length(unique(in_sf[[id_field]]))){
+  if (dissolve && !is.null(id_field)) {
+    if (length(in_sf[[id_field]]) != length(unique(in_sf[[id_field]]))) {
       in_sf <- in_sf %>%
-        dplyr::group_by(!!rlang::sym(id_field))%>%
+        dplyr::group_by(!!rlang::sym(id_field)) %>%
         dplyr::summarise()
     }
   }
@@ -250,8 +262,6 @@ pr_extract_spectra <- function(in_file,
       colnames(out_vect) <- paste0("id_", seq_len(dim(in_sf)[1]))
     }
 
-
-
     varnames <- rep(selstats, each = dim(in_rast)[3])
 
     out_df <- data.frame(wvl = wvls, var = varnames, out_vect, row.names = NULL)
@@ -266,6 +276,7 @@ pr_extract_spectra <- function(in_file,
   }
   # extract the pixels if needed----
   if (allpix | (stats & quantiles)) {
+
     message("Extracting pixel data")
     out_all_tmp <- exactextractr::exact_extract(in_rast, in_sf,
                                                 progress = FALSE)
@@ -290,12 +301,13 @@ pr_extract_spectra <- function(in_file,
       colnames(out_df_w_all) <- c(
         "wvl",
         paste0("pix_",
-               stringr::str_pad(seq_along(colnames(tmp)), max(nchar(colnames(tmp))),
+               stringr::str_pad(seq_along(colnames(tmp)),
+                                max(nchar(colnames(tmp))),
                                 "left", "0")))
       out_df_w_all$wvl <- as.numeric(as.character(out_df_w_all$wvl))
       # out_df_l_all <- out_df_all %>%
       #     tidyr::pivot_longer(., 3:dim(.)[2], names_to = "PIX")
-      out_df_w_all$ID <- ifelse(is.null("id_field"), in_sf$id_field[[ind]],
+      out_df_w_all$ID <- ifelse(!is.null(id_field), as.character(in_sf[[id_field]][[ind]]),
                                 paste0("id_", ind))
       out_df_w_all <- dplyr::select(out_df_w_all, ID, tidyselect::everything())
       #
@@ -313,7 +325,7 @@ pr_extract_spectra <- function(in_file,
         perccol <- out_all_l %>%
           dplyr::group_by(ID, wvl) %>%
           dplyr::summarise(., perc = stats::quantile(value, probs  = qq,
-                                              na.rm = TRUE)) %>%
+                                                     na.rm = TRUE)) %>%
           dplyr::ungroup() %>%
           dplyr::arrange(., ID, wvl)
         names(perccol)[3] <- paste0("quant_", 100*qq)
@@ -322,7 +334,7 @@ pr_extract_spectra <- function(in_file,
       }
     }
   } else {
-    out_all_l = NULL
+    out_all_l <- NULL
   }
   # Save if requested ----
 
@@ -368,27 +380,29 @@ pr_extract_spectra <- function(in_file,
       if (ext == "csv") {
         utils::write.csv(out_df_l_stats, file = outfile_stats,
                          row.names = FALSE)
-      }
-      if (ext %in% c("xls", "xlsx")) {
-        openxlsx::write.xlsx(out_df_l_stats, file = outfile_stats,
-                             rowNames = FALSE)
-      }
-      if (ext == "RData") {
-        save(out_df_l_stats, file = outfile_stats)
-      }
-    }
+      } else {
+        if (ext %in% c("xls", "xlsx")) {
+          openxlsx::write.xlsx(out_df_l_stats, file = outfile_stats,
+                               rowNames = FALSE)
+        } else {
+          save(out_df_l_stats, file = outfile_stats)
 
-    if (allpix) {
-      outfile_all   <- file.path(paste0(basefilename, "_allpix.", ext))
-      if (ext == "csv") {
-        utils::write.csv(out_all_l, file = outfile_all, row.names = FALSE)
+        }
       }
-      if (ext %in% c("xls", "xlsx")) {
-        openxlsx::write.xlsx(out_all_l, file = outfile_all,
-                             rowNames = FALSE)
-      }
-      if (ext == "RData") {
-        save(out_all_l, file = outfile_all)
+
+      if (allpix) {
+        outfile_all   <- file.path(paste0(basefilename, "_allpix.", ext))
+        if (ext == "csv") {
+          utils::write.csv(out_all_l, file = outfile_all, row.names = FALSE)
+        } else {
+          if (ext %in% c("xls", "xlsx")) {
+            openxlsx::write.xlsx(out_all_l, file = outfile_all,
+                                 rowNames = FALSE)
+          } else {
+
+            save(out_all_l, file = outfile_all)
+          }
+        }
       }
     }
   }

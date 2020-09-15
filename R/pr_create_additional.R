@@ -1,7 +1,9 @@
 #' @title pr_create_additional
-#' @description helper function used to process and save additional data sets such as CLOUD, LC and GLINT
+#' @description helper function used to process and save additional data sets
+#'   such as CLOUD, LC and GLINT
 #' @param f input data he5 from caller
-#' @param type `character` type of dataset to be created ("CLD", "LC" or "GLINT")
+#' @param type `character` type of dataset to be created ("CLD", "LC" or
+#'   "GLINT")
 #' @param out_file output file name for the dataset
 #' @inheritParams pr_convert
 #' @return The function is called for its side effects

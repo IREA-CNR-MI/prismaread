@@ -13,65 +13,87 @@ knitr::opts_chunk$set(
 
 For example, starting from a VNIR Cube obtained with `pr_convert` and a vector polygon file:
 
-```{r message=FALSE, warning=FALSE}
-  library(prismaread)
-  library(ggplot2)
-  library(tmap)
-  in_file <- "D:/prismaread/L2D/testL2D_HCO_VNIR.envi"
-  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(prismaread)
+library(ggplot2)
+library(tmap)
+in_file  <- system.file("testdata/prismaread_test_HCO_FULL.tif",
+                        package = "prismaread")
+in_vect <- system.file("extdata/testdata/polys_prisma.gpkg",
+                       package = "prismaread")
 
-  # extract base statistics, in "long" format
-  test <- pr_extract_spectra(in_file, in_vect, id_field = "ID")
-  test
-  # plot results using ggplot
-  ggplot(test, aes(x = wvl, y = mean)) +
-    geom_line(aes(color = ID, group = ID)) +
-    facet_wrap(~ID) +
-    theme_light()
+# extract base statistics, in "long" format
+test <- pr_extract_spectra(in_file, in_vect, id_field = "field_id")
+test
+# plot results using ggplot
+ggplot(test, aes(x = wvl, y = mean)) +
+  geom_line(aes(color = ID, group = ID)) +
+  facet_wrap(~ID) +
+  theme_light()
 
-  # extract base statistics ands save results as excel file, in "wide" format
-  test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
-                                 stats_format = "wide", id_field = "id")
-  test
+```
 
-  # extract custom statistics
-  test <- pr_extract_spectra(in_file, in_vect,
-                                 selstats = c("mean", "coeffvar", "stdev", "min", "max"),
-                                 id_field = "id")
-  
-  test
-  
-  # plot results using ggplot
-  ggplot(test, aes(x = wvl)) +
-    geom_line(aes(y = mean, color = ID, group = ID)) +
-    geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
-    geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
-    facet_wrap(~ID) +
-    theme_light()
+The `stats_format` defines the format used for statistics' output. If "long" (default, as above), 
+the output has one column for the ID of the feature, and one column for each statistic. 
+If "wide", the output has one column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2,
+etcetera).
 
-  
-  # extract custom statistics and quantiles
-  test <- pr_extract_spectra(in_file, in_vect, quantiles = TRUE,
-                                 selstats = c("mean", "stdev"),
-                                 id_field = "id")
-  test
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# extract base statistics for VNIR and save results as excel file, in "wide" format
 
-  
-  # extract also all pixels
-  test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
-                                 selstats = c("mean", "stdev"),
-                                 id_field = "id")
-  
-  
-  # stats are saved in the "stats" slot of the output
-  test$stats
-  
-  # pixel values are saved in the "allpix" slot of the output
-  test$allpix
+in_file  <- system.file("testdata/prisma_test_HCO_VNIR.tif",
+                        package = "prismaread")
+test <- pr_extract_spectra(in_file, in_vect,
+                           out_file = tempfile(fileext = ".xlsx"),
+                           stats_format = "wide", id_field = "field_id")
+test
 
-  ggplot(test$allpix, aes(x = wvl)) +
-    geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
-    facet_wrap(~ID) +
-    theme_light()
+```
+
+Additional arguments allow specifying which statistics are needed, as well as 
+selecting if info regarding single pixels contained in each polygon need to be 
+returned:
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# extract custom statistics
+test <- pr_extract_spectra(in_file, 
+                           in_vect,
+                           selstats = c("mean", "coeffvar", "stdev", "min", "max"),
+                           id_field = "field_id")
+
+test
+
+# plot results using ggplot
+ggplot(test, aes(x = wvl)) +
+  geom_line(aes(y = mean, color = ID, group = ID)) +
+  geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
+  geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
+  facet_wrap(~ID) +
+  theme_light()
+
+# extract custom statistics and quantiles
+test <- pr_extract_spectra(in_file, in_vect, quantiles = TRUE,
+                           selstats = c("mean", "stdev"),
+                           id_field = "field_id")
+test
+
+
+# extract also all pixels
+test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
+                           selstats = c("mean", "stdev"),
+                           id_field = "field_id")
+
+
+# stats are saved in the "stats" slot of the output
+test$stats
+
+# pixel values are saved in the "allpix" slot of the output
+test$allpix
+
+ggplot(test$allpix, aes(x = wvl)) +
+  geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
+  facet_wrap(~ID) +
+  theme_light()
 
 ```

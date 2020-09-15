@@ -101,7 +101,7 @@
 
       
 
-      </header><script src="Extracting-data-over-vector_files/header-attrs-2.3/header-attrs.js"></script><script src="Extracting-data-over-vector_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Extracting-data-over-vector_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Extracting Data Over Vector Features</h1>
@@ -117,158 +117,169 @@
 <p><code>prismaread</code> provides a very efficient function based on package <code>exactextractr</code>(<a href="https://github.com/isciences/exactextractr" class="uri">https://github.com/isciences/exactextractr</a>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (<strong>See <a href="reference/pr_extract_spectra.html">documentation</a> of the prisma_extract_spectra() function for info on available arguments</strong>).</p>
 <p>For example, starting from a VNIR Cube obtained with <code>pr_convert</code> and a vector polygon file:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/mtennekes/tmap">tmap</a></span>)
-  <span class="kw">in_file</span> <span class="op">&lt;-</span> <span class="st">"D:/prismaread/L2D/testL2D_HCO_VNIR.envi"</span>
-  <span class="kw">in_vect</span> <span class="op">&lt;-</span> <span class="st">"D:/prismaread/test/testpoints_l2d_polys.gpkg"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/mtennekes/tmap">tmap</a></span>)
+<span class="kw">in_file</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"testdata/prismaread_test_HCO_FULL.tif"</span>,
+                        package = <span class="st">"prismaread"</span>)
+<span class="kw">in_vect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/testdata/polys_prisma.gpkg"</span>,
+                       package = <span class="st">"prismaread"</span>)
 
-  <span class="co"># extract base statistics, in "long" format</span>
-  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, id_field = <span class="st">"ID"</span>)
-  <span class="kw">test</span>
-<span class="co">#&gt; # A tibble: 396 x 4</span>
-<span class="co">#&gt;      wvl ID       mean  stdev</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. poly_1 0      0     </span>
-<span class="co">#&gt;  2  411. poly_1 0.0515 0.0259</span>
-<span class="co">#&gt;  3  419. poly_1 0.0612 0.0290</span>
-<span class="co">#&gt;  4  427. poly_1 0.0698 0.0308</span>
-<span class="co">#&gt;  5  434. poly_1 0.0760 0.0321</span>
-<span class="co">#&gt;  6  441. poly_1 0.0770 0.0324</span>
-<span class="co">#&gt;  7  449. poly_1 0.0854 0.0340</span>
-<span class="co">#&gt;  8  456. poly_1 0.0871 0.0344</span>
-<span class="co">#&gt;  9  464. poly_1 0.0908 0.0353</span>
-<span class="co">#&gt; 10  471. poly_1 0.0966 0.0363</span>
-<span class="co">#&gt; # ... with 386 more rows</span>
-  <span class="co"># plot results using ggplot</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>, y = <span class="kw">mean</span>)) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(color = <span class="kw">ID</span>, group = <span class="kw">ID</span>)) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+<span class="co"># extract base statistics, in "long" format</span>
+<span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, id_field = <span class="st">"field_id"</span>)
+<span class="kw">test</span>
+<span class="co">#&gt; # A tibble: 2,079 x 4</span>
+<span class="co">#&gt;      wvl ID     mean  stdev</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402. cloud 0.114 0.191 </span>
+<span class="co">#&gt;  2  411. cloud 0.469 0.0768</span>
+<span class="co">#&gt;  3  419. cloud 0.485 0.0788</span>
+<span class="co">#&gt;  4  427. cloud 0.504 0.0811</span>
+<span class="co">#&gt;  5  434. cloud 0.504 0.0813</span>
+<span class="co">#&gt;  6  442. cloud 0.499 0.0811</span>
+<span class="co">#&gt;  7  449. cloud 0.513 0.0833</span>
+<span class="co">#&gt;  8  456. cloud 0.512 0.0838</span>
+<span class="co">#&gt;  9  464. cloud 0.518 0.0851</span>
+<span class="co">#&gt; 10  471. cloud 0.530 0.0871</span>
+<span class="co">#&gt; # … with 2,069 more rows</span>
+<span class="co"># plot results using ggplot</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>, y = <span class="kw">mean</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(color = <span class="kw">ID</span>, group = <span class="kw">ID</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
 </pre></div>
 <p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p>The <code>stats_format</code> defines the format used for statistics’ output. If “long” (default, as above), the output has one column for the ID of the feature, and one column for each statistic. If “wide”, the output has one column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2, etcetera).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># extract base statistics for VNIR and save results as excel file, in "wide" format</span>
 
-  <span class="co"># extract base statistics ands save results as excel file, in "wide" format</span>
-  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, out_file = <span class="st">"D:/Temp/test1.xlsx"</span>,
-                                 stats_format = <span class="st">"wide"</span>, id_field = <span class="st">"id"</span>)
-  <span class="kw">test</span>
-<span class="co">#&gt; # A tibble: 66 x 13</span>
-<span class="co">#&gt;      wvl mean_X1 stdev_X1 mean_X2 stdev_X2 mean_X3 stdev_X3 mean_X4 stdev_X4</span>
-<span class="co">#&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402.  0        0       0.0302  0.00693 2.47e-3  0.00301 0.0125    0.0150</span>
-<span class="co">#&gt;  2  411.  0.0515   0.0259  0.0244  0.00682 6.39e-4  0.00148 0.00961   0.0129</span>
-<span class="co">#&gt;  3  419.  0.0612   0.0290  0.0332  0.00778 2.40e-3  0.00331 0.0141    0.0167</span>
-<span class="co">#&gt;  4  427.  0.0698   0.0308  0.0419  0.00888 6.32e-3  0.00468 0.0183    0.0200</span>
-<span class="co">#&gt;  5  434.  0.0760   0.0321  0.0482  0.00961 9.69e-3  0.00549 0.0224    0.0222</span>
-<span class="co">#&gt;  6  441.  0.0770   0.0324  0.0510  0.0102  1.09e-2  0.00596 0.0248    0.0239</span>
-<span class="co">#&gt;  7  449.  0.0854   0.0340  0.0596  0.0107  1.61e-2  0.00674 0.0323    0.0258</span>
-<span class="co">#&gt;  8  456.  0.0871   0.0344  0.0613  0.0109  1.62e-2  0.00678 0.0330    0.0261</span>
-<span class="co">#&gt;  9  464.  0.0908   0.0353  0.0652  0.0114  1.87e-2  0.00691 0.0363    0.0269</span>
-<span class="co">#&gt; 10  471.  0.0966   0.0363  0.0704  0.0117  2.17e-2  0.00713 0.0401    0.0275</span>
-<span class="co">#&gt; # ... with 56 more rows, and 4 more variables: mean_X5 &lt;dbl&gt;, stdev_X5 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   mean_X6 &lt;dbl&gt;, stdev_X6 &lt;dbl&gt;</span>
-
-  <span class="co"># extract custom statistics</span>
-  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>,
-                                 selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>),
-                                 id_field = <span class="st">"id"</span>)
-  
-  <span class="kw">test</span>
-<span class="co">#&gt; # A tibble: 396 x 7</span>
-<span class="co">#&gt;      wvl ID      mean coeffvar  stdev     min   max</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. X1    0       NaN     0      0       0    </span>
-<span class="co">#&gt;  2  411. X1    0.0515    0.503 0.0259 0.00490 0.164</span>
-<span class="co">#&gt;  3  419. X1    0.0612    0.475 0.0290 0.00599 0.192</span>
-<span class="co">#&gt;  4  427. X1    0.0698    0.442 0.0308 0.0116  0.211</span>
-<span class="co">#&gt;  5  434. X1    0.0760    0.423 0.0321 0.0148  0.223</span>
-<span class="co">#&gt;  6  441. X1    0.0770    0.421 0.0324 0.0131  0.225</span>
-<span class="co">#&gt;  7  449. X1    0.0854    0.399 0.0340 0.0189  0.242</span>
-<span class="co">#&gt;  8  456. X1    0.0871    0.395 0.0344 0.0213  0.244</span>
-<span class="co">#&gt;  9  464. X1    0.0908    0.388 0.0353 0.0220  0.251</span>
-<span class="co">#&gt; 10  471. X1    0.0966    0.376 0.0363 0.0259  0.262</span>
-<span class="co">#&gt; # ... with 386 more rows</span>
-  
-  <span class="co"># plot results using ggplot</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>)) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span>, color = <span class="kw">ID</span>, group = <span class="kw">ID</span>)) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span> <span class="op">+</span> <span class="kw">stdev</span>, group = <span class="kw">ID</span>), color = <span class="st">"grey75"</span>) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span> <span class="op">-</span> <span class="kw">stdev</span>, group = <span class="kw">ID</span>), color = <span class="st">"grey75"</span>) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+<span class="kw">in_file</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"testdata/prisma_test_HCO_VNIR.tif"</span>,
+                        package = <span class="st">"prismaread"</span>)
+<span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>,
+                           out_file = <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(fileext = <span class="st">".xlsx"</span>),
+                           stats_format = <span class="st">"wide"</span>, id_field = <span class="st">"field_id"</span>)
+<span class="kw">test</span>
+<span class="co">#&gt; # A tibble: 63 x 19</span>
+<span class="co">#&gt;      wvl mean_cloud stdev_cloud mean_crop_1 stdev_crop_1 mean_crop_2</span>
+<span class="co">#&gt;    &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402.      0.114      0.191      0            0        0.000499  </span>
+<span class="co">#&gt;  2  411.      0.469      0.0768     0.00860      0.00255  0.00000475</span>
+<span class="co">#&gt;  3  419.      0.485      0.0788     0.0144       0.00229  0.000777  </span>
+<span class="co">#&gt;  4  427.      0.504      0.0811     0.0215       0.00261  0.00540   </span>
+<span class="co">#&gt;  5  434.      0.504      0.0813     0.0215       0.00245  0.00665   </span>
+<span class="co">#&gt;  6  442.      0.499      0.0811     0.0206       0.00250  0.00527   </span>
+<span class="co">#&gt;  7  449.      0.513      0.0833     0.0254       0.00258  0.00978   </span>
+<span class="co">#&gt;  8  456.      0.512      0.0838     0.0256       0.00250  0.00928   </span>
+<span class="co">#&gt;  9  464.      0.518      0.0851     0.0268       0.00282  0.0104    </span>
+<span class="co">#&gt; 10  471.      0.530      0.0871     0.0301       0.00300  0.0130    </span>
+<span class="co">#&gt; # … with 53 more rows, and 13 more variables: stdev_crop_2 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   mean_forest &lt;dbl&gt;, stdev_forest &lt;dbl&gt;, mean_soil_1 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   stdev_soil_1 &lt;dbl&gt;, mean_soil_2 &lt;dbl&gt;, stdev_soil_2 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   mean_urban &lt;dbl&gt;, stdev_urban &lt;dbl&gt;, mean_urban_2 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   stdev_urban_2 &lt;dbl&gt;, mean_water &lt;dbl&gt;, stdev_water &lt;dbl&gt;</span>
 </pre></div>
-<p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-2.png" width="700"></p>
+<p>Additional arguments allow specifying which statistics are needed, as well as selecting if info regarding single pixels contained in each polygon need to be returned:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># extract custom statistics</span>
+<span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, 
+                           <span class="kw">in_vect</span>,
+                           selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"coeffvar"</span>, <span class="st">"stdev"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>),
+                           id_field = <span class="st">"field_id"</span>)
 
-  
-  <span class="co"># extract custom statistics and quantiles</span>
-  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, quantiles = <span class="fl">TRUE</span>,
-                                 selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
-                                 id_field = <span class="st">"id"</span>)
-  <span class="kw">test</span>
-<span class="co">#&gt; # A tibble: 396 x 9</span>
-<span class="co">#&gt;      wvl ID      mean  stdev quant_5 quant_25 quant_50 quant_75 quant_95</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. X1    0      0           NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  2  411. X1    0.0515 0.0259      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  3  419. X1    0.0612 0.0290      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  4  427. X1    0.0698 0.0308      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  5  434. X1    0.0760 0.0321      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  6  441. X1    0.0770 0.0324      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  7  449. X1    0.0854 0.0340      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  8  456. X1    0.0871 0.0344      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt;  9  464. X1    0.0908 0.0353      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt; 10  471. X1    0.0966 0.0363      NA       NA       NA       NA       NA</span>
-<span class="co">#&gt; # ... with 386 more rows</span>
+<span class="kw">test</span>
+<span class="co">#&gt; # A tibble: 567 x 7</span>
+<span class="co">#&gt;      wvl ID     mean coeffvar  stdev   min   max</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402. cloud 0.114    1.68  0.191  0     0.564</span>
+<span class="co">#&gt;  2  411. cloud 0.469    0.164 0.0768 0.176 0.617</span>
+<span class="co">#&gt;  3  419. cloud 0.485    0.163 0.0788 0.188 0.638</span>
+<span class="co">#&gt;  4  427. cloud 0.504    0.161 0.0811 0.197 0.662</span>
+<span class="co">#&gt;  5  434. cloud 0.504    0.161 0.0813 0.199 0.662</span>
+<span class="co">#&gt;  6  442. cloud 0.499    0.163 0.0811 0.194 0.657</span>
+<span class="co">#&gt;  7  449. cloud 0.513    0.162 0.0833 0.202 0.677</span>
+<span class="co">#&gt;  8  456. cloud 0.512    0.164 0.0838 0.202 0.677</span>
+<span class="co">#&gt;  9  464. cloud 0.518    0.164 0.0851 0.200 0.685</span>
+<span class="co">#&gt; 10  471. cloud 0.530    0.164 0.0871 0.207 0.703</span>
+<span class="co">#&gt; # … with 557 more rows</span>
 
-  
-  <span class="co"># extract also all pixels</span>
-  <span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, allpix = <span class="fl">TRUE</span>,
-                                 selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
-                                 id_field = <span class="st">"id"</span>)
-  
-  
-  <span class="co"># stats are saved in the "stats" slot of the output</span>
-  <span class="kw">test</span><span class="op">$</span><span class="kw">stats</span>
-<span class="co">#&gt; # A tibble: 396 x 4</span>
-<span class="co">#&gt;      wvl ID      mean  stdev</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  402. X1    0      0     </span>
-<span class="co">#&gt;  2  411. X1    0.0515 0.0259</span>
-<span class="co">#&gt;  3  419. X1    0.0612 0.0290</span>
-<span class="co">#&gt;  4  427. X1    0.0698 0.0308</span>
-<span class="co">#&gt;  5  434. X1    0.0760 0.0321</span>
-<span class="co">#&gt;  6  441. X1    0.0770 0.0324</span>
-<span class="co">#&gt;  7  449. X1    0.0854 0.0340</span>
-<span class="co">#&gt;  8  456. X1    0.0871 0.0344</span>
-<span class="co">#&gt;  9  464. X1    0.0908 0.0353</span>
-<span class="co">#&gt; 10  471. X1    0.0966 0.0363</span>
-<span class="co">#&gt; # ... with 386 more rows</span>
-  
-  <span class="co"># pixel values are saved in the "allpix" slot of the output</span>
-  <span class="kw">test</span><span class="op">$</span><span class="kw">allpix</span>
-<span class="co">#&gt; # A tibble: 66,528 x 4</span>
-<span class="co">#&gt;    ID      wvl pixel    value</span>
-<span class="co">#&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 id_1   402. pix_001 0     </span>
-<span class="co">#&gt;  2 id_1   411. pix_001 0.0542</span>
-<span class="co">#&gt;  3 id_1   419. pix_001 0.0651</span>
-<span class="co">#&gt;  4 id_1   427. pix_001 0.0721</span>
-<span class="co">#&gt;  5 id_1   434. pix_001 0.0785</span>
-<span class="co">#&gt;  6 id_1   441. pix_001 0.0793</span>
-<span class="co">#&gt;  7 id_1   449. pix_001 0.0854</span>
-<span class="co">#&gt;  8 id_1   456. pix_001 0.0890</span>
-<span class="co">#&gt;  9 id_1   464. pix_001 0.0942</span>
-<span class="co">#&gt; 10 id_1   471. pix_001 0.0997</span>
-<span class="co">#&gt; # ... with 66,518 more rows</span>
-
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span><span class="op">$</span><span class="kw">allpix</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>)) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">value</span>, group = <span class="kw">pixel</span>, color = <span class="kw">ID</span>), lwd = <span class="fl">0.01</span>)  <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+<span class="co"># plot results using ggplot</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span>, color = <span class="kw">ID</span>, group = <span class="kw">ID</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span> <span class="op">+</span> <span class="kw">stdev</span>, group = <span class="kw">ID</span>), color = <span class="st">"grey75"</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">mean</span> <span class="op">-</span> <span class="kw">stdev</span>, group = <span class="kw">ID</span>), color = <span class="st">"grey75"</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
 </pre></div>
-<p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-2-3.png" width="700"></p>
+<p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+
+<span class="co"># extract custom statistics and quantiles</span>
+<span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, quantiles = <span class="fl">TRUE</span>,
+                           selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
+                           id_field = <span class="st">"field_id"</span>)
+<span class="kw">test</span>
+<span class="co">#&gt; # A tibble: 567 x 9</span>
+<span class="co">#&gt;      wvl ID     mean  stdev quant_5 quant_25 quant_50 quant_75 quant_95</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402. cloud 0.114 0.191    0        0        0        0.301    0.491</span>
+<span class="co">#&gt;  2  411. cloud 0.469 0.0768   0.313    0.427    0.476    0.512    0.566</span>
+<span class="co">#&gt;  3  419. cloud 0.485 0.0788   0.324    0.443    0.490    0.529    0.587</span>
+<span class="co">#&gt;  4  427. cloud 0.504 0.0811   0.339    0.461    0.511    0.550    0.611</span>
+<span class="co">#&gt;  5  434. cloud 0.504 0.0813   0.337    0.460    0.510    0.549    0.611</span>
+<span class="co">#&gt;  6  442. cloud 0.499 0.0811   0.335    0.454    0.505    0.544    0.605</span>
+<span class="co">#&gt;  7  449. cloud 0.513 0.0833   0.343    0.467    0.519    0.561    0.625</span>
+<span class="co">#&gt;  8  456. cloud 0.512 0.0838   0.340    0.465    0.518    0.560    0.623</span>
+<span class="co">#&gt;  9  464. cloud 0.518 0.0851   0.344    0.470    0.525    0.566    0.631</span>
+<span class="co">#&gt; 10  471. cloud 0.530 0.0871   0.352    0.480    0.537    0.578    0.647</span>
+<span class="co">#&gt; # … with 557 more rows</span>
+
+
+<span class="co"># extract also all pixels</span>
+<span class="kw">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pr_extract_spectra.html">pr_extract_spectra</a></span>(<span class="kw">in_file</span>, <span class="kw">in_vect</span>, allpix = <span class="fl">TRUE</span>,
+                           selstats = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mean"</span>, <span class="st">"stdev"</span>),
+                           id_field = <span class="st">"field_id"</span>)
+
+
+<span class="co"># stats are saved in the "stats" slot of the output</span>
+<span class="kw">test</span><span class="op">$</span><span class="kw">stats</span>
+<span class="co">#&gt; # A tibble: 567 x 4</span>
+<span class="co">#&gt;      wvl ID     mean  stdev</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  402. cloud 0.114 0.191 </span>
+<span class="co">#&gt;  2  411. cloud 0.469 0.0768</span>
+<span class="co">#&gt;  3  419. cloud 0.485 0.0788</span>
+<span class="co">#&gt;  4  427. cloud 0.504 0.0811</span>
+<span class="co">#&gt;  5  434. cloud 0.504 0.0813</span>
+<span class="co">#&gt;  6  442. cloud 0.499 0.0811</span>
+<span class="co">#&gt;  7  449. cloud 0.513 0.0833</span>
+<span class="co">#&gt;  8  456. cloud 0.512 0.0838</span>
+<span class="co">#&gt;  9  464. cloud 0.518 0.0851</span>
+<span class="co">#&gt; 10  471. cloud 0.530 0.0871</span>
+<span class="co">#&gt; # … with 557 more rows</span>
+
+<span class="co"># pixel values are saved in the "allpix" slot of the output</span>
+<span class="kw">test</span><span class="op">$</span><span class="kw">allpix</span>
+<span class="co">#&gt; # A tibble: 295,974 x 4</span>
+<span class="co">#&gt;    ID      wvl pixel   value</span>
+<span class="co">#&gt;    &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 cloud  402. pix_001 0.377</span>
+<span class="co">#&gt;  2 cloud  411. pix_001 0.368</span>
+<span class="co">#&gt;  3 cloud  419. pix_001 0.378</span>
+<span class="co">#&gt;  4 cloud  427. pix_001 0.397</span>
+<span class="co">#&gt;  5 cloud  434. pix_001 0.396</span>
+<span class="co">#&gt;  6 cloud  442. pix_001 0.387</span>
+<span class="co">#&gt;  7 cloud  449. pix_001 0.399</span>
+<span class="co">#&gt;  8 cloud  456. pix_001 0.395</span>
+<span class="co">#&gt;  9 cloud  464. pix_001 0.401</span>
+<span class="co">#&gt; 10 cloud  471. pix_001 0.409</span>
+<span class="co">#&gt; # … with 295,964 more rows</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">test</span><span class="op">$</span><span class="kw">allpix</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">wvl</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">value</span>, group = <span class="kw">pixel</span>, color = <span class="kw">ID</span>), lwd = <span class="fl">0.01</span>)  <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span><span class="kw">ID</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light</a></span>()
+</pre></div>
+<p><img src="Extracting-data-over-vector_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -284,7 +295,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

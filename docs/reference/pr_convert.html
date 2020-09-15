@@ -163,7 +163,7 @@
   out_filebase = <span class='st'>"auto"</span>,
   out_format = <span class='st'>"ENVI"</span>,
   base_georef = <span class='fl'>TRUE</span>,
-  fill_gaps = <span class='fl'>TRUE</span>,
+  fill_gaps = <span class='fl'>FALSE</span>,
   VNIR = <span class='fl'>FALSE</span>,
   SWIR = <span class='fl'>FALSE</span>,
   FULL = <span class='fl'>FALSE</span>,
@@ -208,20 +208,21 @@ Default: "auto"</p></td>
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default:
+'GTiff'</p></td>
     </tr>
     <tr>
       <th>base_georef</th>
-      <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-using the "Georeference from input GLT" procedure explained here:
+      <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C
+data, using the "Georeference from input GLT" procedure explained here:
 https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
 Default: TRUE</p></td>
     </tr>
     <tr>
       <th>fill_gaps</th>
       <td><p>`logical` if TRUE, when georeferencing on L1, L2B/C data,
-substitute missing values with results of a 3x3 focal filter on the georeferenced
-data, Default: TRUE</p></td>
+substitute missing values with results of a 3x3 focal filter on the
+georeferenced data, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>VNIR</th>
@@ -238,33 +239,36 @@ VNIR and SWIR, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>source</th>
-      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
+      <td><p>`character` ["HC0" | "HRC"], Considered Data Cub,
+Default: 'HCO'</p></td>
     </tr>
     <tr>
       <th>join_priority</th>
-      <td><p>`character` ["VNIR" | "SWIR"], spectrometer to consider in
-the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+      <td><p>`character` ["VNIR" | "SWIR"], spectrometer to consider
+when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
 Default: "SWIR"</p></td>
     </tr>
     <tr>
       <th>ATCOR</th>
-      <td><p>logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;</p></td>
+      <td><p>logical` if TRUE, create the text files required to run ATCOR,
+Default: FALSE;</p></td>
     </tr>
     <tr>
       <th>ATCOR_wls</th>
       <td><p>NULL, or `numeric` If NULL the only ATCOR wvl file
-created is the one containing Nominal wavelengths. If a numeric vector is provided,
-then one different wvl file is created for each selected COLUMN selected (e.g., if
-providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
-columns 200 and 800 are saved.)</p></td>
+created is the one containing Nominal wavelengths. If a numeric vector is
+provided, then one different wvl file is created for each selected COLUMN
+selected (e.g., if providing `ATCOR_wls = c(200, 800)`, then the wavelengths
+and FWHMs related to columns 200 and 800 are saved.)</p></td>
     </tr>
     <tr>
       <th>PAN</th>
-      <td><p>`logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)</p></td>
+      <td><p>`logical` if TRUE, also save PAN data, default: FALSE</p></td>
     </tr>
     <tr>
       <th>CLOUD</th>
-      <td><p>`logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data).
+      <td><p>`logical` if TRUE, also save CLOUD MASK mask data,
+Default: FALSE (Ignored for L2 data).
 It is coded as:
   0 for not cloudy pixel
   1 for cloudy pixel
@@ -273,7 +277,8 @@ It is coded as:
     </tr>
     <tr>
       <th>LC</th>
-      <td><p>`logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
+      <td><p>`logical` if TRUE, also save the LAND COVER data, default: FALSE
+(Ignored for L2 data)
 It is coded as:
  0 for water pixel
  1 for snow pixel (and ice)
@@ -287,80 +292,94 @@ It is coded as:
     </tr>
     <tr>
       <th>GLINT</th>
-      <td><p>`logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
-It is coded as:
-0 for not sun glint
-1 for sun glint
-10 for not of all previous classification
-255 = error</p></td>
+      <td><p>`logical` if TRUE, also save GLINT mask data, default: FALSE
+(Ignored for L2 data)
+  It is coded as:
+  0 for not sun glint
+  1 for sun glint
+  10 for not of all previous classification
+  255 = error</p></td>
     </tr>
     <tr>
       <th>ANGLES</th>
-      <td><p>if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
-a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains "relaz_ang" and
-Band 3 contains "solzen_ang"), default: FALSE</p></td>
+      <td><p>if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are
+saved as a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains
+"relaz_ang" and Band 3 contains "solzen_ang"), default: FALSE</p></td>
     </tr>
     <tr>
       <th>LATLON</th>
-      <td><p>if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
-a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE</p></td>
+      <td><p>if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data
+are saved as a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon",
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>ERR_MATRIX</th>
-      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
-SATURATION ERROR MATRIX is coded as:
- 0=pixel ok;
- 1=DEFECTIVE PIXEL from KDP
- 2= Pixel in saturation.
- 3= Pixel with lower radiometric accuracy, due to coregistration effects.
- 4= Pixel becomes NaN or Inf during processing.</p></td>
+      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX
+Data, Default: FALSE
+ SATURATION ERROR MATRIX is coded as:
+  0=pixel ok;
+  1=DEFECTIVE PIXEL from KDP
+  2= Pixel in saturation.
+  3= Pixel with lower radiometric accuracy, due to coregistration effects.
+  4= Pixel becomes NaN or Inf during processing.</p></td>
     </tr>
     <tr>
       <th>apply_errmatrix</th>
-      <td><p>Not yet implemented!</p></td>
+      <td><p>`logical` if TRUE, set pixels with values above 0 in
+the SATERR_MATRIX data cube (for L1) or ERRMATRIX cube (for L2) to NA,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>`logical` if TRUE, existing files are overwritten, default: FALSE</p></td>
+      <td><p>`logical` if TRUE, existing files are overwritten,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>in_L2_file</th>
-      <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
-info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
-data are also retrieved from the L2 file.</p></td>
+      <td><p>`character` full path of an L2B/C file to be used to
+extract georeferencing info and angles for a corresponding L1 file. If not
+NULL, and `in_file` is a L1 file, the LAT and LON fields used for bowtie
+georeferencing are taken from the L2 file instead than from the L1 file.
+The ANGLES data are also retrieved from the L2 file if requested.</p></td>
     </tr>
     <tr>
       <th>selbands_vnir</th>
-      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+      <td><p>`numeric array` containing wavelengths (in nanometers)
+of bands that should be extracted from the VNIR data cube. If not NULL, only
+the bands with wavelengths closest to these values are extracted,
+Default: NULL</p></td>
     </tr>
     <tr>
       <th>selbands_swir</th>
-      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+      <td><p>`numeric array` containing wavelengths (in nanometers)
+of bands that should be extracted from the SWIR data cube. If not NULL, only
+the bands with wavelengths closest to these values are extracted,
+Default: NULL</p></td>
     </tr>
     <tr>
       <th>indexes</th>
       <td><p>`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
-the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html</p></td>
+the corresponding table at:
+https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
+Default:NULL</p></td>
     </tr>
     <tr>
       <th>cust_indexes</th>
-      <td><p>`character` named list containing names and formulas of custom
-indexes to be computed. The indexes formulas must be computable R formulas, where
-bands are referred to by the prefix "b", followed by the wavelength (e.g.,
-`cust_indexes = list(myindex1 = "R500 / R600",
-                     myindex2 = "(R800 - R680) / (R800 + R680)")`</p></td>
+      <td><p>`character` named list containing names and formulas of
+custom indexes to be computed. The indexes formulas must be computable R
+formulas, where bands are referred to by the prefix "b", followed by the
+wavelength (e.g.,`cust_indexes = list(myindex1 = "R500 / R600",
+                              myindex2 = "(R800 - R680) / (R800 + R680)")`,
+Default:NULL</p></td>
     </tr>
     <tr>
       <th>keep_index_cube</th>
-      <td><p>`logical`, if TRUE, and spectral indexes were computed,
-keep in the output folder the hyperspectral cube used to compute the indexes (
-containing only wavelengths required to compute the desired indexes). The file
-takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
- deleted automatically afterwards. Default: FALSE</p></td>
+      <td><p>`logical`, if TRUE, and spectral indexes were
+computed, keep in the output folder the hyperspectral cube used to compute
+the indexes (containing only wavelengths required to compute the desired
+indexes). The file takes a "_INDEXES" suffix. If FALSE, put the file in
+tempdir so that it is deleted automatically afterwards. Default: FALSE</p></td>
     </tr>
     </table>
 
@@ -370,48 +389,98 @@ takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
- <span class='kw'>in_file</span>    <span class='op'>&lt;-</span> <span class='st'>"/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"</span>
- <span class='kw'>out_folder</span> <span class='op'>&lt;-</span> <span class='st'>"/home/lb/tmp/test/"</span>
- <span class='kw'>out_format</span> <span class='op'>&lt;-</span> <span class='st'>"ENVI"</span>
 
- <span class='co'># Save VNIR Cube image</span>
+<span class='co'># Here we download the example file from github using `piggyback` if not already</span>
+<span class='co'>#  downloaded.</span>
+<span class='co'># WARNING ! This may need a long time (1GB file)</span>
+<span class='kw'>testfile_l1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
+<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
+            <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5"</span>)
+
+<span class='co'>if</span> (<span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='kw'>testfile_l1</span>)) {
+  <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span>(<span class='st'>"Downloading test data - This may need a long time!"</span>)
+  <span class='kw'>piggyback</span>::<span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span>(
+           <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip"</span>,
+           repo = <span class='st'>"lbusett/prismaread"</span>,
+           dest = <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
+           <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>""</span>, package = <span class='st'>"prismaread"</span>), <span class='st'>"/testdata"</span>))
+  <span class='kw'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
+                    <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
+                    <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip"</span>)
+  <span class='fu'><a href='https://rdrr.io/r/utils/unzip.html'>unzip</a></span>(<span class='kw'>zipfile</span>, exdir = <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span>(<span class='kw'>testfile_l1</span>))
+  <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='kw'>zipfile</span>)
+}
+<span class='kw'>out_folder</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>"prismaread_l1"</span>)
+
+<span class='co'># Save separately the VNIR and SWIR spetral cubes, in Tiff format. Also save</span>
+<span class='co'># LATLON, CLOUD and PAN</span>
+
+ <span class='fu'>pr_convert</span>(in_file    = <span class='kw'>testfile_l1</span>,
+            out_folder = <span class='kw'>out_folder</span>,
+            out_format = <span class='st'>"GTiff"</span>,
+            VNIR       = <span class='fl'>TRUE</span>,
+            SWIR       = <span class='fl'>TRUE</span>,
+            LATLON     = <span class='fl'>TRUE</span>,
+            PAN        = <span class='fl'>TRUE</span>,
+            CLOUD      = <span class='fl'>TRUE</span>)
+
+ <span class='co'># Save the full cube, prioritizing the SWIR spectrometer and save in ENVI</span>
+ <span class='co'># format. Also save Cloud and LC data. Also, use a custom prefix for output</span>
+ <span class='co'># files</span>
+
+ <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>testfile_l1</span>,
+            out_folder    = <span class='kw'>out_folder</span>,
+            out_filebase  = <span class='st'>"prismaout_2020_05-14"</span>,
+            out_format    = <span class='st'>"ENVI"</span>,
+            FULL          = <span class='fl'>TRUE</span>,
+            join_priority = <span class='st'>"SWIR"</span>,
+            LC            = <span class='fl'>TRUE</span>,
+            CLOUD         = <span class='fl'>TRUE</span>,
+            overwrite     = <span class='fl'>TRUE</span>
+            )
+
+ <span class='co'># Save a full image, prioritizing the VNIR spectrometer and save in TIF</span>
+ <span class='co'># format. Also create ATCOR files, with Nominal wavelengths</span>
+
  <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
-                out_folder    = <span class='kw'>out_folder</span>,
-                out_format    = <span class='kw'>out_format</span>,
-                VNIR          = <span class='fl'>TRUE</span>,
-                SWIR          = <span class='fl'>TRUE</span>,
-                FULL          = <span class='fl'>FALSE</span>,
-                overwrite     = <span class='fl'>TRUE</span>
-                )
+            out_folder    = <span class='kw'>out_folder</span>,
+            out_format    = <span class='st'>"GTiff"</span>,
+            FULL          = <span class='fl'>TRUE</span>,
+            join_priority = <span class='st'>"VNIR"</span>,
+            ATCOR         = <span class='fl'>TRUE</span>
+           )
 
- <span class='co'># Save also the full cube, prioritizing the VNIR spectrometer and save in ENVI format</span>
- <span class='co'># Also save Cloud and LC data. Also, use a custom prefix for output files</span>
- <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
-                out_folder    = <span class='kw'>out_folder</span>,
-                out_filebase  = <span class='st'>"prismaout_2020_05-14"</span>,
-                out_format    = <span class='kw'>out_format</span>,
-                FULL          = <span class='fl'>TRUE</span>,
-                join_priority = <span class='st'>"VNIR"</span>,
-                LC            = <span class='fl'>TRUE</span>,
-                CLOUD         = <span class='fl'>TRUE</span>,
-                overwrite     = <span class='fl'>TRUE</span>
-                )
+<span class='co'># Save the VNIR cube only, asociating a L2 file to be able to retrieve</span>
+<span class='co'># ANGLES data</span>
+<span class='kw'>testfile_l1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
+                       <span class='st'>"PRS_L2D_STD_20200524103704_20200524103708_0001.he5"</span>)
+<span class='kw'>testfile_l2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
+                        <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.he5"</span>)
 
- <span class='co'># Save a full image, prioritizing the SWIR spectrometer and save in TIF format,</span>
- <span class='co'># Also create ATCOR files, with Nominal wavelengths</span>
+<span class='co'># Here we download the example file from github if not already downloaded.</span>
+<span class='co'># WARNING ! This may need a long time (1GB file)</span>
 
- <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
-                out_folder    = <span class='kw'>out_folder</span>,
-                out_format    = <span class='st'>"TIF"</span>,
-                FULL          = <span class='fl'>TRUE</span>,
-                join_priority = <span class='st'>"VNIR"</span>,
-                ATCOR         = <span class='fl'>TRUE</span>,
-                LC            = <span class='fl'>TRUE</span>,
-                CLOUD         = <span class='fl'>TRUE</span>,
-                overwrite     = <span class='fl'>TRUE</span>
-                )
+<span class='co'>if</span> (<span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='kw'>testfile_l2</span>)){
+ <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span>(<span class='st'>"Downloading test data - This may need a long time!"</span>)
+ <span class='kw'>piggyback</span>::<span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span>(
+                 <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.zip"</span>,
+                 repo = <span class='st'>"lbusett/prismaread"</span>,
+                 dest = <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
+                       <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>""</span>, package = <span class='st'>"prismaread"</span>), <span class='st'>"/testdata"</span>))
+ <span class='kw'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
+                      <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.zip"</span>)
+ <span class='fu'><a href='https://rdrr.io/r/utils/unzip.html'>unzip</a></span>(<span class='kw'>zipfile</span>, exdir = <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span>(<span class='kw'>testfile_l1</span>))
+ <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='kw'>zipfile</span>)
+}
 
+<span class='kw'>out_folder</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>"prismaread_l2"</span>)
 
+<span class='fu'>pr_convert</span>(in_file    = <span class='kw'>in_file</span>,
+          in_L2_file = <span class='kw'>in_L2_file</span>,
+          out_folder = <span class='kw'>out_folder</span>,
+          out_format = <span class='st'>"ENVI"</span>,
+          VNIR       = <span class='fl'>TRUE</span>,
+          ANGLES     = <span class='fl'>TRUE</span>)
 }
 </div></pre>
   </div>
@@ -429,7 +498,7 @@ takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

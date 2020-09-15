@@ -23,11 +23,14 @@ pr_rastwrite_lines(
 
 \item{proc_lev}{`character` [\"1\" | \"2D\"], Default: '1'}
 
-\item{scale_min}{`numeric` coefficients use to compute values from DN on L2 products}
+\item{scale_min}{`numeric` coefficients use to compute values from DN on
+products}
 
-\item{scale_max}{`numeric`  coefficients use to compute values from DN on L2 products}
+\item{scale_max}{`numeric`  coefficients use to compute values from DN on L2
+products}
 
-\item{join}{`logical` flag used to indicate if we are saving the "joined" VNIR+SWIR cube}
+\item{join}{`logical` flag used to indicate if we are saving the "joined"
+VNIR+SWIR cube}
 }
 \value{
 the function is called for its side effects

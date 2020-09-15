@@ -45,16 +45,17 @@ filename of the input prisma file, with appropriate suffixes. If a different
 string is provided, it is used as prefix instead of the input file name,
 Default: "auto"}
 
-\item{out_format}{`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'}
+\item{out_format}{`character`` ["GTiff" | "ENVI"], Output format, Default:
+'GTiff'}
 
-\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-using the "Georeference from input GLT" procedure explained here:
+\item{base_georef}{`logical` if TRUE, apply base georeferencing on L1, L2B/C
+data, using the "Georeference from input GLT" procedure explained here:
 https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
 Default: TRUE}
 
 \item{fill_gaps}{`logical` if TRUE, when georeferencing on L1, L2B/C data,
-substitute missing values with results of a 3x3 focal filter on the georeferenced
-data, Default: TRUE}
+substitute missing values with results of a 3x3 focal filter on the
+georeferenced data, Default: FALSE}
 
 \item{VNIR}{`logical` if TRUE, create the VNIR image, Default: FALSE}
 
@@ -63,30 +64,34 @@ data, Default: TRUE}
 \item{FULL}{`logical` if TRUE, create a single multispectral image from
 VNIR and SWIR, Default: FALSE}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cub,
+Default: 'HCO'}
 
-\item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
-the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+\item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider
+when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
 Default: "SWIR"}
 
-\item{ATCOR}{logical` if TRUE, create the text files required to run ATCOR, Default: FALSE;}
+\item{ATCOR}{logical` if TRUE, create the text files required to run ATCOR,
+Default: FALSE;}
 
 \item{ATCOR_wls}{NULL, or `numeric` If NULL the only ATCOR wvl file
-created is the one containing Nominal wavelengths. If a numeric vector is provided,
-then one different wvl file is created for each selected COLUMN selected (e.g., if
-providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
-columns 200 and 800 are saved.)}
+created is the one containing Nominal wavelengths. If a numeric vector is
+provided, then one different wvl file is created for each selected COLUMN
+selected (e.g., if providing `ATCOR_wls = c(200, 800)`, then the wavelengths
+and FWHMs related to columns 200 and 800 are saved.)}
 
-\item{PAN}{`logical` if TRUE, also save PAN data, default: TRUE (Ignored for L2 data)}
+\item{PAN}{`logical` if TRUE, also save PAN data, default: FALSE}
 
-\item{CLOUD}{`logical` if TRUE, also save CLOUD MASK mask data, default: TRUE (Ignored for L2 data).
+\item{CLOUD}{`logical` if TRUE, also save CLOUD MASK mask data,
+Default: FALSE (Ignored for L2 data).
 It is coded as:
   0 for not cloudy pixel
   1 for cloudy pixel
   10 = for not of all previous classification
   255 = error}
 
-\item{LC}{`logical` if TRUE, also save the LAND COVER data, default: TRUE (Ignored for L2 data)
+\item{LC}{`logical` if TRUE, also save the LAND COVER data, default: FALSE
+(Ignored for L2 data)
 It is coded as:
  0 for water pixel
  1 for snow pixel (and ice)
@@ -98,63 +103,78 @@ It is coded as:
 10 for not of all previous classification
 255 for error}
 
-\item{GLINT}{`logical` if TRUE, also save GLINT mask data, default: TRUE (Ignored for L2 data)
-It is coded as:
-0 for not sun glint
-1 for sun glint
-10 for not of all previous classification
-255 = error}
+\item{GLINT}{`logical` if TRUE, also save GLINT mask data, default: FALSE
+(Ignored for L2 data)
+  It is coded as:
+  0 for not sun glint
+  1 for sun glint
+  10 for not of all previous classification
+  255 = error}
 
-\item{ANGLES}{if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are saved as
-a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains "relaz_ang" and
-Band 3 contains "solzen_ang"), default: FALSE}
+\item{ANGLES}{if TRUE, also save the ACQUISITION ANGLES data. ANGLES data are
+saved as a 3-band raster. Band 1 contains "viewzen_ang", Band 2 contains
+"relaz_ang" and Band 3 contains "solzen_ang"), default: FALSE}
 
-\item{LATLON}{if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data are saved as
-a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon", default: FALSE}
+\item{LATLON}{if TRUE, also save the LATITUDE and LONGITUDE data. LATLON data
+are saved as a 2-band raster. Band 1 contains "Lat", Band 2 contains "Lon",
+Default: FALSE}
 
-\item{ERR_MATRIX}{`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
-SATURATION ERROR MATRIX is coded as:
- 0=pixel ok;
- 1=DEFECTIVE PIXEL from KDP
- 2= Pixel in saturation.
- 3= Pixel with lower radiometric accuracy, due to coregistration effects.
- 4= Pixel becomes NaN or Inf during processing.}
+\item{ERR_MATRIX}{`logical` if TRUE, also save the SATURATION ERROR MATRIX
+Data, Default: FALSE
+ SATURATION ERROR MATRIX is coded as:
+  0=pixel ok;
+  1=DEFECTIVE PIXEL from KDP
+  2= Pixel in saturation.
+  3= Pixel with lower radiometric accuracy, due to coregistration effects.
+  4= Pixel becomes NaN or Inf during processing.}
 
-\item{apply_errmatrix}{Not yet implemented!}
+\item{apply_errmatrix}{`logical` if TRUE, set pixels with values above 0 in
+the SATERR_MATRIX data cube (for L1) or ERRMATRIX cube (for L2) to NA,
+Default: FALSE}
 
-\item{overwrite}{`logical` if TRUE, existing files are overwritten, default: FALSE}
+\item{overwrite}{`logical` if TRUE, existing files are overwritten,
+Default: FALSE}
 
-\item{in_L2_file}{`character` full path of an L2B/C file to be used to extract georeferencing
-info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
-data are also retrieved from the L2 file.}
+\item{in_L2_file}{`character` full path of an L2B/C file to be used to
+extract georeferencing info and angles for a corresponding L1 file. If not
+NULL, and `in_file` is a L1 file, the LAT and LON fields used for bowtie
+georeferencing are taken from the L2 file instead than from the L1 file.
+The ANGLES data are also retrieved from the L2 file if requested.}
 
-\item{selbands_vnir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
+\item{selbands_vnir}{`numeric array` containing wavelengths (in nanometers)
+of bands that should be extracted from the VNIR data cube. If not NULL, only
+the bands with wavelengths closest to these values are extracted,
+Default: NULL}
 
-\item{selbands_swir}{`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the SWIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL}
+\item{selbands_swir}{`numeric array` containing wavelengths (in nanometers)
+of bands that should be extracted from the SWIR data cube. If not NULL, only
+the bands with wavelengths closest to these values are extracted,
+Default: NULL}
 
 \item{indexes}{`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
-the corresponding table at: https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html}
+the corresponding table at:
+https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
+Default:NULL}
 
-\item{cust_indexes}{`character` named list containing names and formulas of custom
-indexes to be computed. The indexes formulas must be computable R formulas, where
-bands are referred to by the prefix "b", followed by the wavelength (e.g.,
-`cust_indexes = list(myindex1 = "R500 / R600",
-                     myindex2 = "(R800 - R680) / (R800 + R680)")`}
+\item{cust_indexes}{`character` named list containing names and formulas of
+custom indexes to be computed. The indexes formulas must be computable R
+formulas, where bands are referred to by the prefix "b", followed by the
+wavelength (e.g.,`cust_indexes = list(myindex1 = "R500 / R600",
+                              myindex2 = "(R800 - R680) / (R800 + R680)")`,
+Default:NULL}
 
-\item{keep_index_cube}{`logical`, if TRUE, and spectral indexes were computed,
-keep in the output folder the hyperspectral cube used to compute the indexes (
-containing only wavelengths required to compute the desired indexes). The file
-takes a "_INDEXES" suffix. If FALSE, put the file in tempdir so that it is
- deleted automatically afterwards. Default: FALSE}
+\item{keep_index_cube}{`logical`, if TRUE, and spectral indexes were
+computed, keep in the output folder the hyperspectral cube used to compute
+the indexes (containing only wavelengths required to compute the desired
+indexes). The file takes a "_INDEXES" suffix. If FALSE, put the file in
+tempdir so that it is deleted automatically afterwards. Default: FALSE}
 }
 \value{
 Upon success of all checks, the input hdf file, opened using
  `hdf5r::H5File`
 }
 \description{
-helper function used to check consistency of pr_convert arguments
+helper function used to check consistency of pr_convert
+ arguments
 }

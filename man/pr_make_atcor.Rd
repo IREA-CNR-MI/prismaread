@@ -22,10 +22,10 @@ pr_make_atcor(
 \item{out_file}{main prismaread output file name - passed by caller}
 
 \item{ATCOR_wls}{NULL, or `numeric` If NULL the only ATCOR wvl file
-created is the one containing Nominal wavelengths. If a numeric vector is provided,
-then one different wvl file is created for each selected COLUMN selected (e.g., if
-providing `ATCOR_wls = c(200, 800)`, then the wavelengths and FWHMs related to
-columns 200 and 800 are saved.)}
+created is the one containing Nominal wavelengths. If a numeric vector is
+provided, then one different wvl file is created for each selected COLUMN
+selected (e.g., if providing `ATCOR_wls = c(200, 800)`, then the wavelengths
+and FWHMs related to columns 200 and 800 are saved.)}
 
 \item{wls}{passed by caller - array of PRISMA wavelengths}
 
@@ -37,11 +37,12 @@ wavelengths}
 \item{order_swir}{passed by caller - ordering of array of PRISMA SWIR
 wavelengths}
 
-\item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider in
-the when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
+\item{join_priority}{`character` ["VNIR" | "SWIR"], spectrometer to consider
+when join_spectra = TRUE, Default: SWIR - ignored if join_spectra is FALSE.
 Default: "SWIR"}
 
-\item{source}{`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'}
+\item{source}{`character` ["HC0" | "HRC"], Considered Data Cub,
+Default: 'HCO'}
 }
 \value{
 `list` containing required info according to `proc_lev`

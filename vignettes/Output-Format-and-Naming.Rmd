@@ -11,8 +11,7 @@ knitr::opts_chunk$set(
 
 ### Format of output rasters
 
-- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format`
-  argument of `convert_prisma`. 
+- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format` argument of `pr_convert`. 
 
 ### Naming conventions
 

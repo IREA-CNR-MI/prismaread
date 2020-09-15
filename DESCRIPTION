@@ -40,7 +40,9 @@ Suggests: testthat,
     ggplot2,
     tibble,
     piggyback,
-    usethis
+    usethis, 
+    mapview,
+    piggyback
 Remotes: 
     isciences/exactextractr
 RoxygenNote: 7.1.1

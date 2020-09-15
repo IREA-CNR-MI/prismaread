@@ -37,11 +37,13 @@ test_that(
         testthat::expect_equal(dim(test), c(63, 19))
 
         test <- pr_extract_spectra(in_file, in_vect,
-                                   selstats = c("mean", "stdev", "coeffvar" ,"min"))
+                                   selstats = c("mean", "stdev", "coeffvar" ,
+                                                "min"))
         testthat::expect_equal(dim(test), c(63*9, 6))
 
         test <- pr_extract_spectra(in_file, in_vect,
-                                   selstats = c("mean", "stdev", "coeffvar" ,"min"),
+                                   selstats = c("mean", "stdev", "coeffvar",
+                                                "min"),
                                    quantiles = TRUE ,
                                    percs = c(0.25,0.5,0.75))
         testthat::expect_equal(dim(test), c(63*9, 9))
@@ -53,12 +55,14 @@ test_that(
         outfile <- tempfile(fileext = ".RData")
         test <- pr_extract_spectra(in_file, in_vect, id_field = "field_id",
                                    out_file = outfile)
-        testthat::expect_true(file.exists(gsub(".RData", "_stats.RData", outfile)))
+        testthat::expect_true(file.exists(gsub(".RData", "_stats.RData",
+                                               outfile)))
 
         outfile <- tempfile(fileext = ".xlsx")
         test <- pr_extract_spectra(in_file, in_vect, id_field = "field_id",
                                    out_file = outfile)
-        testthat::expect_true(file.exists(gsub(".xlsx", "_stats.xlsx", outfile)))
+        testthat::expect_true(file.exists(gsub(".xlsx", "_stats.xlsx",
+                                               outfile)))
 
         outfile <- tempfile(fileext = ".csv")
         test <- pr_extract_spectra(in_file, in_vect, id_field = "field_id",

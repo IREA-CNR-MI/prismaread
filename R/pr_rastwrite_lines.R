@@ -4,14 +4,18 @@
 #' @param out_file `character` full path of output image
 #' @param out_format `character` [\"TIF\" | \"ENVI\"], Default: 'tif'
 #' @param proc_lev `character` [\"1\" | \"2D\"], Default: '1'
-#' @param scale_min `numeric` coefficients use to compute values from DN on L2 products
-#' @param scale_max `numeric`  coefficients use to compute values from DN on L2 products
-#' @param join `logical` flag used to indicate if we are saving the "joined" VNIR+SWIR cube
+#' @param scale_min `numeric` coefficients use to compute values from DN on
+#'  products
+#' @param scale_max `numeric`  coefficients use to compute values from DN on L2
+#'  products
+#' @param join `logical` flag used to indicate if we are saving the "joined"
+#'  VNIR+SWIR cube
 #' @return the function is called for its side effects
 #' @details DETAILS
 #' @rdname pr_rastwrite_lines
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
-#' @importFrom raster nlayers brick raster blockSize writeStart getValues writeValues writeStop
+#' @importFrom raster nlayers brick raster blockSize writeStart getValues
+#' writeValues writeStop
 
 pr_rastwrite_lines <- function(rast_in,
                             out_file,
@@ -29,13 +33,13 @@ pr_rastwrite_lines <- function(rast_in,
     bs <-  raster::blockSize(out)
 
     if (proc_lev == "ERR") {
-        datatype = "INT1U"
+        datatype <- "INT1U"
     }
 
     if (substring(proc_lev, 1,1) == "1") {
-        datatype = "FLT4S"
+        datatype <- "FLT4S"
     } else {
-        datatype = "FLT4S"
+        datatype <- "FLT4S"
     }
 
 

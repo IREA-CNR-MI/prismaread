@@ -33,7 +33,7 @@ pr_make_atcor <- function(f,
 
     wl_tot_atcor   <- wls[wls != 0]
     fwhm_tot_atcor <- fwhms[fwhms != 0]
-    out <- data.frame(`channel number`            = 1:length(wl_tot_atcor),
+    out <- data.frame(`channel number`            = seq_along(wl_tot_atcor),
                       `channel center wavelength` = round(wl_tot_atcor/1000,
                                                           digits = 6),
                       `bandwidth` = fwhm_tot_atcor, stringsAsFactors = FALSE)
@@ -58,7 +58,8 @@ pr_make_atcor <- function(f,
     file.copy(system.file("extdata/atcor_dat.dat", package = "prismaread"),
               out_file_dat)
 
-    # if specified, save additional wvl files corresponding to selected columns ----
+    # if specified, save additional wvl files corresponding to selected ----
+    # columns
 
     if (!is.null(ATCOR_wls)) {
 

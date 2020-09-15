@@ -2,7 +2,8 @@
 % Please edit documentation in R/pr_extract_spectra.R
 \name{pr_extract_spectra}
 \alias{pr_extract_spectra}
-\title{Extract values and statistics from a PRISMA hyperspectral cube converted with pr_convert}
+\title{Extract values and statistics from a PRISMA hyperspectral cube
+ converted with pr_convert}
 \usage{
 pr_extract_spectra(
   in_file,
@@ -21,57 +22,62 @@ pr_extract_spectra(
 \arguments{
 \item{in_file}{input PRISMA file obtained with `pr_convert`}
 
-\item{in_vect}{either the full path to a vector file, or a `sf` object containing
-the points/polygons on which data should be extracted}
+\item{in_vect}{either the full path to a vector file, or a `sf` object
+containing the points/polygons on which data should be extracted}
 
 \item{id_field}{`character` (Optional), name of the column of the vector
-dataset to be used to "name" the outputs, and also "aggregate" them in case `dissolve` is TRUE.
+dataset to be used to "name" the outputs, and also "aggregate" them in case
+`dissolve` is TRUE.
 If NULL, a arbitrary `ID` field is created, and each point/polygon
 is considered separately (see Details),  Default: NULL}
 
-\item{dissolve}{`logical` If TRUE and `id_field` was specified, in case multiple features of the input
-vector share a common id, they are dissolved before extracting the data, Default: FALSE}
+\item{dissolve}{`logical` If TRUE and `id_field` was specified, in case
+multiple features of the input vector share a common id, they are dissolved
+before extracting the data, Default: FALSE}
 
-\item{stats}{`logical` IF TRUE, compute standard statistics (mean, min, max, sd, variation coefficient)
-on the vector features, Default: TRUE}
+\item{stats}{`logical` IF TRUE, compute standard statistics (mean, min, max,
+sd, variation coefficient) on the vector features. Statistics to be
+computed are set using the `selstats` argument, Default: TRUE}
 
-\item{selstats}{`character` containing the statistics to be computed. Possible values are:
-"mean", "stdev","variance","coefficient_of_variation",
-"min","max"}
+\item{selstats}{`character` containing the statistics to be computed.
+Possible values are: "mean", "stdev","variance","coeffvar", "min","max",
+Default: c("mean", "stdev")}
 
-\item{stats_format}{`character` ["long" | "wide"] defines the format used for statistics output.
-If "long", the output has one column for the ID of the feature, and one column for each statistic.
-If "wide", the output has one column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2, etcetera)}
+\item{stats_format}{`character` ["long" | "wide"] defines the format used for
+statistics output. If "long", the output has one column for the ID of the
+feature, and one column for each statistic. If "wide", the output has one
+column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2,
+etcetera)}
 
-\item{quantiles}{`logical`, if TRUE, also compute quantiles on the vector features. Computed quantiles
-are set using the `percs` argument, Default: FALSE}
+\item{quantiles}{`logical`, if TRUE, also compute quantiles on the vector
+features. Computed quantiles are set using the `percs` argument,
+Default: FALSE}
 
-\item{percs}{`(sorted) numeric array [0,1]` defines which quantiles should be computed if
-`quantiles` is TRUE, Default: c(5,25,50,75,95)}
+\item{percs}{`(sorted) numeric array [0,1]` defines which quantiles should be
+computed if `quantiles` is TRUE, Default: c(0.05,0.25,0.50,0.75,0.95)}
 
-\item{allpix}{`logical` IF TRUE, also save the values for all pixels of the `in_vect`
-features in the `allpix` slot of the output list, Default: FALSE}
+\item{allpix}{`logical` IF TRUE, also save the values for all pixels of the
+`in_vect` features in the `allpix` slot of the output list, Default: FALSE}
 
-\item{out_file}{`character` full path of an output file where results should be stored, with
-extension. Valid extensions are ".csv", ".xls", ".xlsx" and ".RData". If NULL, output
-is not saved, Default: NULL}
+\item{out_file}{`character` full path of an output file where results should
+be stored, with extension. Valid extensions are ".csv", ".xls", ".xlsx"
+and ".RData". If NULL, output is not saved, Default: NULL}
 }
 \value{
 format of the output varies based on arguments `allpix` and `stats`
- 1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted statistics,
-    for each feature of the input and each wavelength. Format depends on `stat_sformat`;
- 2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted raster values,
-    for each pixel of each feature of the input and each wavelength;
- 3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot contains
-    statistics, and the `allpix` slot contains pixel values;
+ 1. If stats = TRUE and allpix = FALSE: a `tibble` containing extracted
+    statistics, for each feature of the input and each wavelength.
+    Format depends on `stat_sformat`;
+ 2. If stats = FALSE and allpix = TRUE:  a `tibble` containing extracted
+    raster values for each pixel of each feature of the input and each
+    wavelength;
+ 3. If stats = TRUE and allpix = TRUE:  a `list` in which the `stats` slot
+    contains statistics, and the `allpix` slot contains pixel values;
 }
 \description{
 function to extract values of a PRISMA image converted
  with prismaread on points/polygons saved on a vector file or on
  a `sf` object
-}
-\details{
-DETAILS
 }
 \examples{
 \dontrun{
@@ -79,7 +85,8 @@ if(interactive()){
  in_file <- "D:/prismareaetd/L2D/testL2D_HCO_VNIR.envi"
  in_vect <- "D:/prismaread/test/testpoints_l2d_polys.gpkg"
  # extract base statistics
- test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx")
+ test <- pr_extract_spectra(in_file, in_vect,
+                            out_file = "D:/Temp/test1.xlsx")
  test
  # plot results using ggplot
  ggplot(test, aes(x = wvl, y = mean)) +
@@ -88,13 +95,15 @@ if(interactive()){
    theme_light()
 
  # extract base statistics ands save results as excel file, in "wide" format
- test <- pr_extract_spectra(in_file, in_vect, out_file = "D:/Temp/test1.xlsx",
-                                stats_format = "wide")
+ test <- pr_extract_spectra(in_file, in_vect,
+                            out_file = "D:/Temp/test1.xlsx",
+                            stats_format = "wide")
  test
 
  # extract custom statistics
  test <- pr_extract_spectra(in_file, in_vect,
-                                selstats = c("mean", "coeffvar", "stdev", "min", "max"))
+                            selstats = c("mean", "coeffvar", "stdev",
+                                         "min", "max"))
  # plot results using ggplot
  ggplot(test, aes(x = wvl)) +
    geom_line(aes(y = mean, color = ID, group = ID)) +
@@ -109,8 +118,9 @@ if(interactive()){
  test
 
  # extract also all pixels
- test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE, quantiles = TRUE,
-                                selstats = c("mean", "stdev"))
+ test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
+                            quantiles = TRUE,
+                            selstats = c("mean", "stdev"))
  test$allpix
 
  ggplot(test$allpix, aes(x = wvl)) +

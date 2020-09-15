@@ -1,10 +1,12 @@
 #' @title pr_create_vnir
 #' @description helper function used to process and save the VNIR data cube
 #' @param f input data he5 from caller
-#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by caller
+#' @param proc_lev `character` Processing level (e.g., "1", "2B") - passed by
+#'  caller
 #' @param out_file_vnir output file name for VNIR
 #' @param wl_vnir passed by caller - array of PRISMA VNIR wavelengths
-#' @param order_vnir passed by caller - ordering of array of PRISMA VNIR wavelengths
+#' @param order_vnir passed by caller - ordering of array of PRISMA VNIR
+#'   wavelengths
 #' @param fwhm_vnir passed by caller - array of PRISMA VNIR fwhms
 #' @inheritParams pr_convert
 #' @return the function is called for its side effects
@@ -55,7 +57,7 @@ pr_create_vnir <- function(f,
         }
     }
 
-    # Get the different bands in order of wvl, and convert to `raster` bands ----
+    # Get the different bands in order of wvl, and convert to `raster` bands----
     # Also georeference if needed
     ind_vnir <- 1
     if (is.null(selbands_vnir)) {
@@ -118,7 +120,7 @@ pr_create_vnir <- function(f,
                     # on L2, retreive and apply georeferencing ----
                     message("Importing Band: ", band_vnir,
                             " (",wl_vnir[band_vnir], ") of: 66")
-                    outcrs = paste0(
+                    outcrs <- paste0(
                         "+proj=utm +zone=", geo$proj_code,
                         ifelse(substring(
                             geo$proj_epsg, 3, 3) == 7, " +south", ""),
@@ -126,7 +128,8 @@ pr_create_vnir <- function(f,
                     band <- raster::raster(
                         (vnir_cube[,order_vnir[band_vnir], ]),
                         crs = outcrs)
-                    # traspose the band to get it correctly oriented and set extent
+                    # traspose the band to get it correctly oriented and set
+                    # extent
                     band <- raster::t(band)
                     band <- pr_setext_L2D(geo, band)
                     if (apply_errmatrix | ERR_MATRIX) {
@@ -220,7 +223,7 @@ pr_create_vnir <- function(f,
     rm(rast_vnir)
     # write textfile of wavelengths ----
     out_file_txt <- paste0(tools::file_path_sans_ext(out_file_vnir), ".wvl")
-    utils::write.table(data.frame(band = 1:length(wl_sub),
+    utils::write.table(data.frame(band = seq_along(wl_sub),
                                   orband = orbands,
                                   wl   = wl_sub,
                                   fwhm = fwhm_sub,

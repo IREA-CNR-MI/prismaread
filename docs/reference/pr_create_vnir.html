@@ -181,11 +181,13 @@
     </tr>
     <tr>
       <th>proc_lev</th>
-      <td><p>`character` Processing level (e.g., "1", "2B") - passed by caller</p></td>
+      <td><p>`character` Processing level (e.g., "1", "2B") - passed by
+caller</p></td>
     </tr>
     <tr>
       <th>source</th>
-      <td><p>`character` ["HC0" | "HRC"], Considered Data Cube Default: 'HCO'</p></td>
+      <td><p>`character` ["HC0" | "HRC"], Considered Data Cub,
+Default: 'HCO'</p></td>
     </tr>
     <tr>
       <th>out_file_vnir</th>
@@ -193,20 +195,21 @@
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default: 'GTiff'</p></td>
+      <td><p>`character`` ["GTiff" | "ENVI"], Output format, Default:
+'GTiff'</p></td>
     </tr>
     <tr>
       <th>base_georef</th>
-      <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C data,
-using the "Georeference from input GLT" procedure explained here:
+      <td><p>`logical` if TRUE, apply base georeferencing on L1, L2B/C
+data, using the "Georeference from input GLT" procedure explained here:
 https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html,
 Default: TRUE</p></td>
     </tr>
     <tr>
       <th>fill_gaps</th>
       <td><p>`logical` if TRUE, when georeferencing on L1, L2B/C data,
-substitute missing values with results of a 3x3 focal filter on the georeferenced
-data, Default: TRUE</p></td>
+substitute missing values with results of a 3x3 focal filter on the
+georeferenced data, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>wl_vnir</th>
@@ -214,7 +217,8 @@ data, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>order_vnir</th>
-      <td><p>passed by caller - ordering of array of PRISMA VNIR wavelengths</p></td>
+      <td><p>passed by caller - ordering of array of PRISMA VNIR
+wavelengths</p></td>
     </tr>
     <tr>
       <th>fwhm_vnir</th>
@@ -222,29 +226,35 @@ data, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>apply_errmatrix</th>
-      <td><p>Not yet implemented!</p></td>
+      <td><p>`logical` if TRUE, set pixels with values above 0 in
+the SATERR_MATRIX data cube (for L1) or ERRMATRIX cube (for L2) to NA,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>ERR_MATRIX</th>
-      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX Data, default: FALSE
-SATURATION ERROR MATRIX is coded as:
- 0=pixel ok;
- 1=DEFECTIVE PIXEL from KDP
- 2= Pixel in saturation.
- 3= Pixel with lower radiometric accuracy, due to coregistration effects.
- 4= Pixel becomes NaN or Inf during processing.</p></td>
+      <td><p>`logical` if TRUE, also save the SATURATION ERROR MATRIX
+Data, Default: FALSE
+ SATURATION ERROR MATRIX is coded as:
+  0=pixel ok;
+  1=DEFECTIVE PIXEL from KDP
+  2= Pixel in saturation.
+  3= Pixel with lower radiometric accuracy, due to coregistration effects.
+  4= Pixel becomes NaN or Inf during processing.</p></td>
     </tr>
     <tr>
       <th>selbands_vnir</th>
-      <td><p>`numeric array` containing wavelengths (in nanometers) of bands that should be extracted from
-the VNIR data cube. If not NULL, only the bands with wavelengths closest to these values are extracted, Default: NULL</p></td>
+      <td><p>`numeric array` containing wavelengths (in nanometers)
+of bands that should be extracted from the VNIR data cube. If not NULL, only
+the bands with wavelengths closest to these values are extracted,
+Default: NULL</p></td>
     </tr>
     <tr>
       <th>in_L2_file</th>
-      <td><p>`character` full path of an L2B/C file to be used to extract georeferencing
-info and angles for a corresponding L1 file. If not NULL, and `in_file` is a L1 file, the LAT and LON
-fields used for bowtie georeferencing are taken from the L2 file instead than from the L1 file. The ANGLES
-data are also retrieved from the L2 file.</p></td>
+      <td><p>`character` full path of an L2B/C file to be used to
+extract georeferencing info and angles for a corresponding L1 file. If not
+NULL, and `in_file` is a L1 file, the LAT and LON fields used for bowtie
+georeferencing are taken from the L2 file instead than from the L1 file.
+The ANGLES data are also retrieved from the L2 file if requested.</p></td>
     </tr>
     </table>
 
@@ -267,7 +277,7 @@ data are also retrieved from the L2 file.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

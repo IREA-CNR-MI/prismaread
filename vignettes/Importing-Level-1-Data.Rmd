@@ -7,97 +7,156 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(prismaread)
 ```
 
-The function to be used to import PRISMA L1 data is `pr_convert`. 
+The function to be used to import __PRISMA L1 data__ is `pr_convert`. 
+
 It takes as input the full path of a PRISMA L1 hdf5 image, an output folder name and format, and a series of switches
 allowing to decide which hyperspectral cubes and ancillary datasets should be crated.
 
 In particular: 
 
- - the `VNIR` and `SWIR` logical arguments allow to decide if importing the VNIR and SWIR hyperspectral cubes; 
- - the `FULL` logical argument `FULL` argument allows deciding if a complete VNIR+SWIR cube has to be created
-alongside the "single" VNIR and SWIR ones. In that case, the 'join_priority' 
-keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
-cube in the wavelength were they overlap. 
- - the `PAN`, `LATLON`, `CLOUD`, `GLINT` and `LC` logical argument allow to decide which of the 
- corresponding ancillary datasets should be created (see the PRISMA manual for additional info)
+- the `VNIR` and `SWIR` logical arguments allow to decide if importing the VNIR and SWIR hyperspectral cubes; 
+- the `FULL` logical argument allows deciding if a complete VNIR+SWIR cube has to be created.
+In that case, the `join_priority` keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
+cube in the wavelengths' region were they overlap. If `FULL` is `TRUE` and 
+- the `PAN`, `LATLON`, `CLOUD`, `GLINT`, `LC` and `ERR_MATRIX` logical arguments allow to decide which of the 
+corresponding ancillary datasets should be created (see the PRISMA manual for additional info)
+- the `apply_errmatric` logical argument allows to decide if pixels for which the ERR_MATRIX values are
+above one are to be set to NoData. 
+- the `base_georef` logical argument allows to decide if a "base" georeferencing in Lat/Lon WGS-84 based on the "GLT and Bowtie  Correction" technique used in ENVI (described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html), is  applied. If set to `FALSE`, the original 1000 x 1000 datasets are returned (flipped to orient them "north/south"), without   projection.
 
-A "base" georeferencing in Lat/Lon WGS-84 based on the "GLT and Bowtie Correction" technique used in ENVI, and
-described in https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html, unless the `base_georef`
-argument is set to FALSE.
+All logical arguments are set to `FALSE` by default (with the exception of `base_georef`), allowing complete customization of a `pr_convert` run.
 
-For example the following code:
+For example the following code accesses the input L1 file and saves a the VNIR and SWIR cubes and the PAN, ANGLES and CLOUD datasets __See [documentation](reference/pr_convert.html) of the pr_convert() function for info on available arguments__. 
 
-```{r l1example, eval=FALSE}
-in_file    = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-out_folder = "/home/lb/tmp/test/"
-out_format = "ENVI"
+__IMPORTANT NOTE__ _To run this, you'd need to download the example data from GitHub. The 
+data is about 1 GB so it could take a while!! The data would be placed in in subfolder
+_testdata_ of the `prismaread` installation folder._
 
-# Save a full image, prioritizing the SWIR spectrometer and save in ENVI format
-pr_convert(in_file    = in_file,
-               out_folder = out_folder,
-               out_format = out_format,
-               join_priority = "SWIR",
-               FULL   = TRUE,
-               LATLON = TRUE,
-               PAN    = TRUE,
-               CLOUD  = TRUE)
+```{r l1example, echo=TRUE, message=FALSE, warning=FALSE}
+
+testfile_l1 <- file.path(system.file("testdata/", package = "prismaread"),
+                         "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5")
+# Here we download the example file from github if not already downloaded. 
+# WARNING ! This may need a long time (1GB file)
+if (!file.exists(testfile_l1)){
+  message("Downloading test data - This may need a long time!")
+  piggyback::pb_download("PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip",
+                         repo = "lbusett/prismaread",
+                         dest = file.path(system.file("", package = "prismaread"), "/testdata"))
+  zipfile <- file.path(system.file("testdata/", package = "prismaread"),
+                       "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip")
+  unzip(zipfile, exdir = dirname(testfile_l1))
+  unlink(zipfile)
+}
+out_folder = file.path(tempdir(), "prismaread_l1")
+
+pr_convert(in_file    = testfile_l1,
+           out_folder = out_folder,
+           out_format = "GTiff",
+           VNIR       = TRUE,
+           SWIR       = TRUE,
+           LATLON     = TRUE,
+           PAN        = TRUE,
+           CLOUD      = TRUE)
 
 ```
 
-accesses the input file and saves both the VNIR and SWIR cubes, as well as a full hyperspectral cube and the PAN, ANGLES and CLOUD datasets __See [documentation](reference/pr_convert.html) of the pr_convert() function for info on available arguments__. 
+Output files are saved in `out_folder` according to conventions described [here](articles/Output-Format-and-Naming.Rmd) and can then be accessed, visualized and processed using standard `R` syntax (e.g., with `raster` or `stars`).
 
-The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files (See [Output format and Naming Conventions](articles/Output-Format-and-Naming.html). 
+```{r}
+
+list.files(out_folder)
+vnir  <- raster::brick(file.path(out_folder, "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.tif"))
+vnir
+
+mapview::viewRGB(vnir, 40,30,20)
+```
+
+The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files . 
+
+```{r}
+wvls <- read.table(file.path(
+  out_folder, 
+  "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.wvl"), 
+  header = TRUE)
+DT::datatable(wvls)
+```
+
+
 
 ## Associating acquisition angles with L1 data
 
 PRISMA L1 data unfortunately does not contain information concerning acquisition angles, that is instead available
 for all L2 datasets. However, if both the L1 and any L2 dataset area available `prismaread` allows to associate the
 ANGLES data retrieved from the L2 dataset to the L1 one. To do that, the user has to specify the additional
-`in_L2_file` in the call to `pr_convert`, such as in: 
+`in_L2_file` in the call to `pr_convert`. 
+__Note that in this case also the georeferencing information used for the GLT georeferencing is taken 
+from the L2 dataset!__ 
 
-```{r l1example4, eval=FALSE}
-in_file    = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-in_L2_file = "/home/lb/tmp/test/PRS_L2B_STD_OFFL_20190825103112_20190825103117_0001.he5"
-out_folder = "/home/lb/tmp/test/"
-out_format = "ENVI"
+```{r l1example2, echo=TRUE, message=FALSE, warning=FALSE}
+testfile_l2 <- file.path(system.file("testdata/", package = "prismaread"),
+                         "PRS_L2C_STD_20200524103704_20200524103708_0001.he5")
+# Here we download the example file from github if not already downloaded. 
+# WARNING ! This may need a long time (1GB file)
+if (!file.exists(testfile_l2)){
+  message("Downloading test data - This may need a long time!")
+  piggyback::pb_download("PRS_L2C_STD_20200524103704_20200524103708_0001.zip",
+                         repo = "lbusett/prismaread",
+                         dest = file.path(system.file("", package = "prismaread"), "/testdata"))
+  zipfile <- file.path(system.file("testdata/", package = "prismaread"),
+                       "PRS_L2C_STD_20200524103704_20200524103708_0001.zip")
+  unzip(zipfile, exdir = dirname(testfile_l1))
+  unlink(zipfile)
+}
 
-# Save a full image, prioritizing the SWIR spectrometer and save in ENVI format
-pr_convert(in_file    = in_file,
-               in_L2_file = in_L2_file, 
-               out_folder = out_folder,
-               out_format = out_format,
-               join_priority = "SWIR",
-               FULL   = TRUE,
-               LATLON = TRUE,
-               PAN    = TRUE,
-               CLOUD  = TRUE, 
-               ANGLES = TRUE)
+out_folder = file.path(tempdir(), "prismaread_l12")
+
+# Save a only VNIR,  also including the ANGLES dataset, in ENVI format, taking
+# ANGLES and georeferencing info from a L2 file. 
+pr_convert(in_file    = testfile_l1,
+           in_L2_file = testfile_l2, 
+           out_folder = out_folder,
+           out_format = "ENVI",
+           VNIR   = TRUE,
+           ANGLES = TRUE)
 ```
 
-__Note that in this case also the georeferencing information used for the GLT georeferencing is taken 
-from the L2 dataset!__
 
 ## Importing only selected bands
 
 The `selbands_vnir` e `selbands_swir` arguments allow to select only a specified subset of 
 PRISMA bands, by specifying an array of required wavelengths. For example: 
 
-``` {r l1example2, eval=FALSE}
-pr_convert(in_file    = in_file,
-               out_folder = out_folder,
-               out_format = out_format,
-               VNIR = TRUE, 
-               SwiR = TRUE, 
-               selbands_vnir = c(450,550,650), 
-               selbands_swir = c(1000,1330), 
-               join_priority = "SWIR",
-               FULL   = TRUE)
+```{r l1example3, echo=TRUE, message=FALSE, warning=FALSE}
+out_folder = file.path(tempdir(), "prismaread_l1sel")
+pr_convert(in_file    = testfile_l1,
+           out_folder = out_folder,
+           out_format = "GTiff",
+           VNIR = TRUE, 
+           SWIR = TRUE,
+           FULL = TRUE,
+           selbands_vnir = c(450,550,650,750), 
+           selbands_swir = c(1000,1330))
 ```
 
 will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the original 
 PRISMA bands whit wavelengths closer to the requested ones. 
+
+```{r}
+list.files(out_folder)
+r <- raster::stack(file.path(out_folder, "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.tif"))
+r
+
+raster::plotRGB(r, 4,3,2, stretch = "lin")
+
+DT::datatable(read.table(file.path(
+  out_folder, 
+  "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.wvl")))
+```
+
 
 
 ## Creation of ATCOR files
@@ -112,26 +171,24 @@ within the "ATCOR" subfolder of the main output folder, with the `.wvl` file con
 For example, this code: 
 
 ```{r atcor1, eval=FALSE}
-in_file  = "/home/lb/tmp/test/PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5"
-out_folder = "/home/lb/tmp/test/"
-out_format = "ENVI"
 
 # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
-pr_convert(in_file    = in_file,
-               out_folder   = out_folder,
-               out_format = out_format,
-               join_priority = "VNIR", 
-               ATCOR = TRUE, 
-               FULL = TRUE,
-               PAN  = TRUE,
-               CLOUD  = TRUE)
+pr_convert(in_file       = testfile_l1,
+           out_folder    = out_folder,
+           out_format    = "GTiff",
+           join_priority = "VNIR", 
+           ATCOR         = TRUE, 
+           FULL          = TRUE,
+           PAN           = TRUE,
+           CLOUD         = TRUE)
 
 ```
 
-will create input files for ATCOR useful for correction of the full hyperspectral cube. 
+will create input files for ATCOR useful for correction of the full hyperspectral cube and place them in the
+"ATCOR" subfolder of the main output folder. 
 
-The user can however also choose to generate additional ATCOR files, containing data about
-wavelengths and FWHMs related to different "columns" of the data cube, as derived 
+The user can  also choose to generate additional ATCOR files, containing data about
+wavelengths and FWHMs related to different columns of the data cube, as derived 
 from the `KDP_AUX/Cw_Vnir_Matrix`, `KDP_AUX/Cw_Swir_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix` HDF layers. This could allow running different atmospheric corrections for different columns of the data, potentially allowing compensating
 "smile" effects on the retrieved surface reflectances. For example, this code: 
 
@@ -142,14 +199,14 @@ out_format = "ENVI"
 
 # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
 pr_convert(in_file    = in_file,
-               out_folder   = out_folder,
-               out_format = out_format,
-               join_priority = "SWIR", 
-               ATCOR = TRUE, 
-               ATCOR_wls = c(200,800), 
-               FULL = TRUE,
-               PAN  = TRUE, 
-               CLOUD  = TRUE)
+           out_folder   = out_folder,
+           out_format = out_format,
+           join_priority = "SWIR", 
+           ATCOR = TRUE, 
+           ATCOR_wls = c(200,800), 
+           FULL = TRUE,
+           PAN  = TRUE, 
+           CLOUD  = TRUE)
 
 ```
 
@@ -158,4 +215,4 @@ will create additional ATCOR input files with wavelengths corresponding to those
 
 __IMPORTANT NOTE__
 
-The latter functionality may be only appliable to "HRC" L1 data cubes. We are currently investigating this - proceed with caution!
+The latter functionality is only appliable to "HRC" L1 data cubes.

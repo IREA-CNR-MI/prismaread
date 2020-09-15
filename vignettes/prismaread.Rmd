@@ -202,18 +202,18 @@ out_format = "ENVI"
 
 # Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
 pr_convert(in_file    = in_file,
-               out_folder = out_folder,
-               out_format = out_format,
-               VNIR   = TRUE, 
-               SWIR   = FALSE,
-               FULL   = FALSE,
-               LATLON = TRUE,
-               PAN    = TRUE,
-               ANGLES  = TRUE)
+           out_folder = out_folder,
+           out_format = out_format,
+           VNIR       = TRUE, 
+           SWIR       = FALSE,
+           FULL       = FALSE,
+           LATLON     = TRUE,
+           PAN        = TRUE,
+           ANGLES     = TRUE)
 
 ```
 
-The following code accesses the input file and saves the VNIR and SWIR cubes, as well as a full hyperspectral cube and the ANGLES and LATLON datasets __See [documentation](reference/convert_prisma.html) of the convert_prisma() function for info on available arguments__.
+The following code accesses the input file and saves the VNIR and SWIR cubes, as well as a full hyperspectral cube and the ANGLES and LATLON datasets __See [documentation](reference/pr_convert.html) of the pr_convert() function for info on available arguments__.
 
 ```{r l2example2, eval=FALSE}
 in_file    = "/home/lb/tmp/test/PRS_L2D_STD_20190825103112_20190825103117_0001.he5"
@@ -221,14 +221,14 @@ out_folder = "/home/lb/tmp/test/"
 out_format = "ENVI"
 
 # Save a full image, prioritizing the VNIR spectrometer and save in EVI format
-convert_prisma(in_file    = in_file,
-               out_folder = out_folder,
-               out_format = out_format,
-               VNIR   = TRUE, 
-               SWIR   = TRUE,
-               FULL   = TRUE,
-               LATLON = TRUE,
-               ANGLES  = TRUE)
+pr_convert(in_file    = in_file,
+           out_folder = out_folder,
+           out_format = out_format,
+           VNIR       = TRUE, 
+           SWIR       = TRUE,
+           FULL       = TRUE,
+           LATLON     = TRUE,
+           ANGLES     = TRUE)
 
 ```
 
@@ -241,15 +241,15 @@ The `selbands_vnir` e `selbands_swir` arguments allow to select only a specified
 PRISMA bands, by specifying an array of required wavelengths. For example: 
 
 ``` {r l1example3, eval=FALSE}
-convert_prisma(in_file    = in_file,
-               out_folder = out_folder,
-               out_format = out_format,
-               VNIR = TRUE, 
-               SwiR = TRUE, 
-               selbands_vnir = c(450,550,650), 
-               selbands_swir = c(1000,1330), 
-               join_priority = "SWIR",
-               FULL   = TRUE)
+pr_convert(in_file       = in_file,
+           out_folder    = out_folder,
+           out_format    = out_format,
+           VNIR          = TRUE, 
+           SWIR          = TRUE, 
+           selbands_vnir = c(450,550,650), 
+           selbands_swir = c(1000,1330), 
+           join_priority = "SWIR",
+           FULL          = TRUE)
 ```
 
 will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the original 
@@ -266,9 +266,9 @@ Spectral Indexes to be computed can be selected from a list of predefined ones. 
 ```{r index_1, eval=FALSE, message=FALSE, warning=FALSE}
 in_file <- "D:/prismaread/L2D/PRS_L2D_STD_20190616102249_20190616102253_0001.he5"
 pr_convert(in_file,
-               out_format = "ENVI",
-               out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
-               indexes = c("GI", "MTCI"))
+           out_format = "ENVI",
+           out_folder = "D:/prismaread/L2D/testL2D/ENVI", 
+           indexes    = c("GI", "MTCI"))
 ```
 
 , or use function `pr_compute_indexes` to compute them starting from an hyperspectral cube already processed:
@@ -339,8 +339,7 @@ pr_convert(in_file,
 
 ### Format of output rasters
 
-- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format`
-  argument of `convert_prisma`. 
+- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format` argument of `pr_convert`. 
 
 ### Naming conventions
 
