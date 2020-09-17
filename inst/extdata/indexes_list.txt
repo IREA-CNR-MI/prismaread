@@ -129,3 +129,5 @@
 "128"	"ZTM"	"Zarco-Tejada & Miller"	"R750 / R710"	"Chlorophyll"	"Zarco-Tejada et al. (2001)"
 "129"	"myindex"	"My custom Index"	"R600 / R700"	NA	"Me (2020)"
 "130"	"009066L"	"My custom Index"	"R600 / R700"	NA	"Me (2020)"
+"131"	"009449D"	"My custom Index"	"R600 / R700"	NA	"Me (2020)"
+"132"	"008530N"	"My custom Index"	"R600 / R700"	NA	"Me (2020)"

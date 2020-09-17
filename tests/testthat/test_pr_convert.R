@@ -356,19 +356,19 @@ test_that(
         vnir  <- raster::brick(
             file.path(out_folder_L1, "testL1_1_HCO_VNIR.tif"))
         means_vnir <- as.numeric(raster::cellStats(vnir, "mean", na.rm = TRUE))
-        testthat::expect_equal(means_vnir, c(71.72868  , 45.73275  , 58.20885),
+        testthat::expect_equal(means_vnir, c(71.74590  , 45.75219  , 58.21456),
                                tolerance = 0.0001)
 
         swir  <- raster::brick(
             file.path(out_folder_L1, "testL1_1_HCO_SWIR.tif"))
         means_swir <- as.numeric(raster::cellStats(swir, "mean", na.rm = TRUE))
-        testthat::expect_equal(means_swir, c(8.921804), tolerance = 0.0001)
+        testthat::expect_equal(means_swir, c(8.926156), tolerance = 0.0001)
 
         full <- raster::brick(
             file.path(out_folder_L1, "testL1_1_HCO_FULL.tif"))
         means_full <- as.numeric(raster::cellStats(full, "mean", na.rm = TRUE))
-        testthat::expect_equal(means_full, c(71.72868, 45.73275, 58.20885,
-                                             8.921804), tolerance = 0.0001)
+        testthat::expect_equal(means_full, c(71.74590, 45.75219, 58.21456,
+                                             8.926156), tolerance = 0.0001)
 
         # Use L2file to georeference ----
         in_L2_file <- file.path(

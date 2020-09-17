@@ -7,11 +7,14 @@ Authors@R:
     comment = c(ORCID = '0000-0001-9634-6038')), 
     person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut"), 
     comment = c(ORCID = '0000-0001-6207-5188')))
-Description: `prismaread` allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/) 
- from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). 
- It also provides functionality for automatically computing Spectral Indexes from either the original HDF data
- or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extracting 
- data and computing statistics for the different bands over areas of interest.
+Description: `prismaread` allows easily importing PRISMA (http://www.prisma-i.it/index.php/it/) 
+ satellite hyperspectral data cubes and ancillary information from the original
+ data provided by ASI in HDF format, and convert them to a easier to use format 
+ (ENVI or GeoTiff). 
+ It also provides functionality for automatically computing Spectral Indexes from
+ either the original HDF data or from hyperspectral data already converted using 
+ function `pr_convert`, and for easily and quickly extracting data and computing
+ statistics for the different bands over areas of interest.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

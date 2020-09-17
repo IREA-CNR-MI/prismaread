@@ -177,8 +177,6 @@ pr_create_vnir <- function(f,
         fwhm_sub <- fwhm_vnir[seqbands]
     }
 
-    # wl_vnir   <- wl_vnir[wl_vnir != 0]
-    # fwhm_vnir <- fwhm_vnir[fwhm_vnir != 0]
     rm(vnir_cube)
     rm(band)
     gc()

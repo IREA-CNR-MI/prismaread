@@ -142,7 +142,11 @@ pr_compute_indexes <- function(in_file,
                         message("Writing Block: ", i, " of: ", bs$n)
                         x <- raster::getValues(in_rast_comp, row = bs$row[i],
                                                nrows = bs$nrows[i])
-                        x <- eval(parse(text = indform))
+                        if (inherits(x, "numeric")) {
+                            x <- x
+                        } else {
+                            x <- eval(parse(text = indform))
+                        }
                         out <- raster::writeValues(out, x, bs$row[i])
                     }
                     out <- raster::writeStop(out)

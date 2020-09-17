@@ -79,7 +79,8 @@ The function also saves ancillary data related to wavelengths and fwhms of the d
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 wvls <- read.table(file.path(
   out_folder_L2D, 
-  "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.wvl"))
+  "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.wvl"), 
+  header = TRUE)
 DT::datatable(wvls)
 ```
 

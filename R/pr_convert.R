@@ -465,10 +465,6 @@ pr_convert <- function(in_file,
       wl_swir   <- wl_swir[seqbands_swir]
       fwhm_swir <- fwhm_swir[seqbands_swir]
     }
-    # be sure to remove zeroes also if swir already present to avoid  ----
-    # errors on creation of FULL if recycling an existing cube from file
-    # fwhm_swir <- fwhm_swir[wl_swir != 0]
-    # wl_swir   <- wl_swir[wl_swir != 0]
 
     # create FULL data cube and convert to raster ----
     if (FULL & is.null(indexes)) {
@@ -494,6 +490,7 @@ pr_convert <- function(in_file,
       }
     }
 
+    # Create and write the FULL hyperspectral cube if needed ----
     if (FULL) {
       if (file.exists(out_file_full) & !overwrite) {
         message("FULL file already exists - use overwrite = TRUE or change
@@ -556,7 +553,7 @@ pr_convert <- function(in_file,
           }
         }
 
-
+        # Write ENVI header if needed ----
         if (out_format == "ENVI") {
           cat("band names = {", paste(names(rast_tot),collapse=","), "}", "\n",
               file=raster::extension(out_file_full, "hdr"), append = TRUE)
@@ -605,12 +602,6 @@ pr_convert <- function(in_file,
                            cust_indexes = cust_indexes,
                            overwrite = overwrite)
       }
-
-      # if (CONTREM) {
-      #
-      #   # TODO: Add functionality for continuum removal computatation ?
-      #
-      # }
 
     }
 
@@ -789,7 +780,7 @@ pr_convert <- function(in_file,
 
   # second run: create indexes -----
   # in this way we can use the same function,
-  # and when creating indexes create a temporary full raster, containgn only
+  # and when creating indexes create a temporary full raster, containing  only
   # bands required for the selected indexes
 
   if (!is.null(indexes)) {

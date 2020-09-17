@@ -154,7 +154,8 @@ raster::plotRGB(r, 4,3,2, stretch = "lin")
 
 DT::datatable(read.table(file.path(
   out_folder, 
-  "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.wvl")))
+  "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.wvl")), 
+  header = TRUE)
 ```
 
 
