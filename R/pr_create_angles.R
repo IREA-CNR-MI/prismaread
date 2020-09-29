@@ -9,12 +9,12 @@
 #' @importFrom raster raster flip extent setExtent
 #'
 pr_create_angles <- function(f,
-                                 proc_lev,
-                                 out_file,
-                                 out_format,
-                                 base_georef,
-                                 fill_gaps,
-                                 in_L2_file = NULL){
+                             proc_lev,
+                             out_file,
+                             out_format,
+                             base_georef,
+                             fill_gaps,
+                             in_L2_file = NULL){
 
 
     message(" - Accessing ANGLES dataset - ")
@@ -45,9 +45,9 @@ pr_create_angles <- function(f,
                       "_HCO/Geometric Fields/Solar_Zenith_Angle")]][,])
         if (base_georef) {
             rast_viewzen   <- pr_basegeo(rast_viewzen, geo$lon, geo$lat,
-                                             fill_gaps)
+                                         fill_gaps)
             rast_relazang  <- pr_basegeo(rast_relazang, geo$lon, geo$lat,
-                                             fill_gaps)
+                                         fill_gaps)
             rast_solzenang <- pr_basegeo(rast_solzenang, geo$lon, geo$lat,
             )
         } else {
@@ -95,8 +95,16 @@ pr_create_angles <- function(f,
     rastang <- raster::stack(rast_viewzen,
                              rast_relazang,
                              rast_solzenang)
-    rastang[rastang == 0 ] <- NA
+    rastang[rastang == 0] <- NA
+
+    avg_ang <- raster::cellStats(rastang, 'mean', na.rm = T)
+    avg_ang <- as.data.frame(t(avg_ang))
+    names(avg_ang) <- c("view_zenang", "relaz_ang", "solzen_ang")
+    txt_angfile <- paste0(tools::file_path_sans_ext(out_file), ".avgs")
+    write.table(avg_ang, txt_angfile, row.names = FALSE, col.names = TRUE)
+
     names(rastang) <- c("view_zenang", "relaz_ang", "solzen_ang")
+
     gc()
     message(" - Writing ANGLES raster - ")
     pr_rastwrite_lines(rastang, out_file, out_format)
