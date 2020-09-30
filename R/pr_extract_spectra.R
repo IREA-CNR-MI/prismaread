@@ -168,19 +168,19 @@ pr_extract_spectra <- function(in_file,
   if (in_type %in% c("VNIR", "SWIR", "FULL")) {
     in_file_wvl <- paste0(tools::file_path_sans_ext(in_file), ".wvl")
     wvl_ok <- FALSE
-    if (tools::file_ext(in_file) == "envi") {
-      # attempt to retrieve wavelengths from band names (works for ENVI files)
-      tmpnames <- names(in_rast)
-      tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
-      wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..",
-                                               fixed = TRUE)[[2]])
-      if (is.numeric(wvls) && all(!is.na(wvls))) {
-        wvl_ok <- TRUE
-      } else {
-        message("Unable to retrieve wavelengths from ENVI band names - ",
-                "trying to use .wvl file")
-      }
-    }
+    # if (tools::file_ext(in_file) == "envi") {
+    #   # attempt to retrieve wavelengths from band names (works for ENVI files)
+    #   tmpnames <- names(in_rast)
+    #   tmpnames <- substring(tmpnames, 1, nchar(tmpnames) - 1)
+    #   wvls <- as.numeric(data.table::tstrsplit(tmpnames, "..",
+    #                                            fixed = TRUE)[[2]])
+    #   if (is.numeric(wvls) && all(!is.na(wvls))) {
+    #     wvl_ok <- TRUE
+    #   } else {
+    #     message("Unable to retrieve wavelengths from ENVI band names - ",
+    #             "trying to use .wvl file")
+    #   }
+    # }
 
     if (!wvl_ok) {
       if (file.exists(in_file_wvl)) {
