@@ -566,6 +566,7 @@ pr_convert <- function(in_file,
                 out_hdr, append = TRUE)
           write("wavelength units = Nanometers")
           write("sensor type = PRISMA")
+          write("data ignore value = -9.99000000e+002")
         }
 
         out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), ".wvl")

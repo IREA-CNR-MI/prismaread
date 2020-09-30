@@ -58,6 +58,7 @@ pr_create_latlon <- function(f,
         out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
         cat("band names = {", paste(names(rastlatlon),collapse=","), "}", "\n",
             file=out_hdr, append=TRUE)
+        write("data ignore value = -9.99000000e+002")
     }
 
     rm(rastlatlon ,rast_lat, rast_lon)

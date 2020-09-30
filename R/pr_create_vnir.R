@@ -216,6 +216,7 @@ pr_create_vnir <- function(f,
               out_hdr, append = TRUE)
         write("wavelength units = Nanometers")
         write("sensor type = PRISMA")
+        write("data ignore value = -9.99000000e+002")
 
     }
     rm(rast_vnir)
