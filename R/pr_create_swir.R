@@ -202,9 +202,9 @@ pr_create_swir <- function(f,
         write(c("fwhm = {",
                 paste(round(fwhm_sub, digits = 4), collapse = ","), "}"),
               out_hdr, append = TRUE)
-        write("wavelength units = Nanometers")
-        write("sensor type = PRISMA")
-        write("data ignore value = -9.99000000e+002")
+        write("wavelength units = Nanometers", out_hdr, append = TRUE)
+        write("sensor type = PRISMA", out_hdr, append = TRUE)
+        write("data ignore value = -9.99000000e+002", out_hdr, append = TRUE)
     }
 
     rm(rast_swir)

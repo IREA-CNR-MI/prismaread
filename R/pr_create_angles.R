@@ -113,7 +113,7 @@ pr_create_angles <- function(f,
         out_hdr <- paste0(tools::file_path_sans_ext(out_file), ".hdr")
         cat("band names = {", paste(names(rastang),collapse=","), "}", "\n",
             file=out_hdr, append=TRUE)
-        write("data ignore value = -9.99000000e+002")
+        write("data ignore value = -9.99000000e+002", out_hdr, append = TRUE)
     }
     rm(rastang ,rast_viewzen, rast_relazang, rast_solzenang)
     rm(geo)
