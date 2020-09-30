@@ -564,9 +564,9 @@ pr_convert <- function(in_file,
           write(c("fwhm = {",
                   paste(round(fwhm_tot, digits = 4), collapse = ","), "}"),
                 out_hdr, append = TRUE)
-          write("wavelength units = Nanometers")
-          write("sensor type = PRISMA")
-          write("data ignore value = -9.99000000e+002")
+          write("wavelength units = Nanometers", out_hdr, append = TRUE)
+          write("sensor type = PRISMA", out_hdr, append = TRUE)
+          write("data ignore value = -9.99000000e+002", out_hdr, append = TRUE)
         }
 
         out_file_txt <- paste0(tools::file_path_sans_ext(out_file_full), ".wvl")
