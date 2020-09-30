@@ -47,6 +47,7 @@ pr_rastwrite_lines <- function(rast_in,
                               filename = out_file,
                               overwrite = TRUE,
                               options = c("COMPRESS=LZW"),
+                              NAflag = -999,
                               datatype = datatype)
 
     for (i in 1:bs$n) {
