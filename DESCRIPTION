@@ -35,7 +35,8 @@ Imports:
     magrittr, 
     DT,
     rlang,
-    assertthat
+    assertthat,
+    exactextractr
 Suggests: testthat, 
     spelling,
     knitr,
@@ -46,7 +47,5 @@ Suggests: testthat,
     usethis, 
     mapview,
     piggyback
-Remotes: 
-    isciences/exactextractr
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
