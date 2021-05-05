@@ -111,9 +111,9 @@
 #' @examples
 #' \dontrun{
 #'
-#' # Here we download the example file from github using `piggyback` if not already
-#' #  downloaded.
-#' # WARNING ! This may need a long time (1GB file)
+#' # Here the example file is downloaded from GitHub using `{piggyback}`
+#' # (if not already downloaded).
+#' # WARNING: this may need a long time (1GB file).
 #
 #'testfile_l1 <- file.path(
 #' system.file("testdata/", package = "prismaread"),

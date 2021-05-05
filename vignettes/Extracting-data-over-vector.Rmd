@@ -9,45 +9,84 @@ knitr::opts_chunk$set(
 )
 ```
 
-`prismaread` provides a very efficient function based on package `exactextractr`(<https://github.com/isciences/exactextractr>) for extracting and summarizing data from the converted hyperspectral cubes over features of vector spatial files. The function allows to compute several statistics, as well as extracting all pixel values, and to save them to RData, CSV or EXCEL files (**See [documentation](reference/pr_extract_spectra.html) of the prisma\_extract\_spectra() function for info on available arguments**).
+`prismaread` provides a very efficient function based on package `exactextractr`(<https://github.com/isciences/exactextractr>) for extracting and summarising data from the converted hyperspectral cubes over features of vector spatial files. The function allows computing several statistics, as well as extracting all pixel values, and saving them to RData, CSV or EXCEL files (**see [`prisma_extract_spectra()` documentation](reference/pr_extract_spectra.html) for info on available arguments**).
 
-For example, starting from a VNIR Cube obtained with `pr_convert` and a vector polygon file:
+For example, starting from a VNIR Cube obtained with `pr_convert()` and a vector polygon file:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(prismaread)
 library(ggplot2)
 library(tmap)
-in_file  <- system.file("testdata/prismaread_test_HCO_FULL.tif",
-                        package = "prismaread")
-in_vect <- system.file("extdata/testdata/polys_prisma.gpkg",
-                       package = "prismaread")
+in_full_path  <- file.path(
+  system.file("testdata", package = "prismaread"),
+  "prismaread_test_HCO_FULL.tif"
+)
+in_poly_path <- system.file(
+  "extdata/testdata/polys_prisma.gpkg",
+  package = "prismaread"
+)
+
+# Download and unzip using piggyback if necessary
+if (!file.exists(in_full_path)) {
+  message("Downloading test data - this may need a long time...")
+  if (!requireNamespace("piggyback", quietly = TRUE)) {
+    install.packages("piggyback")
+  }
+  in_full_zip_path <- gsub("tif$", "zip", in_full_path)
+  piggyback::pb_download(
+    basename(in_full_zip_path),
+    repo = "lbusett/prismaread",
+    dest = dirname(in_full_zip_path)
+  )
+  piggyback::pb_track(glob = "inst/testdata/*.tif")
+  unzip(in_full_zip_path, exdir = dirname(in_full_path))
+  unlink(in_full_zip_path)
+}
 
 # extract base statistics, in "long" format
-test <- pr_extract_spectra(in_file, in_vect, id_field = "field_id")
-test
+extr1 <- pr_extract_spectra(in_full_path, in_poly_path, id_field = "field_id")
+extr1
 # plot results using ggplot
-ggplot(test, aes(x = wvl, y = mean)) +
+library(ggplot2)
+ggplot(extr1, aes(x = wvl, y = mean)) +
   geom_line(aes(color = ID, group = ID)) +
   facet_wrap(~ID) +
   theme_light()
 
 ```
 
-The `stats_format` defines the format used for statistics' output. If "long" (default, as above), 
+Argument `stats_format` defines the format used for statistics' output. If "long" (default, as above), 
 the output has one column for the ID of the feature, and one column for each statistic. 
-If "wide", the output has one column for each ID/statistic couple (e.g., mean_id_1, stdev_id_1, mean_id_2,
+If "wide", the output has one column for each ID/statistic couple (e.g., `mean_id_1`, `stdev_id_1`, `mean_id_2`,
 etcetera).
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-# extract base statistics for VNIR and save results as excel file, in "wide" format
+in_vnir_path  <- file.path(
+  system.file("testdata", package = "prismaread"),
+  "prisma_test_HCO_VNIR.tif"
+)
 
-in_file  <- system.file("testdata/prisma_test_HCO_VNIR.tif",
-                        package = "prismaread")
-test <- pr_extract_spectra(in_file, in_vect,
-                           out_file = tempfile(fileext = ".xlsx"),
-                           stats_format = "wide", id_field = "field_id")
-test
+# Download and unzip using piggyback if necessary
+if (!file.exists(in_full_path)) {
+  message("Downloading test data - this may need a long time...")
+  in_vnir_zip_path <- gsub("tif$", "zip", in_vnir_path)
+  piggyback::pb_download(
+    basename(in_vnir_zip_path),
+    repo = "lbusett/prismaread",
+    dest = dirname(in_vnir_zip_path)
+  )
+  piggyback::pb_track(glob = "inst/testdata/*.tif")
+  unzip(in_vnir_zip_path, exdir = dirname(in_vnir_path))
+  unlink(in_vnir_zip_path)
+}
 
+# Extract base statistics for VNIR and save results as excel file, in "wide" format
+extr2 <- pr_extract_spectra(
+  in_vnir_path, in_poly_path,
+  out_file = tempfile(fileext = ".xlsx"),
+  stats_format = "wide", id_field = "field_id"
+)
+extr2
 ```
 
 Additional arguments allow specifying which statistics are needed, as well as 
@@ -57,42 +96,46 @@ returned:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # extract custom statistics
-test <- pr_extract_spectra(in_file, 
-                           in_vect,
-                           selstats = c("mean", "coeffvar", "stdev", "min", "max"),
-                           id_field = "field_id")
-
-test
+extr3 <- pr_extract_spectra(
+  in_vnir_path, in_poly_path,
+  selstats = c("mean", "coeffvar", "stdev", "min", "max"),
+  id_field = "field_id"
+)
+extr3
 
 # plot results using ggplot
-ggplot(test, aes(x = wvl)) +
-  geom_line(aes(y = mean, color = ID, group = ID)) +
-  geom_line(aes(y = mean + stdev, group = ID), color = "grey75") +
-  geom_line(aes(y = mean - stdev, group = ID), color = "grey75") +
+ggplot(extr3, aes(x = wvl)) +
+  geom_ribbon(aes(ymin = mean - stdev, ymax = mean + stdev, fill = ID), alpha = 0.2) +
+  geom_line(aes(y = mean, color = ID, colour = ID)) +
   facet_wrap(~ID) +
   theme_light()
 
 # extract custom statistics and quantiles
-test <- pr_extract_spectra(in_file, in_vect, quantiles = TRUE,
-                           selstats = c("mean", "stdev"),
-                           id_field = "field_id")
-test
+extr4 <- pr_extract_spectra(
+  in_vnir_path, in_poly_path,
+  quantiles = TRUE,
+  selstats = c("mean", "stdev"),
+  id_field = "field_id"
+)
+extr4
 
 
 # extract also all pixels
-test <- pr_extract_spectra(in_file, in_vect, allpix = TRUE,
-                           selstats = c("mean", "stdev"),
-                           id_field = "field_id")
-
+extr5 <- pr_extract_spectra(
+  in_vnir_path, in_poly_path,
+  allpix = TRUE,
+  selstats = c("mean", "stdev"),
+  id_field = "field_id"
+)
 
 # stats are saved in the "stats" slot of the output
-test$stats
+extr5$stats
 
 # pixel values are saved in the "allpix" slot of the output
-test$allpix
+extr5$allpix
 
-ggplot(test$allpix, aes(x = wvl)) +
-  geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01)  +
+ggplot(extr5$allpix, aes(x = wvl)) +
+  geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01) +
   facet_wrap(~ID) +
   theme_light()
 

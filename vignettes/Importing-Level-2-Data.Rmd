@@ -17,116 +17,164 @@ allowing to decide which hyperspectral cubes and ancillary datasets should be cr
 
 In particular: 
 
-- the `VNIR` and `SWIR` logical arguments allow to decide if importing the VNIR and SWIR hyperspectral cubes; 
+- the `VNIR` and `SWIR` logical arguments allow deciding if importing the VNIR and SWIR hyperspectral cubes; 
 - the `FULL` logical argument allows deciding if a complete VNIR+SWIR cube has to be created.
-In that case, the `join_priority` keyword is used to decide if keeping bands from the "VNIR" or the "SWIR" data
-cube in the wavelengths' region were they overlap. If `FULL` is `TRUE` and 
-- the `PAN`, `LATLON` and `ANGLES` allow to decide which of the 
-corresponding ancillary datasets should be created (see the PRISMA manual for additional info)
-- If working with __L2B__ or __L2C__ data the `base_georef` logical argument allows to decide if a "base" georeferencing in 
-Lat/Lon WGS-84 based on the "GLT and Bowtie  Correction" technique used in ENVI (described in  
-https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html), is  applied. If set to `FALSE`, the original 1000 x   1000 datasets are returned (flipped to orient them "north/south"), without   projection. If working with __L2D__, the output 
-datasets are already georeferenced (UTM projection), although __accuracy of geolocation should be checked__. 
 
-For example the following code accesses the input L2D file and saves the VNIR and SWIR cubes and the PAN, ANGLES and CLOUD datasets __See [documentation](reference/pr_convert.html) of the pr_convert() function for info on available arguments__. 
+In that case (`FULL = TRUE`):
+- the `join_priority` keyword is used to decide if keeping bands from the "VNIR" 
+    or the "SWIR" data cube in the wavelengths' region where they overlap;
+- the `PAN`, `LATLON` and `ANGLES` logical arguments 
+    allow deciding which of the corresponding ancillary datasets should be created 
+    (see the PRISMA manual for additional info);
+- if working with __L2B__ or __L2C__ data,
+    the `base_georef` logical argument allows deciding if a "base" georeferencing 
+    in Lat/Lon WGS-84 based on the "GLT and Bowtie  Correction" technique used 
+    in ENVI and described [here](https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html) 
+    is applied (if set to `FALSE`, the original 1000 x 1000 datasets are 
+    returned -- flipped to orient them "north/south" -- without projection.
+    If working with __L2D__, the output datasets are already georeferenced 
+    (UTM projection), although __accuracy of geolocation should be checked__. 
 
-__IMPORTANT NOTE__ _To run this, you'd need to download the example data from GitHub. The 
-data is about 1 GB so it could take a while!! The data would be placed in in subfolder
-_testdata_ of the `prismaread` installation folder._
+For example the following code accesses the input L2D file and saves the VNIR 
+and SWIR cubes and the PAN, ANGLES and CLOUD datasets.
+__See [documentation](reference/pr_convert.html) of the `pr_convert()` function
+for info on available arguments.__
+
+__IMPORTANT NOTE:__ to run this, you'd need to download the example data from 
+GitHub.
+The data is about 1 GB, so it could take some time.
+The data would be placed in subfolder _testdata_ of the `{prismaread}` 
+installation folder.
 
 ```{r l2example, echo=TRUE, message=FALSE, warning=FALSE}
-testfile_l2D <- file.path(system.file("testdata/", package = "prismaread"),
-                          "PRS_L2D_STD_20200524103704_20200524103708_0001.he5")
+l2d_he5_path <- file.path(
+  system.file("testdata", package = "prismaread"),
+  "PRS_L2D_STD_20200524103704_20200524103708_0001.he5"
+)
 
 # Download and unzip using piggyback if necessary
-if (!file.exists(testfile_l2D)){
-  message("Downloading test data - This may need a long time!")
-  piggyback::pb_download("PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
-                         repo = "lbusett/prismaread",
-                         dest = file.path(system.file("", package = "prismaread"), "/testdata"))
+if (!file.exists(l2d_he5_path)) {
+  message("Downloading test data - this may need a long time...")
+  if (!requireNamespace("piggyback", quietly = TRUE)) {
+    install.packages("piggyback")
+  }
+  l2d_zip_path <- file.path(
+    system.file("testdata", package = "prismaread"),
+    "PRS_L2D_STD_20200524103704_20200524103708_0001.zip"
+  )
+  piggyback::pb_download(
+    "PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
+    repo = "lbusett/prismaread",
+    dest = dirname(l2d_zip_path)
+  )
   piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
-  zipfile <- file.path(system.file("testdata/", package = "prismaread"),
-                       "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
-  unzip(zipfile, exdir = dirname(testfile_l2D))
-  unlink(zipfile)
+  unzip(l2d_zip_path, exdir = dirname(l2d_he5_path))
+  unlink(l2d_zip_path)
 }
-out_folder_L2D <- file.path(tempdir(), "prismaread/L2D")
-dir.create(out_folder_L2D, recursive = TRUE)
+l2d_out_dir <- file.path(tempdir(), "prismaread/L2D")
+dir.create(dirname(l2d_out_dir), showWarnings = FALSE)
 
-# Save a full image, prioritizing the VNIR spectrometer and save in ENVI format
-pr_convert(in_file    = testfile_l2D,
-           out_folder = out_folder_L2D,
-           out_format = "GTiff",
-           VNIR       = TRUE, 
-           SWIR       = TRUE,
-           LATLON     = TRUE,
-           ANGLES     = TRUE)
+# Save a full image, prioritising the VNIR spectrometer and save in ENVI format
+pr_convert(
+  in_file = l2d_he5_path,
+  out_folder = l2d_out_dir,
+  out_format = "GTiff",
+  VNIR = TRUE,
+  SWIR = TRUE,
+  LATLON = TRUE,
+  ANGLES = TRUE
+)
 ```
 
-Output files are saved in `out_folder` according to conventions described [here](articles/Output-Format-and-Naming.Rmd) and can then be accessed, visualized and processed using standard `R` syntax (e.g., with `raster` or `stars`).
+Output files are saved in `out_folder` according to conventions described 
+[here](articles/Output-Format-and-Naming.Rmd) and can then be accessed, 
+visualised and processed using standard `R` syntax (e.g., with `raster` or `stars`).
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
-list.files(out_folder_L2D)
-vnir  <- raster::brick(file.path(out_folder_L2D, "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.tif"))
-vnir
+list.files(l2d_out_dir)
+l2d_vnir_path <- file.path(
+  l2d_out_dir,
+  "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.tif"
+)
+l2d_vnir <- raster::brick(l2d_vnir_path)
+l2d_vnir
 
-mapview::viewRGB(vnir, 40,30,20)
+mapview::viewRGB(l2d_vnir, 40,30,20)
 ```
 
-The function also saves ancillary data related to wavelengths and fwhms of the different images, and to hour and sun geometry at acquisition in ancillary txt files . 
+The function also saves in text files ancillary data related to:
+1. wavelengths and fwhms of the different images:
+2. hour and sun geometry at acquisition. 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-wvls <- read.table(file.path(
-  out_folder_L2D, 
-  "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.wvl"), 
-  header = TRUE)
-DT::datatable(wvls)
+l2d_vnir_wvl <- read.table(
+  file.path(
+    l2d_out_dir, 
+    "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.wvl"
+  ), 
+  header = TRUE
+)
+DT::datatable(l2d_vnir_wvl)
 ```
 
-The following code accesses the input file and saves the VNIR and SWIR cubes, as well as a full hyperspectral cube and the ANGLES and LATLON datasets __See [documentation](reference/pr_convert.html) of the pr_convert() function for info on available arguments__.
+The following code accesses the input file and saves the VNIR and SWIR cubes, 
+as well as a full hyperspectral cube and the ANGLES and LATLON datasets.
+__See [`pr_convert()` documentation](reference/pr_convert.html) for info on 
+available arguments__. 
 
 ```{r l2example2, eval=FALSE}
 
-# Save a full image, prioritizing the SWIR spectrometer (default 
-# and saves in ENVI format
-pr_convert(in_file    = testfile_l2D,
-           out_folder = out_folder_L2D,
-           out_format = "ENVI",
-           VNIR       = TRUE, 
-           SWIR       = TRUE,
-           FULL       = TRUE,
-           LATLON     = TRUE,
-           ANGLES     = TRUE)
+# Save a full image, prioritising the SWIR spectrometer (default)
+# and saves in ENVI format.
+pr_convert(
+  in_file = l2d_he5_path,
+  out_folder = l2d_out_dir,
+  out_format = "ENVI",
+  VNIR = TRUE, 
+  SWIR = TRUE,
+  FULL = TRUE,
+  LATLON = TRUE,
+  ANGLES = TRUE
+)
 
 ```
 
 ## Importing only selected bands
 
-The `selbands_vnir` and `selbands_swir` arguments allow to select only a specified subset of 
-PRISMA bands, by specifying an array of required wavelengths. For example the following code
+The `selbands_vnir` and `selbands_swir` arguments allow selecting only a specified subset of 
+PRISMA bands, by specifying an array of required wavelengths. For example, the following code
 will create a 3-band VNIR cube, a 2-band SWIR and a 5-band FULL dataset, by selecting the
 original PRISMA bands with wavelengths closer to the requested ones. 
 
 ```{r message=FALSE, warning=FALSE, echo=TRUE}
-pr_convert(in_file       = testfile_l2D,
-           out_folder    = out_folder_L2D,
-           out_format    = "GTiff",
-           VNIR          = TRUE, 
-           SWIR          = TRUE, 
-           selbands_vnir = c(450,550,650), 
-           selbands_swir = c(1000,1330), 
-           join_priority = "SWIR",
-           FULL          = TRUE,
-           overwrite = T)
+pr_convert(
+  in_file = l2d_he5_path,
+  out_folder = l2d_out_dir,
+  out_format = "GTiff",
+  VNIR = TRUE, 
+  SWIR = TRUE, 
+  selbands_vnir = c(450,550,650), 
+  selbands_swir = c(1000,1330), 
+  join_priority = "SWIR",
+  FULL = TRUE,
+  overwrite = T
+)
 
-list.files(out_folder_L2D)
-r <- raster::stack(file.path(out_folder_L2D, "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.tif"))
-r
+list.files(l2d_out_dir)
+l2dsel_vnir <- raster::brick(
+  file.path(
+    l2d_out_dir, 
+    "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.tif"
+  )
+)
+l2dsel_vnir
 
-r <- raster::stack(file.path(out_folder_L2D, "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_SWIR.tif"))
-r
-
+l2dsel_swir <- raster::stack(
+  file.path(
+    l2d_out_dir, 
+    "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_SWIR.tif"
+  )
+)
+l2dsel_vnir
 ```
-
-

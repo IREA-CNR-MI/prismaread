@@ -1,5 +1,5 @@
 ---
-title: "Computing Spectral Indexes"
+title: "Computing Spectral Indices"
 ---
 
 ```{r, include = FALSE}
@@ -10,112 +10,147 @@ knitr::opts_chunk$set(
 library(prismaread)
 ```
 
-`prismaread` allows to automatically compute spectral indexes starting from either an original PRISMA hdf image, or from an hyperspectral cube already processed with `convert prisma`.
+`prismaread` allows automatically computing spectral indices starting from 
+either an original PRISMA hdf image, or from an hyperspectral cube already 
+processed with `pr_convert()`.
 
-## Computing spectral indexes from a predefined list 
+## Computing spectral indices from a predefined list 
 
-Spectral Indexes to be computed can be selected from a list of predefined ones. To do so, either specify a vector of desired indexes as the `indexes` argument of `pr_convert` to compute them directly from the hdf prisma data:
+Spectral indices to be computed can be selected from a list of predefined ones. 
+To do so, either specify a vector of desired indices as the `indexes` argument 
+of `pr_convert()` to compute them directly from the hdf prisma data:
 
 ```{r index_1, echo=TRUE, message=FALSE, warning=FALSE}
-testfile_l2D <- file.path(system.file("testdata/", package = "prismaread"),
-                          "PRS_L2D_STD_20200524103704_20200524103708_0001.he5")
+l2d_he5_path <- file.path(
+  system.file("testdata", package = "prismaread"),
+  "PRS_L2D_STD_20200524103704_20200524103708_0001.he5"
+)
 
 # Download and unzip using piggyback if necessary
-if (!file.exists(testfile_l2D)){
-  message("Downloading test data - This may need a long time!")
-  piggyback::pb_download("PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
-                         repo = "lbusett/prismaread",
-                         dest = file.path(system.file("", package = "prismaread"), "/testdata"))
+if (!file.exists(l2d_he5_path)) {
+  message("Downloading test data - this may need a long time...")
+  if (!requireNamespace("piggyback", quietly = TRUE)) {
+    install.packages("piggyback")
+  }
+  l2d_zip_path <- file.path(
+    system.file("testdata", package = "prismaread"),
+    "PRS_L2D_STD_20200524103704_20200524103708_0001.zip"
+  )
+  piggyback::pb_download(
+    "PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
+    repo = "lbusett/prismaread",
+    dest = dirname(l2d_zip_path)
+  )
   piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")
-  zipfile <- file.path(system.file("testdata/", package = "prismaread"),
-                       "PRS_L2D_STD_20200524103704_20200524103708_0001.zip")
-  unzip(zipfile, exdir = dirname(testfile_l2D))
-  unlink(zipfile)
+  unzip(l2d_zip_path, exdir = dirname(l2d_he5_path))
+  unlink(l2d_zip_path)
 }
-out_folder_ind <- file.path(tempdir(), "prismaread/indexes")
-dir.create(out_folder_ind, recursive = TRUE)
-pr_convert(in_file    = testfile_l2D,
-           out_format = "ENVI",
-           out_folder = out_folder_ind, 
-           indexes    = c("GI", "MSAVI"))
+idx_out_dir <- file.path(tempdir(), "prismaread/indices")
+dir.create(dirname(idx_out_dir))
+pr_convert(
+  in_file = l2d_he5_path,
+  out_format = "ENVI",
+  out_folder = idx_out_dir, 
+  indexes = c("GI", "MSAVI")
+)
 ```
 
-, or use function `pr_compute_indexes` to compute them starting from an
-hyperspectral cube already processed (Note that this is a bit slower and you
+Alternatively, use function `pr_compute_indexes()` to compute them starting from 
+an hyperspectral cube already processed (note that this is a bit slower and you
 need to be sure that bands required to compute the index are available in the
-file you are using as input!):
+file you are using as input).
 
 ```{r index_2, echo=TRUE, message=FALSE, warning=FALSE}
-in_file  <- system.file("testdata/prismaread_test_HCO_FULL.tif",
-                        package = "prismaread")
-out_folder_ind <- file.path(tempdir(), "prismaread/indexes2")
-dir.create(out_folder_ind, recursive = TRUE)
-out_file <- tempfile(fileext = ".tif", tmpdir = out_folder_ind)
-pr_compute_indexes(in_file    = in_file,
-                   out_file   = out_file,
-                   indexes    = c("GI", "MSAVI"))
+in_tif_path <- system.file(
+  "testdata/prismaread_test_HCO_FULL.tif",
+  package = "prismaread"
+)
+idx2_out_dir <- file.path(tempdir(), "prismaread/indices2")
+dir.create(idx2_out_dir, recursive = TRUE)
+idx2_out_path <- tempfile(fileext = ".tif", tmpdir = idx2_out_dir)
+pr_compute_indices(
+  in_file = in_tif_path,
+  out_file = idx2_out_path,
+  indexes = c("GI", "MSAVI")
+)
 ```
 
-Output file names are created by adding a suffix corresponding to the indexes names to the base output filename. In addition, an ancillary file containing the formulas used to compute each index is saved (extension = *.formulas*) for reference. the file shows the formulas used, giving reference to the true wavelengths of the PRISMA bands used in the computation.
+Output file names are created by adding a suffix corresponding to the indices
+names to the base output filename. In addition, an ancillary file containing 
+the formulas used to compute each index is saved (extension = `.formulas`) 
+for reference. The file shows the formulas used, giving reference to the true
+wavelengths of the PRISMA bands used in the computation.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-list.files(dirname(out_file), full.names = T)
+list.files(idx2_out_dir, full.names = TRUE)
 
-MSAVI <- raster::raster(gsub(".tif", "_MSAVI.tif", out_file))
-# Remove NA areas to visualize better
-MSAVI[MSAVI == -0.5 ] <- NA
+idx2_out_MSAVI <- raster::raster(gsub(".tif", "_MSAVI.tif", idx2_out_path))
+# Remove NA areas for better visualisation
+idx2_out_MSAVI[idx2_out_MSAVI == -0.5 ] <- NA
 
-mapview::mapview(MSAVI)
+mapview::mapview(idx2_out_MSAVI)
 ```
 
 
-The list of available indexes, shown below, was derived from the list of spectral indexes available in package [`hsdar`](https://cran.r-project.org/web/packages/hsdar/hsdar.pdf), as well as from the list reported [HERE](https://cubert-gmbh.com/applications/vegetation-indices/).
+The list of available indices, shown below, was derived from the list of 
+spectral indices available in package 
+[`hsdar`](https://cran.r-project.org/web/packages/hsdar/hsdar.pdf),
+as well as from the list reported
+[HERE](https://cubert-gmbh.com/applications/vegetation-indices/).
 
 ```{r tbl, echo=FALSE, message=FALSE, warning=FALSE}
-
 pr_listindexes()
-
 ```
 
-**NOTE** Although a check was done on indexes formulas, we do not guarantee that all of them are correct. Please check the formulas in the table to be sure!
+**NOTE:** although a check was done on indices formulas, we do not guarantee
+that all of them are correct. Please check the formulas in the table to be sure.
 
-**IMPORTANT NOTE**
-
-Computation of spectral indexes can be done alongside extraction of spectral cubes/ancillary info. For example, this commands: 
+**IMPORTANT NOTE:** computation of spectral indices can be done alongside 
+extraction of spectral cubes/ancillary info. For example, commands below
+export the VNIR cube, LATLON and ANGLES datasets along with
+images relative to "GI" and "MTCI" indices. 
 
 ```{r index2, eval=FALSE}
-out_folder <- tempdir()
-pr_compute_indexes(in_file    = testfile_l2D,
-                   out_folder = out_folder,
-                   VNIR       = TRUE, LATLON = TRUE, ANGLES = TRUE,
-                   out_format = "ENVI",
-                   indexes    = c("GI", "MTCI"))
+idx3_out_dir <- file.path(tempdir(), "prismaread/indices3")
+pr_compute_indexes(
+  in_file = l2d_he5_path,
+  out_folder = idx3_out_dir,
+  VNIR = TRUE, 
+  LATLON = TRUE, 
+  ANGLES = TRUE,
+  out_format = "ENVI",
+  indices = c("GI", "MTCI")
+)
 ```
 
-will save in output the VNIR cube, LATLON and ANGLES datasets and compute and save
-images relative to the "GI" and "MTCI" indexes. 
 
 ### Adding a new index to the list
 
-Additional spectral indexes can be added to the aforementioned list using function `pr_addindex()`, as in the following example
+Additional spectral indices can be added to the aforementioned list using 
+function `pr_addindex()`, as in the following example:
 
 ```{r l1example4, eval=FALSE}
-pr_addindex(Name = "myindex", Formula = "R600 / R700", 
-            Description = "My custom Index", 
-            Reference = "Me (2020)"
+pr_addindex(
+  Name = "myindex", 
+  Formula = "R600 / R700", 
+  Description = "My custom Index", 
+  Reference = "Me (2020)"
+)
 ```
 
-## Computing custom spectral indexes
+## Computing custom spectral indices
 
-Custom spectral indexes can also be computed on the fly by specifying the `cust_indexes`
-argument, as a __named list__, such as in:
+Custom spectral indices can also be computed on the fly by specifying the
+`cust_indexes` argument, as a __named list__, such as in:
 
 ```{r l1example2, eval=FALSE, message=FALSE, warning=FALSE}
-out_folder <- file.path()
-pr_convert(testfile_l2D,
-           out_format = "ENVI",
-           out_folder = out_folder_ind, 
-           indexes = c("GI", "MTCI"), 
-           cust_indexes = list(myindex1 = "R500 / R600",
-                               myindex2 = "(R800 - R680) / (R800 + R680)"))
+idx4_out_dir <- file.path(tempdir(), "prismaread/indices4")
+pr_convert(
+  l2d_he5_path,
+  out_format = "ENVI",
+  out_folder = idx4_out_dir, 
+  indices = c("GI", "MTCI"), 
+  cust_indices = list(myindex1 = "R500 / R600",
+                      myindex2 = "(R800 - R680) / (R800 + R680)")
+)
 ```

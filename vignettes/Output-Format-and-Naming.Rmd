@@ -11,14 +11,15 @@ knitr::opts_chunk$set(
 
 ### Format of output rasters
 
-- Outputs are provided as rasters in __ENVI__ or __GEOTIFF__ format according to user's choice in the `output_format` argument of `pr_convert`. 
+Outputs are provided as rasters in __ENVI__ or __GeoTiff__ format according to
+user's choice in the `output_format` argument of `pr_convert()`. 
 
 ### Naming conventions
 
-- Filenames are built starting from the output folder name provided by the user, by
+Filenames are built starting from the output folder name provided by the user, by
 adding appropriate suffixes. If `out_basefile` is not specified (or set to `auto`, the Default), 
 output file names are created based on the filename of the hdf5 input. For example, if 
-in_file is "PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5", the output file for the VNIR cube will be `PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_VNIR.envi` (or .tif), that for SWIR will be
+in_file is `PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5`, the output file for the VNIR cube will be `PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_VNIR.envi` (or `.tif`), that for SWIR will be
 `PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_SWIR.envi` ), etcetera. 
 
 If `out_basefile` is specified, the filenames are created substituting the specified string. For example, if 
