@@ -46,18 +46,15 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="articles/prismaread.html">Get started</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/lbusett/prismaread/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -78,7 +75,7 @@
       <a href="articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
-      <a href="articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+      <a href="articles/Computing-Spectral-Indexes.html">Computing Spectral Indices</a>
     </li>
     <li>
       <a href="articles/Output-Format-and-Naming.html">Output Format and Naming</a>
@@ -112,23 +109,22 @@
 
 <p><code>prismaread</code> allows easily importing PRISMA hyperspectral data (<a href="http://www.prisma-i.it/index.php/it/" class="uri">http://www.prisma-i.it/index.php/it/</a>) from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function <code>pr_convert</code>, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.</p>
 <p><a href="http://www.irea.cnr.it/en/"> <img src="reference/figures/logo_irea.png" height="60" align="left" style="vertical-align:middle;margin:0px 10px"></a></p>
-<p><em><code>prismaread</code> is developed and maintained by Lorenzo Busetto and Luigi Ranghetti, <a href="http://www.irea.cnr.it/en/">Institute of Remote Sensing of Environment</a> - National Research Council - Italy (CNR-IREA)</em></p>
+<p><em><code>prismaread</code> was developed by Lorenzo Busetto, <a href="http://www.irea.cnr.it/en/">Institute of Remote Sensing of Environment</a> - National Research Council - Italy (CNR-IREA)</em></p>
+<p>Lorenzo maintained <code>prismaread</code> until 21st October 2020, when <a href="https://docs.ropensci.org/MODIStsp/articles/lorenzo.html">he suddenly passed away</a>. <strong>Currently the package development is frozen.</strong> If you need help, please refer to the package documentation at <a href="https://lbusett.github.io/prismaread">lbusett.github.io/prismaread</a>.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can install the last stable version of <code>prismaread</code> from <a href="https://github.com/">GitHub</a> using:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install.packages("remotes")</span>
-<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>, ref = <span class="st">"v1.0.0"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"lbusett/prismaread"</span>, ref <span class="op">=</span> <span class="st">"v1.0.0"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lbusett.github.io/prismaread/">prismaread</a></span><span class="op">)</span></code></pre></div>
 <p>, or the last development version using:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># install.packages("remotes")</span>
-<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"lbusett/prismaread"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://lbusett.github.io/prismaread">prismaread</a></span>)
-</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"lbusett/prismaread"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lbusett.github.io/prismaread/">prismaread</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">

@@ -48,3 +48,4 @@ Suggests: testthat,
     piggyback
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
+Language: en-GB

@@ -185,7 +185,7 @@ closer to the requested ones.
 l1sel_out_dir <- file.path(tempdir(), "prismaread/L1sel")
 pr_convert(
   in_file = l1_he5_path,
-  out_dir = l1sel_out_dir,
+  out_folder = l1sel_out_dir,
   out_format = "GTiff",
   VNIR = TRUE, 
   SWIR = TRUE,
@@ -209,9 +209,10 @@ l1sel_vnir_wvl <- read.table(
   file.path(
     l1sel_out_dir, 
     "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001_HCO_VNIR.wvl"
-  )
+  ), 
+  header = TRUE
 )
-DT::datatable(l1sel_vnir_wvl, header = TRUE)
+DT::datatable(l1sel_vnir_wvl)
 ```
 
 
@@ -247,7 +248,7 @@ pr_convert(
 
 
 The user can also choose to generate additional ATCOR files, containing data 
-aboutwavelengths and FWHMs related to different columns of the data cube, 
+about wavelengths and FWHMs related to different columns of the data cube, 
 as derived from the `KDP_AUX/Cw_Vnir_Matrix`, `KDP_AUX/Cw_Swir_Matrix`,
 `KDP_AUX/Cw_Fwhm_Matrix`, `KDP_AUX/Cw_Fwhm_Matrix` HDF layers. 
 This could allow running different atmospheric corrections for different columns 
@@ -262,7 +263,7 @@ l1sel2_out_dir <- file.path(tempdir(), "prismaread/L1sel2")
 # Save a full image, prioritising the VNIR spectrometer and saving in ENVI format
 pr_convert(
   in_file = l1_he5_path,
-  out_dir = l1sel2_out_dir,
+  out_folder = l1sel2_out_dir,
   out_format = "ENVI",
   join_priority = "SWIR", 
   ATCOR = TRUE, 

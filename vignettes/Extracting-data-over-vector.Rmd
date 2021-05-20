@@ -135,7 +135,7 @@ extr5$stats
 extr5$allpix
 
 ggplot(extr5$allpix, aes(x = wvl)) +
-  geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.01) +
+  geom_line(aes(y = value, group = pixel, color = ID), lwd = 0.02) +
   facet_wrap(~ID) +
   theme_light()
 

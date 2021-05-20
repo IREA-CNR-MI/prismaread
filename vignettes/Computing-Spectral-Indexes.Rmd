@@ -68,7 +68,7 @@ in_tif_path <- system.file(
 idx2_out_dir <- file.path(tempdir(), "prismaread/indices2")
 dir.create(idx2_out_dir, recursive = TRUE)
 idx2_out_path <- tempfile(fileext = ".tif", tmpdir = idx2_out_dir)
-pr_compute_indices(
+pr_compute_indexes(
   in_file = in_tif_path,
   out_file = idx2_out_path,
   indexes = c("GI", "MSAVI")

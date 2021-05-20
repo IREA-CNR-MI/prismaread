@@ -260,7 +260,7 @@ A “User Product” is either **(1)** a “consumer product”, which
 means any tangible personal property which is normally used for personal, family, or
 household purposes, or **(2)** anything designed or sold for incorporation into a
 dwelling. In determining whether a product is a consumer product, doubtful cases
-shall be resolved in favor of coverage. For a particular product received by a
+shall be resolved in favour of coverage. For a particular product received by a
 particular user, “normally used” refers to a typical or common use of
 that class of product, regardless of the status of the particular user or of the way
 in which the particular user actually uses, or expects or is expected to use, the

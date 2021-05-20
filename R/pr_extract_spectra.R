@@ -291,6 +291,7 @@ pr_extract_spectra <- function(in_file,
     for (ind in seq_along(out_all_tmp)) {
 
       tmp <- t(out_all_tmp[[ind]])
+      colnames(tmp) <- seq_len(dim(tmp)[2])
       out_df_all <- data.frame(wvl = c(wvls, "cov_frac"),
                                var = "value",
                                tmp, row.names = NULL)

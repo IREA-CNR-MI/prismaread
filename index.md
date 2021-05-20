@@ -25,10 +25,16 @@ over areas of interest.
 <a href="http://www.irea.cnr.it/en/">
 <img src="man/figures/logo_irea.png" height="60" align="left" style="vertical-align:middle;margin:0px 10px"/></a>
 
-*`prismaread` is developed and maintained by Lorenzo Busetto and Luigi
-Ranghetti, [Institute of Remote Sensing of
-Environment](http://www.irea.cnr.it/en/) - National Research Council -
-Italy (CNR-IREA)*
+*`prismaread` was developed by Lorenzo Busetto, [Institute of Remote
+Sensing of Environment](http://www.irea.cnr.it/en/) - National Research
+Council - Italy (CNR-IREA)*
+
+Lorenzo maintained `prismaread` until 21st October 2020, when [he
+suddenly passed
+away](https://docs.ropensci.org/MODIStsp/articles/lorenzo.html).
+**Currently the package development is frozen.** If you need help,
+please refer to the package documentation at
+[lbusett.github.io/prismaread](https://lbusett.github.io/prismaread).
 
 # Installation
 

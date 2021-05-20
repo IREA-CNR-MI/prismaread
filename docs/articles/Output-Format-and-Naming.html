@@ -46,18 +46,15 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/prismaread.html">Get started</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/lbusett/prismaread/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -78,7 +75,7 @@
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
-      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indices</a>
     </li>
     <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
@@ -101,7 +98,7 @@
 
       
 
-      </header><script src="Output-Format-and-Naming_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="Output-Format-and-Naming_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Output Format and Naming</h1>
@@ -117,16 +114,12 @@
 <div id="format-of-output-rasters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#format-of-output-rasters" class="anchor"></a>Format of output rasters</h3>
-<ul>
-<li>Outputs are provided as rasters in <strong>ENVI</strong> or <strong>GEOTIFF</strong> format according to user’s choice in the <code>output_format</code> argument of <code>pr_convert</code>.</li>
-</ul>
+<p>Outputs are provided as rasters in <strong>ENVI</strong> or <strong>GeoTiff</strong> format according to user’s choice in the <code>output_format</code> argument of <code><a href="../reference/pr_convert.html">pr_convert()</a></code>.</p>
 </div>
 <div id="naming-conventions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#naming-conventions" class="anchor"></a>Naming conventions</h3>
-<ul>
-<li>Filenames are built starting from the output folder name provided by the user, by adding appropriate suffixes. If <code>out_basefile</code> is not specified (or set to <code>auto</code>, the Default), output file names are created based on the filename of the hdf5 input. For example, if in_file is “PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5”, the output file for the VNIR cube will be <code>PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_VNIR.envi</code> (or .tif), that for SWIR will be <code>PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_SWIR.envi</code> ), etcetera.</li>
-</ul>
+<p>Filenames are built starting from the output folder name provided by the user, by adding appropriate suffixes. If <code>out_basefile</code> is not specified (or set to <code>auto</code>, the Default), output file names are created based on the filename of the hdf5 input. For example, if in_file is <code>PRS_L1_STD_OFFL_20190825103112_20190825103117_0001.he5</code>, the output file for the VNIR cube will be <code>PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_VNIR.envi</code> (or <code>.tif</code>), that for SWIR will be <code>PRS_L1_STD_OFFL_20190825103112_20190825103117_0001_HCO_SWIR.envi</code> ), etcetera.</p>
 <p>If <code>out_basefile</code> is specified, the filenames are created substituting the specified string. For example, if out_basefile is “myprisma”, the output file for the VNIR cube will be <code>myprisma_HCO_VNIR.envi</code> (or .tif), that for SWIR will be <code>myprisma_HCO_SWIR.envi</code> ), etcetera.</p>
 </div>
 <div id="measure-units" class="section level3">

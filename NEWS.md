@@ -17,7 +17,7 @@
 * Major changes
 
     - Fixed coordinates of georeferenced images considering that coordinates 
-      provided in metadata and geolocation fields correspond to the center of the
+      provided in metadata and geolocation fields correspond to the centre of the
       pixel. 
       
 # prismaread 0.2.0 - 2019-06-04
@@ -35,7 +35,7 @@
     - Added possibility to extract only some bands, using the `selbands_vnir` and 
       `selbands_swir` arguments to `convert_prisma`;
       
-    - Removed the `out_file` argument, in favor of the `out_folder` and `out_basefile`
+    - Removed the `out_file` argument, in favour of the `out_folder` and `out_basefile`
       arguments (see documentation); 
       
 * Other changes

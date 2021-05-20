@@ -89,18 +89,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/prismaread.html">Get started</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/lbusett/prismaread/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -121,7 +118,7 @@
       <a href="../articles/Importing-Level-2-Data.html">Importing Level 2 Data</a>
     </li>
     <li>
-      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indexes</a>
+      <a href="../articles/Computing-Spectral-Indexes.html">Computing Spectral Indices</a>
     </li>
     <li>
       <a href="../articles/Output-Format-and-Naming.html">Output Format and Naming</a>
@@ -157,36 +154,36 @@
  format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pr_convert</span>(
-  <span class='kw'>in_file</span>,
-  <span class='kw'>out_folder</span>,
-  out_filebase = <span class='st'>"auto"</span>,
-  out_format = <span class='st'>"ENVI"</span>,
-  base_georef = <span class='fl'>TRUE</span>,
-  fill_gaps = <span class='fl'>FALSE</span>,
-  VNIR = <span class='fl'>FALSE</span>,
-  SWIR = <span class='fl'>FALSE</span>,
-  FULL = <span class='fl'>FALSE</span>,
-  source = <span class='st'>"HCO"</span>,
-  join_priority = <span class='st'>"SWIR"</span>,
-  ATCOR = <span class='fl'>FALSE</span>,
-  ATCOR_wls = <span class='kw'>NULL</span>,
-  PAN = <span class='fl'>FALSE</span>,
-  CLOUD = <span class='fl'>FALSE</span>,
-  LC = <span class='fl'>FALSE</span>,
-  GLINT = <span class='fl'>FALSE</span>,
-  ANGLES = <span class='fl'>FALSE</span>,
-  LATLON = <span class='fl'>FALSE</span>,
-  ERR_MATRIX = <span class='fl'>FALSE</span>,
-  apply_errmatrix = <span class='fl'>FALSE</span>,
-  overwrite = <span class='fl'>FALSE</span>,
-  in_L2_file = <span class='kw'>NULL</span>,
-  selbands_vnir = <span class='kw'>NULL</span>,
-  selbands_swir = <span class='kw'>NULL</span>,
-  indexes = <span class='kw'>NULL</span>,
-  cust_indexes = <span class='kw'>NULL</span>,
-  keep_index_cube = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>pr_convert</span><span class='op'>(</span>
+  <span class='va'>in_file</span>,
+  <span class='va'>out_folder</span>,
+  out_filebase <span class='op'>=</span> <span class='st'>"auto"</span>,
+  out_format <span class='op'>=</span> <span class='st'>"ENVI"</span>,
+  base_georef <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  fill_gaps <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  VNIR <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  SWIR <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  FULL <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  source <span class='op'>=</span> <span class='st'>"HCO"</span>,
+  join_priority <span class='op'>=</span> <span class='st'>"SWIR"</span>,
+  ATCOR <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ATCOR_wls <span class='op'>=</span> <span class='cn'>NULL</span>,
+  PAN <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  CLOUD <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  LC <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  GLINT <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ANGLES <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  LATLON <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ERR_MATRIX <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  apply_errmatrix <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  in_L2_file <span class='op'>=</span> <span class='cn'>NULL</span>,
+  selbands_vnir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  selbands_swir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  indexes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cust_indexes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  keep_index_cube <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -388,100 +385,100 @@ tempdir so that it is deleted automatically afterwards. Default: FALSE</p></td>
     <p>The function is called for its side effects</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='co'># Here we download the example file from github using `piggyback` if not already</span>
-<span class='co'>#  downloaded.</span>
-<span class='co'># WARNING ! This may need a long time (1GB file)</span>
-<span class='kw'>testfile_l1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
-<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
-            <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5"</span>)
+<span class='co'># Here the example file is downloaded from GitHub using `{piggyback}`</span>
+<span class='co'># (if not already downloaded).</span>
+<span class='co'># WARNING: this may need a long time (1GB file).</span>
+<span class='va'>testfile_l1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"testdata/"</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>,
+            <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.he5"</span><span class='op'>)</span>
 
-<span class='co'>if</span> (<span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='kw'>testfile_l1</span>)) {
-  <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span>(<span class='st'>"Downloading test data - This may need a long time!"</span>)
-  <span class='kw'>piggyback</span>::<span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span>(
+<span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span><span class='op'>(</span><span class='va'>testfile_l1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Downloading test data - This may need a long time!"</span><span class='op'>)</span>
+  <span class='fu'>piggyback</span><span class='fu'>::</span><span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span><span class='op'>(</span>
            <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip"</span>,
-           repo = <span class='st'>"lbusett/prismaread"</span>,
-           dest = <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
-           <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>""</span>, package = <span class='st'>"prismaread"</span>), <span class='st'>"/testdata"</span>))
-  <span class='kw'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
-                    <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
-                    <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip"</span>)
-  <span class='fu'><a href='https://rdrr.io/r/utils/unzip.html'>unzip</a></span>(<span class='kw'>zipfile</span>, exdir = <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span>(<span class='kw'>testfile_l1</span>))
-  <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='kw'>zipfile</span>)
-}
-<span class='kw'>out_folder</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>"prismaread_l1"</span>)
+           repo <span class='op'>=</span> <span class='st'>"lbusett/prismaread"</span>,
+           dest <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
+           <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>""</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>, <span class='st'>"/testdata"</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='va'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
+                    <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"testdata/"</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>,
+                    <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/unzip.html'>unzip</a></span><span class='op'>(</span><span class='va'>zipfile</span>, exdir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span><span class='op'>(</span><span class='va'>testfile_l1</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>zipfile</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='va'>out_folder</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"prismaread_l1"</span><span class='op'>)</span>
 
 <span class='co'># Save separately the VNIR and SWIR spetral cubes, in Tiff format. Also save</span>
 <span class='co'># LATLON, CLOUD and PAN</span>
 
- <span class='fu'>pr_convert</span>(in_file    = <span class='kw'>testfile_l1</span>,
-            out_folder = <span class='kw'>out_folder</span>,
-            out_format = <span class='st'>"GTiff"</span>,
-            VNIR       = <span class='fl'>TRUE</span>,
-            SWIR       = <span class='fl'>TRUE</span>,
-            LATLON     = <span class='fl'>TRUE</span>,
-            PAN        = <span class='fl'>TRUE</span>,
-            CLOUD      = <span class='fl'>TRUE</span>)
+ <span class='fu'>pr_convert</span><span class='op'>(</span>in_file    <span class='op'>=</span> <span class='va'>testfile_l1</span>,
+            out_folder <span class='op'>=</span> <span class='va'>out_folder</span>,
+            out_format <span class='op'>=</span> <span class='st'>"GTiff"</span>,
+            VNIR       <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            SWIR       <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            LATLON     <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            PAN        <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            CLOUD      <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
  <span class='co'># Save the full cube, prioritizing the SWIR spectrometer and save in ENVI</span>
  <span class='co'># format. Also save Cloud and LC data. Also, use a custom prefix for output</span>
  <span class='co'># files</span>
 
- <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>testfile_l1</span>,
-            out_folder    = <span class='kw'>out_folder</span>,
-            out_filebase  = <span class='st'>"prismaout_2020_05-14"</span>,
-            out_format    = <span class='st'>"ENVI"</span>,
-            FULL          = <span class='fl'>TRUE</span>,
-            join_priority = <span class='st'>"SWIR"</span>,
-            LC            = <span class='fl'>TRUE</span>,
-            CLOUD         = <span class='fl'>TRUE</span>,
-            overwrite     = <span class='fl'>TRUE</span>
-            )
+ <span class='fu'>pr_convert</span><span class='op'>(</span>in_file       <span class='op'>=</span> <span class='va'>testfile_l1</span>,
+            out_folder    <span class='op'>=</span> <span class='va'>out_folder</span>,
+            out_filebase  <span class='op'>=</span> <span class='st'>"prismaout_2020_05-14"</span>,
+            out_format    <span class='op'>=</span> <span class='st'>"ENVI"</span>,
+            FULL          <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            join_priority <span class='op'>=</span> <span class='st'>"SWIR"</span>,
+            LC            <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            CLOUD         <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            overwrite     <span class='op'>=</span> <span class='cn'>TRUE</span>
+            <span class='op'>)</span>
 
  <span class='co'># Save a full image, prioritizing the VNIR spectrometer and save in TIF</span>
  <span class='co'># format. Also create ATCOR files, with Nominal wavelengths</span>
 
- <span class='fu'>pr_convert</span>(in_file       = <span class='kw'>in_file</span>,
-            out_folder    = <span class='kw'>out_folder</span>,
-            out_format    = <span class='st'>"GTiff"</span>,
-            FULL          = <span class='fl'>TRUE</span>,
-            join_priority = <span class='st'>"VNIR"</span>,
-            ATCOR         = <span class='fl'>TRUE</span>
-           )
+ <span class='fu'>pr_convert</span><span class='op'>(</span>in_file       <span class='op'>=</span> <span class='va'>in_file</span>,
+            out_folder    <span class='op'>=</span> <span class='va'>out_folder</span>,
+            out_format    <span class='op'>=</span> <span class='st'>"GTiff"</span>,
+            FULL          <span class='op'>=</span> <span class='cn'>TRUE</span>,
+            join_priority <span class='op'>=</span> <span class='st'>"VNIR"</span>,
+            ATCOR         <span class='op'>=</span> <span class='cn'>TRUE</span>
+           <span class='op'>)</span>
 
 <span class='co'># Save the VNIR cube only, asociating a L2 file to be able to retrieve</span>
 <span class='co'># ANGLES data</span>
-<span class='kw'>testfile_l1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
-                       <span class='st'>"PRS_L2D_STD_20200524103704_20200524103708_0001.he5"</span>)
-<span class='kw'>testfile_l2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
-                        <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.he5"</span>)
+<span class='va'>testfile_l1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"testdata/"</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>,
+                       <span class='st'>"PRS_L2D_STD_20200524103704_20200524103708_0001.he5"</span><span class='op'>)</span>
+<span class='va'>testfile_l2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"testdata/"</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>,
+                        <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.he5"</span><span class='op'>)</span>
 
 <span class='co'># Here we download the example file from github if not already downloaded.</span>
 <span class='co'># WARNING ! This may need a long time (1GB file)</span>
 
-<span class='co'>if</span> (<span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='kw'>testfile_l2</span>)){
- <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span>(<span class='st'>"Downloading test data - This may need a long time!"</span>)
- <span class='kw'>piggyback</span>::<span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span>(
+<span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span><span class='op'>(</span><span class='va'>testfile_l2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Downloading test data - This may need a long time!"</span><span class='op'>)</span>
+ <span class='fu'>piggyback</span><span class='fu'>::</span><span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span><span class='op'>(</span>
                  <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.zip"</span>,
-                 repo = <span class='st'>"lbusett/prismaread"</span>,
-                 dest = <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(
-                       <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>""</span>, package = <span class='st'>"prismaread"</span>), <span class='st'>"/testdata"</span>))
- <span class='kw'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"testdata/"</span>, package = <span class='st'>"prismaread"</span>),
-                      <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.zip"</span>)
- <span class='fu'><a href='https://rdrr.io/r/utils/unzip.html'>unzip</a></span>(<span class='kw'>zipfile</span>, exdir = <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span>(<span class='kw'>testfile_l1</span>))
- <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='kw'>zipfile</span>)
-}
+                 repo <span class='op'>=</span> <span class='st'>"lbusett/prismaread"</span>,
+                 dest <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
+                       <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>""</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>, <span class='st'>"/testdata"</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='va'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"testdata/"</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>,
+                      <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.zip"</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/utils/unzip.html'>unzip</a></span><span class='op'>(</span><span class='va'>zipfile</span>, exdir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>dirname</a></span><span class='op'>(</span><span class='va'>testfile_l1</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>zipfile</span><span class='op'>)</span>
+<span class='op'>}</span>
 
-<span class='kw'>out_folder</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>"prismaread_l2"</span>)
+<span class='va'>out_folder</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"prismaread_l2"</span><span class='op'>)</span>
 
-<span class='fu'>pr_convert</span>(in_file    = <span class='kw'>in_file</span>,
-          in_L2_file = <span class='kw'>in_L2_file</span>,
-          out_folder = <span class='kw'>out_folder</span>,
-          out_format = <span class='st'>"ENVI"</span>,
-          VNIR       = <span class='fl'>TRUE</span>,
-          ANGLES     = <span class='fl'>TRUE</span>)
-}
+<span class='fu'>pr_convert</span><span class='op'>(</span>in_file    <span class='op'>=</span> <span class='va'>in_file</span>,
+          in_L2_file <span class='op'>=</span> <span class='va'>in_L2_file</span>,
+          out_folder <span class='op'>=</span> <span class='va'>out_folder</span>,
+          out_format <span class='op'>=</span> <span class='st'>"ENVI"</span>,
+          VNIR       <span class='op'>=</span> <span class='cn'>TRUE</span>,
+          ANGLES     <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
