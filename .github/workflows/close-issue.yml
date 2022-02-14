@@ -15,4 +15,4 @@ jobs:
           then, address remaining doubts to public forums like StackOverflow,
           where other users could eventually provide useful ticks.
           "
-        issue-pattern: ".*"
+        issue-pattern: ".*do not autoclose this issue.*"
