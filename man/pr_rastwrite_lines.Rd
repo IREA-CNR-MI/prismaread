@@ -42,5 +42,5 @@ Write a raster object by blocks of lines
 DETAILS
 }
 \author{
-Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+Lorenzo Busetto, phD (2017)
 }

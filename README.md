@@ -1,16 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# prismaread <a href='https://github.com/lbusett/prismaread'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# prismaread <a href='https://github.com/irea-cnr-mi/prismaread'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
 [![Travis build
-status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
+status](https://travis-ci.org/irea-cnr-mi/prismaread.svg?branch=master)](https://travis-ci.org/irea-cnr-mi/prismaread)
 [![Lifecycle:
 beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4019081.svg)](https://doi.org/10.5281/zenodo.4019081)
-[![codecov](https://codecov.io/gh/lbusett/prismaread/branch/master/graph/badge.svg)](https://codecov.io/gh/lbusett/prismaread)
+[![codecov](https://codecov.io/gh/irea-cnr-mi/prismaread/branch/master/graph/badge.svg)](https://codecov.io/gh/irea-cnr-mi/prismaread)
 <!-- badges: end -->
 
 `prismaread` allows easily importing PRISMA hyperspectral data
@@ -34,37 +34,28 @@ suddenly passed
 away](https://docs.ropensci.org/MODIStsp/articles/lorenzo.html).
 **Currently the package development is frozen.** If you need help,
 please refer to the package documentation at
-[lbusett.github.io/prismaread](https://lbusett.github.io/prismaread).
+[irea-cnr-mi.github.io/prismaread](https://irea-cnr-mi.github.io/prismaread).
 
 # Installation
 
-You can install the last stable version of `prismaread` from
-[GitHub](https://github.com/) using:
+You can install `prismaread` from [GitHub](https://github.com/) using:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("lbusett/prismaread", ref = "v1.0.0")
-library(prismaread)
-```
-
-, or the last development version using:
-
-``` r
-# install.packages("remotes")
-remotes::install_github("lbusett/prismaread")
+remotes::install_github("irea-cnr-mi/prismaread")
 library(prismaread)
 ```
 
 # Usage
 
-See `prismaread` [website](https://lbusett.github.io/prismaread/) for
-further instructions and info on output formats.
+See `prismaread` [website](https://irea-cnr-mi.github.io/prismaread/)
+for further instructions and info on output formats.
 
 # Future Work
 
-  - Improve speed of writing FULL hyperspectral cubes
+-   Improve speed of writing FULL hyperspectral cubes
 
-  - Clean up code
+-   Clean up code
 
 ## Citation
 
@@ -72,10 +63,10 @@ To cite `prismaread` please use:
 
 Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating
 access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL:
-<https://lbusett.github.io/prismaread/>, doi:
+<https://irea-cnr-mi.github.io/prismaread/>, doi:
 <https://doi.org/10.5281/zenodo.4019081>
 
 ## Website
 
 For more information, documentation and examples of use, **see also the
-prismaread website at <https://github.com/lbusett/prismaread/>**
+prismaread website at <https://github.com/irea-cnr-mi/prismaread/>**

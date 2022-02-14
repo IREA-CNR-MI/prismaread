@@ -35,7 +35,7 @@ if (!file.exists(in_full_path)) {
   in_full_zip_path <- gsub("tif$", "zip", in_full_path)
   piggyback::pb_download(
     basename(in_full_zip_path),
-    repo = "lbusett/prismaread",
+    repo = "irea-cnr-mi/prismaread",
     dest = dirname(in_full_zip_path)
   )
   piggyback::pb_track(glob = "inst/testdata/*.tif")
@@ -72,7 +72,7 @@ if (!file.exists(in_full_path)) {
   in_vnir_zip_path <- gsub("tif$", "zip", in_vnir_path)
   piggyback::pb_download(
     basename(in_vnir_zip_path),
-    repo = "lbusett/prismaread",
+    repo = "irea-cnr-mi/prismaread",
     dest = dirname(in_vnir_zip_path)
   )
   piggyback::pb_track(glob = "inst/testdata/*.tif")

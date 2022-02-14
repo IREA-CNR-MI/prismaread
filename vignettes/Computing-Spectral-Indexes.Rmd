@@ -38,7 +38,7 @@ if (!file.exists(l2d_he5_path)) {
   )
   piggyback::pb_download(
     "PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
-    repo = "lbusett/prismaread",
+    repo = "irea-cnr-mi/prismaread",
     dest = dirname(l2d_zip_path)
   )
   piggyback::pb_track(glob = "inst/testdata/*.zip, inst/testdata/*.he5")

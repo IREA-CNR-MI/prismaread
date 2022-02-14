@@ -49,7 +49,7 @@
 <meta property="og:title" content="Extract data from a PRISMA he5 file and convert to GTiff or ENVI — pr_convert" />
 <meta property="og:description" content="Access a PRISMA HDF5 file and convert it to ENVI or GeoTiff
  format" />
-<meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png" />
+<meta property="og:image" content="https://github.com/irea-cnr-mi/prismaread/logo.png" />
 
 
 
@@ -90,15 +90,15 @@
         <li>
   <a href="../index.html">
     <span class="fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/lbusett/prismaread/">
+  <a href="https://github.com/irea-cnr-mi/prismaread/">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -107,7 +107,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -132,12 +132,12 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -145,7 +145,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract data from a PRISMA he5 file and convert to GTiff or ENVI</h1>
-    <small class="dont-index">Source: <a href='https://github.com/lbusett/prismaread/blob/master/R/pr_convert.R'><code>R/pr_convert.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/irea-cnr-mi/prismaread/blob/master/R/pr_convert.R'><code>R/pr_convert.R</code></a></small>
     <div class="hidden name"><code>pr_convert.Rd</code></div>
     </div>
 
@@ -358,7 +358,7 @@ Default: NULL</p></td>
       <td><p>`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
 the corresponding table at:
-https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
+https://irea-cnr-mi.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
 Default:NULL</p></td>
     </tr>
     <tr>
@@ -398,7 +398,7 @@ tempdir so that it is deleted automatically afterwards. Default: FALSE</p></td>
   <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Downloading test data - This may need a long time!"</span><span class='op'>)</span>
   <span class='fu'>piggyback</span><span class='fu'>::</span><span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span><span class='op'>(</span>
            <span class='st'>"PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip"</span>,
-           repo <span class='op'>=</span> <span class='st'>"lbusett/prismaread"</span>,
+           repo <span class='op'>=</span> <span class='st'>"irea-cnr-mi/prismaread"</span>,
            dest <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
            <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>""</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>, <span class='st'>"/testdata"</span><span class='op'>)</span><span class='op'>)</span>
   <span class='va'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
@@ -461,7 +461,7 @@ tempdir so that it is deleted automatically afterwards. Default: FALSE</p></td>
  <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Downloading test data - This may need a long time!"</span><span class='op'>)</span>
  <span class='fu'>piggyback</span><span class='fu'>::</span><span class='fu'><a href='https://docs.ropensci.org/piggyback/reference/pb_download.html'>pb_download</a></span><span class='op'>(</span>
                  <span class='st'>"PRS_L2C_STD_20200524103704_20200524103708_0001.zip"</span>,
-                 repo <span class='op'>=</span> <span class='st'>"lbusett/prismaread"</span>,
+                 repo <span class='op'>=</span> <span class='st'>"irea-cnr-mi/prismaread"</span>,
                  dest <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span>
                        <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>""</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>, <span class='st'>"/testdata"</span><span class='op'>)</span><span class='op'>)</span>
  <span class='va'>zipfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"testdata/"</span>, package <span class='op'>=</span> <span class='st'>"prismaread"</span><span class='op'>)</span>,
@@ -501,7 +501,7 @@ tempdir so that it is deleted automatically afterwards. Default: FALSE</p></td>
       </footer>
    </div>
 
-  
+
 
 
   </body>

@@ -154,7 +154,7 @@ Default: NULL}
 \item{indexes}{`character` array of names of indexes to be computed. You can
 see a list of available indexes using command `pr_listindexes()`, or see
 the corresponding table at:
-https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
+https://irea-cnr-mi.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
 Default:NULL}
 
 \item{cust_indexes}{`character` named list containing names and formulas of

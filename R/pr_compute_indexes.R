@@ -14,7 +14,7 @@
 #' @param indexes `character` array of names of indexes to be computed. You can
 #'  see a list of available indexes using command `pr_listindexes()`, or see
 #'  the corresponding table at:
-#'  https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html #nolint
+#'  https://irea-cnr-mi.github.io/prismaread/articles/Computing-Spectral-Indexes.html #nolint
 #' @param cust_indexes `character` named list containing names and formulas of
 #'  custom indexes to be computed. The indexes formulas must be computable R
 #'  formulas, where bands are referred to by the prefix "b", followed by the
@@ -24,8 +24,8 @@
 #'  default: FALSE
 #' @return NULL - new raster file saved in out_filename
 #'
-#' @author Lorenzo Busetto, phD (2017) \email{lbusett@@gmail.com}
-#' @author Luigi Ranghetti, phD (2017) \email{ranghetti.l@@irea.cnr.it}
+#' @author Lorenzo Busetto, phD (2017)
+#' @author Luigi Ranghetti, phD (2017)
 #' @note License: GPL 3.0
 #' @export
 #' @importFrom assertthat see_if

@@ -13,7 +13,7 @@
 #' @return the function is called for its side effects
 #' @details DETAILS
 #' @rdname pr_rastwrite_lines
-#' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+#' @author Lorenzo Busetto, phD (2017)
 #' @importFrom raster nlayers brick raster blockSize writeStart getValues
 #' writeValues writeStop
 

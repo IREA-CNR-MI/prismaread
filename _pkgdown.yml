@@ -4,7 +4,7 @@ home:
   description:
     prismaread allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/)  from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.
 url:
-  https://github.com/lbusett/prismaread/
+  https://github.com/irea-cnr-mi/prismaread/
 template:
   params:
     bootswatch: united

@@ -94,7 +94,7 @@
 #' @param indexes `character` array of names of indexes to be computed. You can
 #'  see a list of available indexes using command `pr_listindexes()`, or see
 #'  the corresponding table at:
-#'  https://lbusett.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
+#'  https://irea-cnr-mi.github.io/prismaread/articles/Computing-Spectral-Indexes.html, #nolint
 #'  Default:NULL
 #' @param cust_indexes `character` named list containing names and formulas of
 #'  custom indexes to be computed. The indexes formulas must be computable R
@@ -123,7 +123,7 @@
 #'   message("Downloading test data - This may need a long time!")
 #'   piggyback::pb_download(
 #'            "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip",
-#'            repo = "lbusett/prismaread",
+#'            repo = "irea-cnr-mi/prismaread",
 #'            dest = file.path(
 #'            system.file("", package = "prismaread"), "/testdata"))
 #'   zipfile <- file.path(
@@ -186,7 +186,7 @@
 #'  message("Downloading test data - This may need a long time!")
 #'  piggyback::pb_download(
 #'                  "PRS_L2C_STD_20200524103704_20200524103708_0001.zip",
-#'                  repo = "lbusett/prismaread",
+#'                  repo = "irea-cnr-mi/prismaread",
 #'                  dest = file.path(
 #'                        system.file("", package = "prismaread"), "/testdata"))
 #'  zipfile <- file.path(system.file("testdata/", package = "prismaread"),

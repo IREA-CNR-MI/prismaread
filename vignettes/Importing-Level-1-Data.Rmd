@@ -70,7 +70,7 @@ if (!file.exists(l1_he5_path)) {
   )
   piggyback::pb_download(
     "PRS_L1_STD_OFFL_20200524103704_20200524103708_0001.zip",
-    repo = "lbusett/prismaread",
+    repo = "irea-cnr-mi/prismaread",
     dest = dirname(l1_zip_path)
   )
   unzip(l1_zip_path, exdir = dirname(l1_he5_path))
@@ -152,7 +152,7 @@ if (!file.exists(l2_he5_path)) {
   )
   piggyback::pb_download(
     "PRS_L2C_STD_20200524103704_20200524103708_0001.zip",
-    repo = "lbusett/prismaread",
+    repo = "irea-cnr-mi/prismaread",
     dest = dirname(l2_zip_path)
   )
   unzip(l2_zip_path, exdir = dirname(l2_zip_path))

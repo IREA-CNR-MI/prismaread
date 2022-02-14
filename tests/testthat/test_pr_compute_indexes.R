@@ -14,7 +14,7 @@ test_that(
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download(
                 "PRS_L2D_STD_20200524103704_20200524103708_0001.zip",
-                repo = "lbusett/prismaread",
+                repo = "irea-cnr-mi/prismaread",
                 dest = file.path(
                     system.file("", package = "prismaread"), "/testdata"))
             piggyback::pb_track(

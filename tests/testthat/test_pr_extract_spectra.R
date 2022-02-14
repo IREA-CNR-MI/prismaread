@@ -13,7 +13,7 @@ test_that(
             message("Downloading test data - This may need a long time!")
             piggyback::pb_download(
                 "prismaread_test_HCO_FULL.tif",
-                repo = "lbusett/prismaread",
+                repo = "irea-cnr-mi/prismaread",
                 dest = file.path(system.file("", package = "prismaread"),
                                  "/testdata"))
         }

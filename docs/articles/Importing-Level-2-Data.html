@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Importing Level 2 Data">
 <meta property="og:description" content="prismaread">
-<meta property="og:image" content="https://github.com/lbusett/prismaread/logo.png">
+<meta property="og:image" content="https://github.com/irea-cnr-mi/prismaread/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -47,15 +47,15 @@
 <li>
   <a href="../index.html">
     <span class="fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/lbusett/prismaread/">
+  <a href="https://github.com/irea-cnr-mi/prismaread/">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -64,7 +64,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -96,7 +96,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="Importing-Level-2-Data_files/header-attrs-2.7/header-attrs.js"></script><script src="Importing-Level-2-Data_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="Importing-Level-2-Data_files/jquery-3.5.1/jquery.min.js"></script><link href="Importing-Level-2-Data_files/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="Importing-Level-2-Data_files/leaflet-1.3.1/leaflet.js"></script><link href="Importing-Level-2-Data_files/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
@@ -110,15 +110,15 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Importing Level 2 Data</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/lbusett/prismaread/blob/master/vignettes/Importing-Level-2-Data.Rmd"><code>vignettes/Importing-Level-2-Data.Rmd</code></a></small>
+
+
+      <small class="dont-index">Source: <a href="https://github.com/irea-cnr-mi/prismaread/blob/master/vignettes/Importing-Level-2-Data.Rmd"><code>vignettes/Importing-Level-2-Data.Rmd</code></a></small>
       <div class="hidden name"><code>Importing-Level-2-Data.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <p>The function to be used to import <strong>PRISMA L2 data</strong> (2B, 2C, 2D) is <code>pr_convert</code>.</p>
 <p>It takes as input the full path of a PRISMA L1 hdf5 image, an output folder name and format, and a series of switches allowing to decide which hyperspectral cubes and ancillary datasets should be crated.</p>
 <p>In particular:</p>
@@ -128,7 +128,7 @@
 </ul>
 <p>In that case (<code>FULL = TRUE</code>): - the <code>join_priority</code> keyword is used to decide if keeping bands from the “VNIR” or the “SWIR” data cube in the wavelengths’ region where they overlap; - the <code>PAN</code>, <code>LATLON</code> and <code>ANGLES</code> logical arguments allow deciding which of the corresponding ancillary datasets should be created (see the PRISMA manual for additional info); - if working with <strong>L2B</strong> or <strong>L2C</strong> data, the <code>base_georef</code> logical argument allows deciding if a “base” georeferencing in Lat/Lon WGS-84 based on the “GLT and Bowtie Correction” technique used in ENVI and described <a href="https://www.harrisgeospatial.com/docs/backgroundgltbowtiecorrection.html">here</a> is applied (if set to <code>FALSE</code>, the original 1000 x 1000 datasets are returned – flipped to orient them “north/south” – without projection. If working with <strong>L2D</strong>, the output datasets are already georeferenced (UTM projection), although <strong>accuracy of geolocation should be checked</strong>.</p>
 <p>For example the following code accesses the input L2D file and saves the VNIR and SWIR cubes and the PAN, ANGLES and CLOUD datasets. <strong>See <a href="reference/pr_convert.html">documentation</a> of the <code><a href="../reference/pr_convert.html">pr_convert()</a></code> function for info on available arguments.</strong></p>
-<p><strong>IMPORTANT NOTE:</strong> to run this, you’d need to download the example data from GitHub. The data is about 1 GB, so it could take some time. The data would be placed in subfolder <em>testdata</em> of the <a href="https://lbusett.github.io/prismaread/">prismaread</a> installation folder.</p>
+<p><strong>IMPORTANT NOTE:</strong> to run this, you’d need to download the example data from GitHub. The data is about 1 GB, so it could take some time. The data would be placed in subfolder <em>testdata</em> of the <a href="https://irea-cnr-mi.github.io/prismaread/">prismaread</a> installation folder.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">l2d_he5_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>, package <span class="op">=</span> <span class="st">"prismaread"</span><span class="op">)</span>,
@@ -147,7 +147,7 @@
   <span class="op">)</span>
   <span class="fu">piggyback</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/piggyback/reference/pb_download.html">pb_download</a></span><span class="op">(</span>
     <span class="st">"PRS_L2D_STD_20200524103704_20200524103708_0001.zip"</span>,
-    repo <span class="op">=</span> <span class="st">"lbusett/prismaread"</span>,
+    repo <span class="op">=</span> <span class="st">"irea-cnr-mi/prismaread"</span>,
     dest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">dirname</a></span><span class="op">(</span><span class="va">l2d_zip_path</span><span class="op">)</span>
   <span class="op">)</span>
   <span class="fu">piggyback</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/piggyback/reference/pb_track.html">pb_track</a></span><span class="op">(</span>glob <span class="op">=</span> <span class="st">"inst/testdata/*.zip, inst/testdata/*.he5"</span><span class="op">)</span>
@@ -202,9 +202,9 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">l2d_vnir_wvl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span>
-    <span class="va">l2d_out_dir</span>, 
+    <span class="va">l2d_out_dir</span>,
     <span class="st">"PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.wvl"</span>
-  <span class="op">)</span>, 
+  <span class="op">)</span>,
   header <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span>
 <span class="fu">DT</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html">datatable</a></span><span class="op">(</span><span class="va">l2d_vnir_wvl</span><span class="op">)</span></code></pre></div>
@@ -218,7 +218,7 @@
   in_file <span class="op">=</span> <span class="va">l2d_he5_path</span>,
   out_folder <span class="op">=</span> <span class="va">l2d_out_dir</span>,
   out_format <span class="op">=</span> <span class="st">"ENVI"</span>,
-  VNIR <span class="op">=</span> <span class="cn">TRUE</span>, 
+  VNIR <span class="op">=</span> <span class="cn">TRUE</span>,
   SWIR <span class="op">=</span> <span class="cn">TRUE</span>,
   FULL <span class="op">=</span> <span class="cn">TRUE</span>,
   LATLON <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -233,10 +233,10 @@
   in_file <span class="op">=</span> <span class="va">l2d_he5_path</span>,
   out_folder <span class="op">=</span> <span class="va">l2d_out_dir</span>,
   out_format <span class="op">=</span> <span class="st">"GTiff"</span>,
-  VNIR <span class="op">=</span> <span class="cn">TRUE</span>, 
-  SWIR <span class="op">=</span> <span class="cn">TRUE</span>, 
-  selbands_vnir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">450</span>,<span class="fl">550</span>,<span class="fl">650</span><span class="op">)</span>, 
-  selbands_swir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">1330</span><span class="op">)</span>, 
+  VNIR <span class="op">=</span> <span class="cn">TRUE</span>,
+  SWIR <span class="op">=</span> <span class="cn">TRUE</span>,
+  selbands_vnir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">450</span>,<span class="fl">550</span>,<span class="fl">650</span><span class="op">)</span>,
+  selbands_swir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">1330</span><span class="op">)</span>,
   join_priority <span class="op">=</span> <span class="st">"SWIR"</span>,
   FULL <span class="op">=</span> <span class="cn">TRUE</span>,
   overwrite <span class="op">=</span> <span class="cn">T</span>
@@ -255,7 +255,7 @@
 <span class="co">#&gt; [10] "PRS_L2D_STD_20200524103704_20200524103708_0001_HCO.ang"</span>
 <span class="va">l2dsel_vnir</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/brick.html">brick</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span>
-    <span class="va">l2d_out_dir</span>, 
+    <span class="va">l2d_out_dir</span>,
     <span class="st">"PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_VNIR.tif"</span>
   <span class="op">)</span>
 <span class="op">)</span>
@@ -272,7 +272,7 @@
 
 <span class="va">l2dsel_swir</span> <span class="op">&lt;-</span> <span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/stack.html">stack</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span>
-    <span class="va">l2d_out_dir</span>, 
+    <span class="va">l2d_out_dir</span>,
     <span class="st">"PRS_L2D_STD_20200524103704_20200524103708_0001_HCO_SWIR.tif"</span>
   <span class="op">)</span>
 <span class="op">)</span>
@@ -310,7 +310,7 @@
       </footer>
 </div>
 
-  
+
 
 
   </body>

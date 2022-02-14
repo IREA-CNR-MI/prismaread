@@ -13,13 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# prismaread <a href='https://github.com/lbusett/prismaread'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# prismaread <a href='https://github.com/irea-cnr-mi/prismaread'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/lbusett/prismaread.svg?branch=master)](https://travis-ci.org/lbusett/prismaread)
+[![Travis build status](https://travis-ci.org/irea-cnr-mi/prismaread.svg?branch=master)](https://travis-ci.org/irea-cnr-mi/prismaread)
 [![Lifecycle: beta](https://img.shields.io/badge/lifecycle-beta-blue.svg)](https://www.tidyverse.org/lifecycle/#beta)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4019081.svg)](https://doi.org/10.5281/zenodo.4019081)
-[![codecov](https://codecov.io/gh/lbusett/prismaread/branch/master/graph/badge.svg)](https://codecov.io/gh/lbusett/prismaread)
+[![codecov](https://codecov.io/gh/irea-cnr-mi/prismaread/branch/master/graph/badge.svg)](https://codecov.io/gh/irea-cnr-mi/prismaread)
 <!-- badges: end -->
 
 `prismaread` allows easily importing PRISMA hyperspectral data (http://www.prisma-i.it/index.php/it/)  from the original data provided by ASI in HDF format, and convert them to a easier to use format (ENVI or GeoTiff). It also provides functionality for automatically computing Spectral Indexes from either the original HDF data or from hyperspectral data already converted using function `pr_convert`, and for easily and quickly extracting data and computing statistics for the different bands over areas of interest.
@@ -34,23 +34,15 @@ Lorenzo maintained `prismaread` until 21st October 2020, when
 [he suddenly passed away](https://docs.ropensci.org/MODIStsp/articles/lorenzo.html).
 **Currently the package development is frozen.**
 If you need help, please refer to the package documentation at
-[lbusett.github.io/prismaread](https://lbusett.github.io/prismaread).
+[irea-cnr-mi.github.io/prismaread](https://irea-cnr-mi.github.io/prismaread).
 
 # Installation
 
-You can install the last stable version of `prismaread` from [GitHub](https://github.com/) using: 
+You can install `prismaread` from [GitHub](https://github.com/) using: 
 
 ``` {r install, eval=FALSE}
 # install.packages("remotes")
-remotes::install_github("lbusett/prismaread", ref = "v1.0.0")
-library(prismaread)
-```
-
-, or the last development version using:
-
-``` {r install2, eval=FALSE}
-# install.packages("remotes")
-remotes::install_github("lbusett/prismaread")
+remotes::install_github("irea-cnr-mi/prismaread")
 library(prismaread)
 ```
 
@@ -80,4 +72,4 @@ See the __Articles__ section of the website for detailed info on usage.
   
 To cite `prismaread` please use:
 
-Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://lbusett.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.4019081
+Busetto, L., Ranghetti, L. (2020) prismaread: A tool for facilitating access and analysis of PRISMA L1/L2 hyperspectral imagery v1.0.0, URL: https://irea-cnr-mi.github.io/prismaread/, doi: https://doi.org/10.5281/zenodo.4019081

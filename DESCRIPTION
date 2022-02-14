@@ -3,9 +3,9 @@ Title: Import PRISMA L1/L2 hyperspectral data and convert them to
  a more user friendly format
 Version: 1.0.0
 Authors@R: 
-    c(person("Lorenzo", "Busetto", email = "lbusett@gmail.com", role = c("aut", "cre"),
+    c(person("Lorenzo", "Busetto", role = c("aut"),
     comment = c(ORCID = '0000-0001-9634-6038')), 
-    person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut"), 
+    person("Luigi", "Ranghetti", email = "luigi@ranghetti.info", role = c("aut", "cre"), 
     comment = c(ORCID = '0000-0001-6207-5188')))
 Description: `prismaread` allows easily importing PRISMA (http://www.prisma-i.it/index.php/it/) 
  satellite hyperspectral data cubes and ancillary information from the original
@@ -18,8 +18,7 @@ Description: `prismaread` allows easily importing PRISMA (http://www.prisma-i.it
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: https://lbusett.github.io/prismaread/
-BugReports: https://github.com/lbusett/prismaread/issues
+URL: https://irea-cnr-mi.github.io/prismaread/
 Imports: 
     hdf5r,
     tools,
@@ -46,6 +45,6 @@ Suggests: testthat,
     usethis, 
     mapview,
     piggyback
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Language: en-GB
